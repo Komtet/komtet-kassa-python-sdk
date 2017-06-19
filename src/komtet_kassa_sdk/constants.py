@@ -1,0 +1,8 @@
+INTENT_TYPES = SELL, SELL_RETURN = 'sell', 'sellReturn'
+
+PAYMENT_TYPES = CARD, CASH = 'card', 'cash'
+
+VAT_TYPES = WITHOUT_VAT, VAT0, VAT10, VAT18, VAT110, VAT118 = 'no', '0', '10', '18', '110', '118'
+VAT_MODES = POSITION_VAT_MODE, UNIT_VAT_MODE = 'position', 'unit'
+
+QUEUE_STATES = ACTIVE_QUEUE_STATE, PASSIVE_QUEUE_STATE = 'active', 'passive'

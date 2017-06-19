@@ -1,1 +1,0 @@
-# komtet-kassa-python-sdk
