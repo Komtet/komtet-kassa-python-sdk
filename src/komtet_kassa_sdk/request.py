@@ -10,7 +10,7 @@ import requests
 from .utils import JSONEncoder
 
 
-API_SERVER = 'http://kassa.komtet.ru'
+API_SERVER = 'https://kassa.komtet.ru'
 API_PATH_PREFIX = '/api/shop/v1'
 
 SHOP_KEY = None
