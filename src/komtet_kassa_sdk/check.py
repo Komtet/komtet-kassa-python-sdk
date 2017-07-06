@@ -5,6 +5,9 @@ from .validation import validate, ValidationError
 from .validation.schemas import position as position_schema, payment as payment_schema
 
 
+SNO = None
+
+
 class CheckPosition(object):
 
     def __init__(self, name, price, quantity=1, total=None, discount=None, vat=None):
@@ -42,11 +45,12 @@ class CheckPosition(object):
 class Check(object):
 
     def __init__(self, task_id, user_email, positions=None, payment=None, payments=None,
-                 is_print=False, intent=SELL):
+                 is_print=False, intent=SELL, sno=None):
         self.task_id = task_id
         self.user_email = user_email
         self.is_print = is_print
         self.intent = intent
+        self.sno = sno or SNO
 
         self.positions = []
         if positions:
@@ -88,11 +92,15 @@ class Check(object):
             "user": self.user_email,
             "print": self.is_print,
             "intent": self.intent,
+            "sno": self.sno,
             "payments": self.payments,
             "positions": [position._prepare() for position in self.positions],
         }
 
     def _validate(self):
+        if self.sno is None:
+            raise CheckError('sno doesn\'t set')
+
         if (
             sum(map(lambda position: position.total, self.positions), 0) !=
             sum(map(lambda payment: payment['sum'], self.payments), 0)

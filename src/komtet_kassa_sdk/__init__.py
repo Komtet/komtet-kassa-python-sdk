@@ -18,7 +18,7 @@ __all__ = [
 
 
 def configure(config, prefix=None):
-    from . import request
+    from . import request, check
 
     if prefix:
         config = {key[len(prefix):]: val
@@ -33,5 +33,7 @@ def configure(config, prefix=None):
         request.API_SERVER = config['server']
     if 'path_prefix' in config:
         request.API_PATH_PREFIX = config['path_prefix']
+    if 'sno' in config:
+        check.SNO = int(config['sno'])
 
     PrintQueue.configure(config.get('named_queues'))

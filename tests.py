@@ -17,6 +17,7 @@ def configure_package():
         'shop_secret': 'yoUR_sHop_SecReT',
         'server': 'http://test.online-kassa.com',
         'path_prefix': '/api/shop/v1',
+        'sno': 2,
         'named_queues': {
             '__default__': 123,
             'first_queue': 123,
