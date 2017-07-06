@@ -4,8 +4,8 @@ komtet-kassa-python-sdk
 
 Библиотека для интеграции вашего сайта с с облачным сервисом распределенной печати чеков `OnlineКасса <http://kassa.komtet.ru>`_
 
-.. image:: https://img.shields.io/travis/Motmom/komtet-kassa-python-sdk.svg?style=flat-square
-  :target: https://travis-ci.org/Motmom/komtet-kassa-python-sdk
+.. image:: https://img.shields.io/travis/Komtet/komtet-kassa-python-sdk.svg?style=flat-square
+  :target: https://travis-ci.org/Komtet/komtet-kassa-python-sdk
 
 Установка
 =========
