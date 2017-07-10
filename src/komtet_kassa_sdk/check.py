@@ -50,7 +50,10 @@ class Check(object):
         self.user_email = user_email
         self.is_print = is_print
         self.intent = intent
-        self.sno = sno or SNO
+
+        self.sno = SNO
+        if sno is not None:
+            self.sno = sno
 
         self.positions = []
         if positions:
