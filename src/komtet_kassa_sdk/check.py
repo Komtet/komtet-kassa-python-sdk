@@ -113,4 +113,4 @@ class Check(object):
     def print_out(self, queue_name=None, **kwargs):
         self._validate()
 
-        PrintQueue(queue_name).put_task(self._prepare(), **kwargs)
+        return PrintQueue(queue_name).put_task(self._prepare(), **kwargs)
