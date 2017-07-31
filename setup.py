@@ -15,7 +15,7 @@ with open('CHANGELOG.rst', 'r') as changelog:
 
 setup(
     name='komtet_kassa_sdk',
-    version='0.1.5',
+    version='0.1.6',
     license='MIT',
     keywords=['online kassa', 'sdk'],
     description='Python SDK for OnlineKacca',
