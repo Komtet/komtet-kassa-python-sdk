@@ -1,116 +1,136 @@
-from .constants import WITHOUT_VAT, CARD, SELL
-from .exc import CheckError, FormatError
-from .queue import PrintQueue
-from .validation import validate, ValidationError
-from .validation.schemas import position as position_schema, payment as payment_schema
+# coding: utf-8
 
 
-SNO = None
+class Intent(object):
+    """Направление платежа"""
+
+    SELL = 'sell'
+    """Платёж"""
+
+    RETURN = 'sellReturn'
+    """Возврат"""
 
 
-class CheckPosition(object):
+class TaxSystem(object):
+    """Система налогообложения"""
 
-    def __init__(self, name, price, quantity=1, total=None, discount=None, vat=None):
-        self.name = name
-        self.price = price
-        self.quantity = quantity
-        self.total = total or price * quantity
-        self.vat = vat
-        self.discount = discount
+    COMMON = 0
+    """ОСН"""
 
-    def _prepare_vat(self):
-        if not self.vat:
-            return {
-                'number': WITHOUT_VAT,
-                'sum': 0
-            }
+    SIMPLIFIED_IN = 1
+    """УСН доход"""
 
-        return self.vat
+    SIMPLIFIED_IN_OUT = 2
+    """УСН доход - расход"""
 
-    def _prepare(self):
-        position = {
-            'name': self.name,
-            'price': self.price,
-            'quantity': self.quantity,
-            'total': self.total,
-            'vat': self._prepare_vat()
-        }
+    UTOII = 3
+    """ЕНВД"""
 
-        if self.discount:
-            position['discount'] = self.discount
+    UST = 4
+    """ЕСН"""
 
-        return position
+    PATENT = 5
+    """Патент"""
+
+
+class VatRate(object):
+    """Налоговая ставка"""
+
+    RATE_NO = 'no'
+    """Без НДС"""
+
+    RATE_0 = '0'
+    """НДС 0%"""
+
+    RATE_10 = '10'
+    """НДС 10%"""
+
+    RATE_18 = '18'
+    """НДС 18%"""
+
+    RATE_110 = '110'
+    """НДС 10/110"""
+
+    RATE_118 = '118'
+    """НДС 18/118"""
+
+    @classmethod
+    def parse(cls, rate):
+        if not isinstance(rate, str):
+            rate = str(rate)
+
+        if rate == '10/110':
+            rate = cls.RATE_110
+        elif rate == '18/118':
+            rate = cls.RATE_118
+        else:
+            rate = rate.replace('%', '')
+            rate = rate.replace('0.', '')
+        if rate not in cls.get_rates():
+            raise ValueError('Unknown VAT rate: %s' % rate)
+        return rate
+
+    @classmethod
+    def get_rates(cls):
+        if not hasattr(cls, 'rates'):
+            cls.rates = [value for key, value in cls.__dict__.items() if key.startswith('RATE_')]
+        return cls.rates
 
 
 class Check(object):
-
-    def __init__(self, task_id, user_email, positions=None, payment=None, payments=None,
-                 is_print=False, intent=SELL, sno=None):
-        self.task_id = task_id
-        self.user_email = user_email
-        self.is_print = is_print
-        self.intent = intent
-
-        self.sno = SNO
-        if sno is not None:
-            self.sno = sno
-
-        self.positions = []
-        if positions:
-            for position in positions:
-                self.append_position(position)
-
-        self.payments = []
-        if payment:
-            self.append_payment(payment)
-        if payments:
-            for payment in payments:
-                self.append_payment(payment)
-
-    def append_position(self, position):
-        try:
-            validate(position, position_schema)
-        except ValidationError:
-            raise FormatError('Invalid format of position', position_schema)
-
-        self.positions.append(CheckPosition(**position))
-
-    def append_payment(self, payment):
-        try:
-            validate(payment, payment_schema)
-        except ValidationError as ex:
-            raise FormatError('Invalid format of payment', payment_schema)
-
-        if isinstance(payment, (int, float)):
-            payment = {
-                'type': CARD,
-                'sum': payment
-            }
-
-        self.payments.append(payment)
-
-    def _prepare(self):
-        return {
-            "task_id": self.task_id and str(self.task_id),
-            "user": self.user_email,
-            "print": self.is_print,
-            "intent": self.intent,
-            "sno": self.sno,
-            "payments": self.payments,
-            "positions": [position._prepare() for position in self.positions],
+    """
+    :param oid: Номер операции в магазине
+    :param str email: E-Mail пользователя для отправки электронного чека
+    :param str intent: Направление платежа
+    :param int tax_system: Система налогообложения
+    """
+    def __init__(self, oid, email, intent, tax_system):
+        self.__data = {
+            'task_id': oid,
+            'user': email,
+            'print': False,
+            'intent': intent,
+            'sno': tax_system,
+            'payments': [],
+            'positions': []
         }
 
-    def _validate(self):
-        if self.sno is None:
-            raise CheckError('sno doesn\'t set')
+    def __iter__(self):
+        for item in self.__data.items():
+            yield item
 
-        if (
-            sum(map(lambda position: position.total, self.positions), 0) !=
-            sum(map(lambda payment: payment['sum'], self.payments), 0)
-        ):
-            raise CheckError('Invalid payment sum in check')
+    def __getitem__(self, item):
+        return self.__data[item]
 
-    def print_out(self, queue_name=None, **kwargs):
-        self._validate()
+    def set_print(self, value):
+        """
+        :param bool value: Печатать чек или нет
+        """
+        self.__data['print'] = bool(value)
+        return self
 
-        return PrintQueue(queue_name).put_task(self._prepare(), **kwargs)
+    def add_payment(self, amount):
+        """
+        :param int|float amount: Сумма платежа
+        """
+        self.__data['payments'].append({'sum': amount})
+        return self
+
+    def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO):
+        """
+        :param str name: Наименование позиции
+        :param int|float price: Цена позиции в чеке
+        :param int|float quantity: Количество единиц
+        :param int|float total: Общая стоимость позиции
+        :param str vat: Налоговая ставка
+        """
+        if total is None:
+            total = price * quantity
+        self.__data['positions'].append({
+            'name': name,
+            'price': price,
+            'quantity': quantity,
+            'total': total,
+            'vat': VatRate.parse(vat)
+        })
+        return self

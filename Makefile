@@ -6,7 +6,7 @@ all:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 buildout: ## Setup development environment
-	@rm bootstrap-buildout.py -f
+	@rm bootstrap.py -f
 	@rm buildout -rf
 	@wget $(BOOTSTRAP_BUILDOUT) -O bootstrap.py
 	@for v in 2 3; do \
@@ -23,7 +23,6 @@ tests:    ## Run tests
 		buildout/$$v/bin/coverage run --source src setup.py test -q && buildout/$$v/bin/coverage report -m;\
 		echo;\
 	done
-	@rm src/komtet_kassa_sdk.egg-info -r
 	@rm .coverage
 
 publish:  ## Upload package to PyPI

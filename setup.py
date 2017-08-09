@@ -1,12 +1,6 @@
 from setuptools import setup, find_packages
 
 
-requires = [
-    'jsonschema',
-    'requests',
-    'six'
-]
-
 with open('README.rst', 'r') as readme:
     long_description = readme.read()
 
@@ -19,17 +13,16 @@ setup(
     license='MIT',
     description='Python SDK for KOMTET Kassa',
     long_description=long_description,
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+
     author='Motmom',
     author_email='motmom.dev@gmail.com',
+
     maintainer='Guryev Konstantin',
     maintainer_email='kosmini4@gmail.com',
-    install_requires=requires,
+
     url='https://github.com/Komtet/komtet-kassa-python-sdk',
     download_url='https://pypi.python.org/pypi/komtet_kassa_sdk',
-    include_package_data=True,
-    zip_safe=False,
+
     classifiers=[
         'Intended Audience :: Developers',
         'Natural Language :: Russian',
@@ -43,5 +36,13 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    test_suite='tests'
+
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    include_package_data=True,
+    zip_safe=False,
+    test_suite='tests',
+    install_requires=[
+        'requests'
+    ]
 )
