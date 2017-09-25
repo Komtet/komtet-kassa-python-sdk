@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
 from decimal import Decimal
 from unittest import TestCase
 
 from mock import patch
 
-from komtet_kassa_sdk import Check, Client, Intent, Task, TaxSystem, VatRate
+from komtet_kassa_sdk import (
+    Check, CorrectionCheck, Client, Intent, Task, TaxSystem, VatRate, CorrectionType
+)
 
 
 class TestVatRate(TestCase):
@@ -35,7 +38,7 @@ class TestCheck(TestCase):
         check.add_payment(100)
         check.add_position('name 0', price=100)
         check.add_payment(200)
-        check.add_position('name 1', 100, quantity=2)
+        check.add_position('name 1', 100, quantity=2, measure_name='kg')
         check.add_payment(300)
         check.add_position('name 2', 100, 3, total=290, vat=18)
 
@@ -46,9 +49,9 @@ class TestCheck(TestCase):
             'intent': 'sell',
             'sno': 0,
             'payments': [
-                {'sum': 100},
-                {'sum': 200},
-                {'sum': 300},
+                {'sum': 100, 'type': 'card'},
+                {'sum': 200, 'type': 'card'},
+                {'sum': 300, 'type': 'card'},
             ],
             'positions': [
                 {
@@ -63,7 +66,8 @@ class TestCheck(TestCase):
                     'price': 100,
                     'quantity': 2,
                     'total': 200,
-                    'vat': 'no'
+                    'vat': 'no',
+                    'measure_name': 'kg'
                 },
                 {
                     'name': 'name 2',
@@ -81,6 +85,43 @@ class TestCheck(TestCase):
         self.assertTrue(check['print'])
         check.set_print(False)
         self.assertFalse(check['print'])
+
+
+class TestCorrectionCheck(TestCase):
+    def test_check(self):
+        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION, TaxSystem.COMMON)
+        check.set_payment(10, VatRate.RATE_10)
+        check.set_correction_data(CorrectionType.FORCED, '2017-09-28', 'K11',
+                                  'Отключение электричества')
+
+        expected = {
+            'task_id': 2,
+            'printer_number': '00112233445566',
+            'intent': 'sellCorrection',
+            'sno': 0,
+            'payments': [
+                {'sum': 10, 'type': 'card'},
+            ],
+            'positions': [
+                {
+                    'name': 'Коррекция прихода',
+                    'price': 10,
+                    'quantity': 1,
+                    'total': 10,
+                    'vat': '10'
+                }
+            ],
+            'correction': {
+                'type': 'forced',
+                'date': '2017-09-28',
+                'document': 'K11',
+                'description': 'Отключение электричества'
+            }
+        }
+        for key, value in check:
+            self.assertEqual(expected[key], value)
+
+        self.assertEqual(check['printer_number'], '00112233445566')
 
 
 class ResponseMock(object):

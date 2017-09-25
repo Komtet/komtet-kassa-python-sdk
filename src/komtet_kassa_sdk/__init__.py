@@ -1,4 +1,4 @@
-from .check import Check, Intent, TaxSystem, VatRate
+from .check import Check, CorrectionCheck, Intent, TaxSystem, VatRate, CorrectionType
 from .client import Client, Task
 
 

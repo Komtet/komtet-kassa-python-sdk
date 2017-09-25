@@ -30,7 +30,9 @@ komtet-kassa-python-sdk
 .. code:: python
 
     from requests.exceptions import HTTPError
-    from komtet_kassa_sdk import Check, Client, Intent, TaxSystem, VatRate
+    from komtet_kassa_sdk import (
+        Check, CorrectionCheck, Client, Intent, TaxSystem, VatRate, CorrectionType, PaymentMethod
+    )
 
     shop_id = 'идентификатор магазина'
     secret_key = 'секретный ключ'
@@ -99,6 +101,55 @@ komtet-kassa-python-sdk
     # external_id - идентификатор операции в магазине
     # print_queue_id - идентификатор очереди
     # state - состояние задачи
+
+
+    # Создание чека коррекции
+
+    printer_number = 'серийный номер принтера'
+
+    intent = Intent.SELL_CORRECTION  # Направление коррекции
+    # intent = Intent.SELL_CORRECTION # Коррекция прихода
+    # intent = Intent.RETURN_CORRECTION # Коррекция расхода
+
+    check = CorrectionCheck(oid, printer_number, intent, tax_system
+
+    payment_method = PaymentMethod.CARD # Метод оплаты, корректирующей суммы
+    # payment_method = PaymentMethod.CARD # электронные
+    # payment_method = PaymentMethod.CASH # наличные
+
+    # Установка суммы коррекции
+    check.set_payment(
+      correction_sum=12, # Сумма
+      vat_rate=vat_rate,
+      payment_method=payment_method
+    )
+
+    correction_type = CorrectionType.SELF # Тип коррекции
+    # correction_type = CorrectionType.SELF # Самостоятельно
+    # correction_type = CorrectionType.FORCED # По предписанию
+
+    # Установка данных коррекции
+    check.set_correction_data(
+        type=correction_type,
+        data='2017-09-28', # Дата документа коррекции в формате 'yyyy-mm-dd'
+        document='К111', # Номер документа коррекции
+        description='Отключение электричества' # Описание коррекции
+    )
+
+    # Отправка запроса
+    try:
+        task = client.create_task(check, 'идентификатор очереди')
+    except HTTPError as exc:
+        print(exc.response.text)
+    else:
+        print(task)
+    # Task(id=1, external_id=2, print_queue_id=3, state='new')
+    # id - идентификатор задачи
+    # external_id - идентификатор операции в магазине
+    # print_queue_id - идентификатор очереди
+    # state - состояние задачи
+
+
 
     # Чтобы проверить, является ли очередь активной, выполните:
     client.is_queue_active('идентификатор очереди')
