@@ -111,7 +111,7 @@ komtet-kassa-python-sdk
     # intent = Intent.SELL_CORRECTION # Коррекция прихода
     # intent = Intent.RETURN_CORRECTION # Коррекция расхода
 
-    check = CorrectionCheck(oid, printer_number, intent, tax_system
+    check = CorrectionCheck(oid, printer_number, intent, tax_system)
 
     payment_method = PaymentMethod.CARD # Метод оплаты, корректирующей суммы
     # payment_method = PaymentMethod.CARD # электронные
