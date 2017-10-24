@@ -36,9 +36,9 @@ class TestCheck(TestCase):
     def test_check(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
         check.add_payment(100)
-        check.add_position('name 0', price=100)
+        check.add_position('name 0', price=100, oid=1)
         check.add_payment(200)
-        check.add_position('name 1', 100, quantity=2, measure_name='kg')
+        check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
         check.add_position('name 2', 100, 3, total=290, vat=18)
 
@@ -55,6 +55,7 @@ class TestCheck(TestCase):
             ],
             'positions': [
                 {
+                    'id': 1,
                     'name': 'name 0',
                     'price': 100,
                     'quantity': 1,
@@ -62,6 +63,7 @@ class TestCheck(TestCase):
                     'vat': 'no'
                 },
                 {
+                    'id': '2',
                     'name': 'name 1',
                     'price': 100,
                     'quantity': 2,

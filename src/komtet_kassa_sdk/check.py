@@ -145,7 +145,7 @@ class Check(object):
         return self
 
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
-                     measure_name=None):
+                     measure_name=None, oid=None):
         """
         :param str name: Наименование позиции
         :param int|float price: Цена позиции в чеке
@@ -166,6 +166,9 @@ class Check(object):
 
         if measure_name is not None:
             position['measure_name'] = measure_name
+
+        if oid is not None:
+            position['id'] = oid
 
         self.__data['positions'].append(position)
         return self
