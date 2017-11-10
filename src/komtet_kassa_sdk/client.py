@@ -4,15 +4,14 @@ import functools
 import hashlib
 import hmac
 import json
-
 from collections import namedtuple
 
 import requests
 
-
 DEFAULT_HOST = 'https://kassa.komtet.ru'
 
 Task = namedtuple('Task', 'id external_id print_queue_id state')
+TaskInfo = namedtuple('TaskInfo', 'id external_id state fiscal_data error_description')
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -30,6 +29,7 @@ class Client(object):
     :param str shop_id: Идентификатор магазина
     :param str secret_key: Секретный ключ
     """
+
     def __init__(self, shop_id, secret_key):
         self.__host = DEFAULT_HOST
         self.__shop_id = shop_id
@@ -79,6 +79,17 @@ class Client(object):
         rep.raise_for_status()
         result = rep.json()
         return Task(**result)
+
+    def get_task_info(self, task_id):
+        """
+        Возвращает информацию о поставленной на фискализацию задаче
+
+        :param str|int task_id: ID задачи
+        """
+        rep = self.__get('/api/shop/v1/tasks/%s' % task_id)
+        rep.raise_for_status()
+        result = rep.json()
+        return TaskInfo(**result)
 
     def __handle_queue_id(self, qid):
         if qid is None:

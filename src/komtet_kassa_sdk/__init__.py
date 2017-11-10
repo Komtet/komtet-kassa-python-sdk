@@ -1,5 +1,7 @@
-from .check import Check, CorrectionCheck, Intent, TaxSystem, VatRate, CorrectionType
-from .client import Client, Task
+from .check import (Check, CorrectionCheck, CorrectionType, Intent, PaymentMethod, TaxSystem,
+                    VatRate)
+from .client import Client, Task, TaskInfo
 
 
-__all__ = ['Check', 'Client', 'Intent', 'Task', 'TaxSystem', 'VatRate']
+__all__ = ['Check', 'CorrectionCheck', 'CorrectionType', 'Client', 'Intent', 'PaymentMethod',
+           'Task', 'TaskInfo', 'TaxSystem', 'VatRate']

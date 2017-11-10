@@ -5,7 +5,7 @@ from unittest import TestCase
 from mock import patch
 
 from komtet_kassa_sdk import (
-    Check, CorrectionCheck, Client, Intent, Task, TaxSystem, VatRate, CorrectionType
+    Check, CorrectionCheck, CorrectionType, Client, Intent, Task, TaskInfo, TaxSystem, VatRate
 )
 
 
@@ -213,3 +213,31 @@ class TestClient(TestCase):
             with self.assertRaises(TypeError) as ctx:
                 self.client.create_task({'key': object()})
             self.assertIn('is not JSON serializable', ctx.exception.args[0])
+
+    def test_get_task_info_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            response_mock = ResponseMock(
+                id=234, external_id='4321', state='done', error_description=None,
+                fiscal_data={
+                    'i': '111',
+                    'fn': '2222222222222222',
+                    't': '3333333333333',
+                    'n': 4,
+                    'fp': '555555555',
+                    's': '6666.77'
+                })
+            requests.get.return_value = response_mock
+            task_info = self.client.get_task_info(234)
+            self.assertIsInstance(task_info, TaskInfo)
+            self.assertEqual(task_info.id, 234)
+            self.assertEqual(task_info.external_id, '4321')
+            self.assertEqual(task_info.state, 'done')
+            self.assertIsNone(task_info.error_description)
+            self.assertDictEqual(task_info.fiscal_data, {
+                'i': '111',
+                'fn': '2222222222222222',
+                't': '3333333333333',
+                'n': 4,
+                'fp': '555555555',
+                's': '6666.77'
+            })

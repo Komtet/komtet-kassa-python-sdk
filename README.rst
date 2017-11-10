@@ -150,6 +150,26 @@ komtet-kassa-python-sdk
     # print_queue_id - идентификатор очереди
     # state - состояние задачи
 
+    # Получение информации о поставленной на фискализацию задаче:
+    try:
+        task_info = client.get_task_info('идентификатор задачи')
+    except HTTPError as exc:
+        print(exc.response.text)
+    else:
+        print(task_info)
+    # TaskInfo(id=234, external_id='4321', state='done', error_description=None,
+    #          fiscal_data={'i': '111',
+    #                       'fn': '2222222222222222',
+    #                       't': '3333333333333',
+    #                       'n': 4,
+    #                       'fp': '555555555',
+    #                       's': '6666.77'})
+    # id - идентификатор задачи
+    # external_id - идентификатор операции в магазине
+    # state - состояние задачи
+    # error_description - описание возникшей ошибки, когда state=='error'
+    # fiscal_data - фискальные данные
+
 
 
     # Чтобы проверить, является ли очередь активной, выполните:
