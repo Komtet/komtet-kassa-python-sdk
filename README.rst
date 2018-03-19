@@ -31,7 +31,8 @@ komtet-kassa-python-sdk
 
     from requests.exceptions import HTTPError
     from komtet_kassa_sdk import (
-        Check, CorrectionCheck, Client, Intent, TaxSystem, VatRate, CorrectionType, PaymentMethod
+        Check, CorrectionCheck, Client, Intent, TaxSystem, VatRate, CorrectionType, PaymentMethod,
+
     )
 
     shop_id = 'идентификатор магазина'
@@ -81,7 +82,14 @@ komtet-kassa-python-sdk
         price=100,  # Цена за единицу
         quantity=2,  # Количество единиц (по умолчанию 1)
         total=200,  # Общая стоимость позиции (по умолчанию price * quantity)
-        vat=vat_rate  # По умолчанию Без НДС (VatRate.RATE_NO)
+        vat=vat_rate  # По умолчанию Без НДС (VatRate.RATE_NO),
+
+        calculation_method=CalculationMethod.FULL_PAYMENT, # По умолчанию FULL_PAYMENT
+        calculation_subject=CalculationSubject.PRODUCT, # По умолчанию PRODUCT
+
+        # Необязательный атрибут, указывается только при продаже комиссионером собственных и
+        # комиссионных товаров
+        agent=Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
     )
 
     # Добавление суммы расчёта
@@ -89,6 +97,9 @@ komtet-kassa-python-sdk
 
     # Если нужно распечатать чек (по умолчанию False)
     check.set_print(True)
+
+    # Если нужно задать данные по кассиру, по умолчанию возьмутся с ФН
+    check.add_cashier('Иваров И.П.', '1234567890123')
 
     # Отправка запроса
     try:
