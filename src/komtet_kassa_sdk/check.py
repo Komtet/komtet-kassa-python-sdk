@@ -222,7 +222,7 @@ class AgentType(object):
 
 
 class Agent(object):
-    """Агент по предмету расчета""""
+    """Агент по предмету расчета"""
     def __init__(self, agent_type, phone, name, inn):
         self.agent_type = agent_type
         self.phone = phone
