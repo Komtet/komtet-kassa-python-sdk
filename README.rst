@@ -32,7 +32,7 @@ komtet-kassa-python-sdk
     from requests.exceptions import HTTPError
     from komtet_kassa_sdk import (
         Check, CorrectionCheck, Client, Intent, TaxSystem, VatRate, CorrectionType, PaymentMethod,
-
+        Agent, AgentType, CalculationSubject, CalculationMethod
     )
 
     shop_id = 'идентификатор магазина'
