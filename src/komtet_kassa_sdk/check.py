@@ -244,7 +244,6 @@ class Check(object):
             'print': False,
             'intent': intent,
             'sno': tax_system,
-            'cashier': None,
             'payments': [],
             'positions': []
         }
@@ -277,13 +276,13 @@ class Check(object):
         :param str name: Ф.И.О. кассира
         :param int inn: ИНН кассира
         """
-        self.__data['cashier'].append({'name': name,
-                                       'inn': inn})
+        self.__data['cashier'] = {'name': name,
+                                  'inn': inn}
         return self
 
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
-                     measure_name=None, oid=None, calculation_method=CalculationMethod.FULL_PAYMENT,
-                     calculation_subject=CalculationSubject.PRODUCT, agent=None):
+                     measure_name=None, oid=None, calculation_method=None,
+                     calculation_subject=None, agent=None):
         """
         :param str name: Наименование позиции
         :param int|float price: Цена позиции в чеке
@@ -299,10 +298,7 @@ class Check(object):
             'price': price,
             'quantity': quantity,
             'total': total,
-            'vat': VatRate.parse(vat),
-            'calculation_method': calculation_method,
-            'calculation_subject': calculation_subject,
-            'agent': agent and agent.__dict__
+            'vat': VatRate.parse(vat)
         }
 
         if measure_name is not None:
@@ -310,6 +306,15 @@ class Check(object):
 
         if oid is not None:
             position['id'] = oid
+
+        if calculation_method is not None:
+            position['calculation_method'] = calculation_method
+
+        if calculation_subject is not None:
+            position['calculation_subject'] = calculation_subject
+
+        if agent is not None:
+            position['agent'] = agent.__dict__
 
         self.__data['positions'].append(position)
         return self
