@@ -302,7 +302,7 @@ class Check(object):
             'vat': VatRate.parse(vat),
             'calculation_method': calculation_method,
             'calculation_subject': calculation_subject,
-            'agent': agent.__dict__ if agent else None
+            'agent': agent and agent.__dict__
         }
 
         if measure_name is not None:
