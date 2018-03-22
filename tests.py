@@ -94,7 +94,7 @@ class TestCheck(TestCase):
         check.add_payment(100)
         check.add_cashier('Иваров И.П.', '1234567890123')
 
-        agent=Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
+        agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
                            calculation_subject=CalculationSubject.PRODUCT,
