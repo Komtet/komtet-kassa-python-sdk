@@ -222,12 +222,26 @@ class AgentType(object):
 
 
 class Agent(object):
-    """Агент по предмету расчета"""
+    """Агент по предмету расчета
+    :param srt agent_type: Типы признака агента по предмету расчета
+    :param str phone: Телефон агента
+    :param str name: Название агента (пример:"OOO 'Лютик'")
+    :param str inn: ИНН Агента
+    """
     def __init__(self, agent_type, phone, name, inn):
-        self.agent_type = agent_type
-        self.phone = phone
-        self.name = name
-        self.inn = inn
+        self.__data = {
+            'agent_type': agent_type,
+            'phone': phone,
+            'name': name,
+            'inn': inn
+        }
+
+    def __iter__(self):
+        for item in self.__data.items():
+            yield item
+
+    def __getitem__(self, item):
+        return self.__data[item]
 
 
 class Check(object):
@@ -314,7 +328,7 @@ class Check(object):
             position['calculation_subject'] = calculation_subject
 
         if agent is not None:
-            position['agent'] = agent.__dict__
+            position['agent'] = dict(agent)
 
         self.__data['positions'].append(position)
         return self
