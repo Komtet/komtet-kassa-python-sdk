@@ -5,7 +5,8 @@ from unittest import TestCase
 from mock import patch
 
 from komtet_kassa_sdk import (
-    Check, CorrectionCheck, CorrectionType, Client, Intent, Task, TaskInfo, TaxSystem, VatRate
+    Check, CorrectionCheck, CorrectionType, Client, Intent, Task, TaskInfo, TaxSystem, VatRate,
+    CalculationSubject, CalculationMethod, AgentType, Agent
 )
 
 
@@ -61,6 +62,79 @@ class TestCheck(TestCase):
                     'quantity': 1,
                     'total': 100,
                     'vat': 'no'
+                },
+                {
+                    'id': '2',
+                    'name': 'name 1',
+                    'price': 100,
+                    'quantity': 2,
+                    'total': 200,
+                    'vat': 'no',
+                    'measure_name': 'kg'
+                },
+                {
+                    'name': 'name 2',
+                    'price': 100,
+                    'quantity': 3,
+                    'total': 290,
+                    'vat': '18'
+                }
+            ]
+        }
+        for key, value in check:
+            self.assertEqual(expected[key], value)
+
+        check.set_print(True)
+        self.assertTrue(check['print'])
+        check.set_print(False)
+        self.assertFalse(check['print'])
+
+    def test_check_ffd_105(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.add_payment(100)
+        check.add_cashier('Иваров И.П.', '1234567890123')
+
+        agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
+        check.add_position('name 0', price=100, oid=1,
+                           calculation_method=CalculationMethod.FULL_PAYMENT,
+                           calculation_subject=CalculationSubject.PRODUCT,
+                           agent=agent)
+        check.add_payment(200)
+        check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
+        check.add_payment(300)
+        check.add_position('name 2', 100, 3, total=290, vat=18)
+
+        expected = {
+            'task_id': 1,
+            'user': 'user@host',
+            'print': False,
+            'intent': 'sell',
+            'sno': 0,
+            'cashier': {
+                'name': 'Иваров И.П.',
+                'inn': '1234567890123'
+            },
+            'payments': [
+                {'sum': 100, 'type': 'card'},
+                {'sum': 200, 'type': 'card'},
+                {'sum': 300, 'type': 'card'}
+            ],
+            'positions': [
+                {
+                    'id': 1,
+                    'name': 'name 0',
+                    'price': 100,
+                    'quantity': 1,
+                    'total': 100,
+                    'vat': 'no',
+                    'calculation_method': 'full_payment',
+                    'calculation_subject': 'product',
+                    'agent': {
+                        'agent_type': 'commissionaire',
+                        'phone': "+77777777777",
+                        'name': "ООО 'Лютик'",
+                        'inn': "12345678901"
+                    }
                 },
                 {
                     'id': '2',
