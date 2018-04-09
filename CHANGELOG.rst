@@ -4,7 +4,7 @@ Changelog
 0.4 (09.04.2018)
 ------------------
 
-- Добавлен класс `AuthorisedPerson`
+- Добавлен метод `set_authorised_person` в класс `CorrectionCheck`
 
 0.3 (20.03.2018)
 ------------------
