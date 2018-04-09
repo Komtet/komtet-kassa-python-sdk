@@ -228,6 +228,7 @@ class Agent(object):
     :param str name: Название агента (пример:"OOO 'Лютик'")
     :param str inn: ИНН Агента
     """
+
     def __init__(self, agent_type, phone, name, inn):
         self.__data = {
             'agent_type': agent_type,
@@ -251,6 +252,7 @@ class Check(object):
     :param str intent: Направление платежа
     :param int tax_system: Система налогообложения
     """
+
     def __init__(self, oid, email, intent, tax_system):
         self.__data = {
             'task_id': oid,
@@ -342,6 +344,7 @@ class CorrectionCheck(object):
     :param int tax_system: Система налогообложения
     :param str vat: Налоговая ставка
     """
+
     def __init__(self, oid, printer_number, intent, tax_system=None):
 
         self.__data = {
@@ -395,4 +398,15 @@ class CorrectionCheck(object):
             'total': amount,
             'vat': vat
         }]
+        return self
+
+    def set_authorised_person(self, name, inn):
+        """
+        :param str name: Ф.И.О. кассира
+        :param int inn: ИНН кассира
+        """
+        self.__data['authorised_person'] = {
+            'name': name,
+            'inn': inn
+        }
         return self

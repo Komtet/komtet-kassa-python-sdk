@@ -2,12 +2,10 @@
 from decimal import Decimal
 from unittest import TestCase
 
+from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
+                              Client, CorrectionCheck, CorrectionType, Intent, Task, TaskInfo,
+                              TaxSystem, VatRate)
 from mock import patch
-
-from komtet_kassa_sdk import (
-    Check, CorrectionCheck, CorrectionType, Client, Intent, Task, TaskInfo, TaxSystem, VatRate,
-    CalculationSubject, CalculationMethod, AgentType, Agent
-)
 
 
 class TestVatRate(TestCase):
@@ -95,6 +93,8 @@ class TestCheck(TestCase):
         check.add_cashier('Иваров И.П.', '1234567890123')
 
         agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
+        self.assertEqual(agent['inn'], '12345678901')
+
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
                            calculation_subject=CalculationSubject.PRODUCT,
@@ -169,6 +169,7 @@ class TestCorrectionCheck(TestCase):
         check.set_payment(10, VatRate.RATE_10)
         check.set_correction_data(CorrectionType.FORCED, '2017-09-28', 'K11',
                                   'Отключение электричества')
+        check.set_authorised_person('Иванов И.И.', '123456789012')
 
         expected = {
             'task_id': 2,
@@ -192,6 +193,10 @@ class TestCorrectionCheck(TestCase):
                 'date': '2017-09-28',
                 'document': 'K11',
                 'description': 'Отключение электричества'
+            },
+            'authorised_person': {
+                'name': 'Иванов И.И.',
+                'inn': '123456789012'
             }
         }
         for key, value in check:
