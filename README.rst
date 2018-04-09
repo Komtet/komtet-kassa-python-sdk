@@ -89,7 +89,7 @@ komtet-kassa-python-sdk
 
         # Необязательный атрибут, указывается только при продаже комиссионером собственных и
         # комиссионных товаров
-        agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
+        agent = Agent(AgentType.COMMISSIONAIRE, '+77777777777', 'ООО "Лютик"', '12345678901')
     )
 
     # Добавление суммы расчёта
@@ -149,7 +149,7 @@ komtet-kassa-python-sdk
     )
     # Указание уполномоченного лица
     check.set_authorised_person(
-        name="Иванов И.И",
+        name='Иванов И.И',
         inn='123456789012'
     )
 
