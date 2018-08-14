@@ -1,5 +1,6 @@
 from setuptools import find_packages, setup
 
+
 with open('README.rst', 'r') as readme:
     long_description = readme.read()
 
@@ -8,7 +9,7 @@ with open('CHANGELOG.rst', 'r') as changelog:
 
 setup(
     name='komtet_kassa_sdk',
-    version='0.4.0',
+    version='0.5.0',
     license='MIT',
     description='Python SDK for KOMTET Kassa',
     long_description=long_description,

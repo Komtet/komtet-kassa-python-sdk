@@ -5,10 +5,16 @@ class Intent(object):
     """Направление платежа"""
 
     SELL = 'sell'
-    """Платёж"""
+    """Приход"""
 
     RETURN = 'sellReturn'
-    """Возврат"""
+    """Возврат прихода"""
+
+    BUY = 'buy'
+    """Расход"""
+
+    BUY_RETURN = 'buyReturn'
+    """Возврат расхода"""
 
     SELL_CORRECTION = 'sellCorrection'
     """Коррекция прихода"""
