@@ -33,13 +33,14 @@ class TestVatRate(TestCase):
 
 class TestCheck(TestCase):
     def test_check(self):
-        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON, payment_address='ул.Мира')
         check.add_payment(100)
         check.add_position('name 0', price=100, oid=1)
         check.add_payment(200)
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
         check.add_position('name 2', 100, 3, total=290, vat=18)
+        check.set_callback_url('http://test.pro')
 
         expected = {
             'task_id': 1,
@@ -47,6 +48,7 @@ class TestCheck(TestCase):
             'print': False,
             'intent': 'sell',
             'sno': 0,
+            'payment_address': 'ул.Мира',
             'payments': [
                 {'sum': 100, 'type': 'card'},
                 {'sum': 200, 'type': 'card'},
@@ -77,7 +79,8 @@ class TestCheck(TestCase):
                     'total': 290,
                     'vat': '18'
                 }
-            ]
+            ],
+            'callback_url': 'http://test.pro'
         }
         for key, value in check:
             self.assertEqual(expected[key], value)
@@ -93,7 +96,7 @@ class TestCheck(TestCase):
         check.add_cashier('Иваров И.П.', '1234567890123')
 
         agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
-        self.assertEqual(agent['inn'], '12345678901')
+        self.assertEqual(agent['supplier_info']['inn'], '12345678901')
 
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
@@ -129,9 +132,11 @@ class TestCheck(TestCase):
                     'vat': 'no',
                     'calculation_method': 'full_payment',
                     'calculation_subject': 'product',
-                    'agent': {
-                        'agent_type': 'commissionaire',
-                        'phone': "+77777777777",
+                    'agent_info': {
+                        'type': 'commissionaire'
+                    },
+                    'supplier_info': {
+                        'phones': ["+77777777777"],
                         'name': "ООО 'Лютик'",
                         'inn': "12345678901"
                     }
@@ -170,6 +175,7 @@ class TestCorrectionCheck(TestCase):
         check.set_correction_data(CorrectionType.FORCED, '2017-09-28', 'K11',
                                   'Отключение электричества')
         check.set_authorised_person('Иванов И.И.', '123456789012')
+        check.set_callback_url('http://test.pro')
 
         expected = {
             'task_id': 2,
@@ -197,7 +203,8 @@ class TestCorrectionCheck(TestCase):
             'authorised_person': {
                 'name': 'Иванов И.И.',
                 'inn': '123456789012'
-            }
+            },
+            'callback_url': 'http://test.pro'
         }
         for key, value in check:
             self.assertEqual(expected[key], value)
@@ -320,3 +327,81 @@ class TestClient(TestCase):
                 'fp': '555555555',
                 's': '6666.77'
             })
+
+
+class TestAgent(TestCase):
+    def setUp(self):
+        self.agent = Agent(AgentType.PAYMENT_AGENT, "+87776665544", "ООО 'Лютик'", "12345678901")
+
+    def test_simple_agent(self):
+
+        expected = {
+            "agent_info": {
+                "type": "payment_agent",
+            },
+            "supplier_info": {
+                "phones": ["+87776665544"],
+                "name": "ООО 'Лютик'",
+                "inn": "12345678901"
+            }
+        }
+        self.assertEqual(dict(self.agent), expected)
+
+    def test_paying_agent(self):
+        self.agent.set_paying_agent_info('Оплата', ['+87654443322'])
+
+        expected = {
+            "agent_info": {
+                "type": "payment_agent",
+                "paying_agent": {
+                    "operation": "Оплата",
+                    "phones": ["+87654443322"]
+                }
+            },
+            "supplier_info": {
+                "phones": ["+87776665544"],
+                "name": "ООО 'Лютик'",
+                "inn": "12345678901"
+            }
+        }
+        self.assertEqual(dict(self.agent), expected)
+
+    def test_receive_payments_operator(self):
+        self.agent.set_receive_payments_operator_info(['+87654443322'])
+
+        expected = {
+            "agent_info": {
+                "type": "payment_agent",
+                "receive_payments_operator": {
+                    "phones": ["+87654443322"]
+                }
+            },
+            "supplier_info": {
+                "phones": ["+87776665544"],
+                "name": "ООО 'Лютик'",
+                "inn": "12345678901"
+            }
+        }
+        self.assertEqual(dict(self.agent), expected)
+
+    def test_money_transfer_operator(self):
+        self.agent.set_money_transfer_operator_info(
+            'Оператор', ['+87654443322'], 'ул.Мира', '0123456789')
+
+        expected = {
+            "agent_info": {
+                "type": "payment_agent",
+                "money_transfer_operator": {
+                    "name": "Оператор",
+                    "phones": ["+87654443322"],
+                    "address": "ул.Мира",
+                    "inn": "0123456789"
+                }
+            },
+            "supplier_info": {
+                "phones": ["+87776665544"],
+                "name": "ООО 'Лютик'",
+                "inn": "12345678901"
+            }
+        }
+        self.assertEqual(dict(self.agent), expected)
