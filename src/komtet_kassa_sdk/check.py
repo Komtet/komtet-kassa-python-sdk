@@ -241,7 +241,7 @@ class Agent(object):
                 'type': agent_type
             }
         }
-        if name:
+        if phone and name and inn:
             self.set_supplier_info(name, [phone], inn)
 
     def set_supplier_info(self, name, phones, inn):
@@ -313,7 +313,7 @@ class Check(object):
             'intent': intent,
             'sno': tax_system,
             'payments': [],
-            'positions': [],
+            'positions': []
         }
         if payment_address:
             self.__data['payment_address'] = payment_address
