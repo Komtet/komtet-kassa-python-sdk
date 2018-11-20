@@ -235,11 +235,56 @@ class Agent(object):
     :param str inn: ИНН Агента
     """
 
-    def __init__(self, agent_type, phone, name, inn):
+    def __init__(self, agent_type, phone=None, name=None, inn=None):
         self.__data = {
-            'agent_type': agent_type,
-            'phone': phone,
+            'agent_info': {
+                'type': agent_type
+            }
+        }
+        if phone and name and inn:
+            self.set_supplier_info(name, [phone], inn)
+
+    def set_supplier_info(self, name, phones, inn):
+        """ Передача атрибутов поставщика
+        :param str name: Наименование поставщика
+        :param list phones: Телефоны поставщика
+        :param str inn: ИНН поставщика
+        """
+        self.__data['supplier_info'] = {
+            'phones': phones,
             'name': name,
+            'inn': inn
+        }
+
+    def set_paying_agent_info(self, operation, phones):
+        """ Передача атрибутов платежного агента
+        :param str oparation: Наименование операции (максимальная длина строки – 24 символа)
+        :param list phones: Телефоны платежного агента
+        """
+        self.__data['agent_info']['paying_agent'] = {
+            'operation': operation,
+            'phones': phones
+        }
+
+    def set_receive_payments_operator_info(self, phones):
+        """ Передача атрибутов оператора по приему платежей
+        :param list phones: Телефоны оператора по приему платежей
+        """
+        self.__data['agent_info']['receive_payments_operator'] = {
+            'phones': phones
+        }
+
+    def set_money_transfer_operator_info(self, name, phones, address, inn):
+        """ Передача атрибутов оператора перевода
+        :param str name: Наименование оператора перевода
+        :param list phones: Телефоны оператора по приему платежей
+        :param str address: Адрес оператора перевода
+        :param str inn: ИНН оператора перевода
+        """
+        self.__data['agent_info']['money_transfer_operator'] = {
+            'name': name,
+            'phones': phones,
+            'address': address,
             'inn': inn
         }
 
@@ -257,9 +302,10 @@ class Check(object):
     :param str email: E-Mail пользователя для отправки электронного чека
     :param str intent: Направление платежа
     :param int tax_system: Система налогообложения
+    :param str payment_address: Место расчетов
     """
 
-    def __init__(self, oid, email, intent, tax_system):
+    def __init__(self, oid, email, intent, tax_system, payment_address=None):
         self.__data = {
             'task_id': oid,
             'user': email,
@@ -269,6 +315,8 @@ class Check(object):
             'payments': [],
             'positions': []
         }
+        if payment_address:
+            self.__data['payment_address'] = payment_address
 
     def __iter__(self):
         for item in self.__data.items():
@@ -336,9 +384,16 @@ class Check(object):
             position['calculation_subject'] = calculation_subject
 
         if agent is not None:
-            position['agent'] = dict(agent)
+            position.update(dict(agent))
 
         self.__data['positions'].append(position)
+        return self
+
+    def set_callback_url(self, url):
+        """
+        :param str callback: URL, на который необходимо ответить после обработки чека
+        """
+        self.__data['callback_url'] = url
         return self
 
 
@@ -415,4 +470,11 @@ class CorrectionCheck(object):
             'name': name,
             'inn': inn
         }
+        return self
+
+    def set_callback_url(self, url):
+        """
+        :param str callback: URL, на который необходимо ответить после обработки чека
+        """
+        self.__data['callback_url'] = url
         return self
