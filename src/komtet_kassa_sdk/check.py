@@ -450,14 +450,15 @@ class CorrectionCheck(object):
         """
         self.__data['payments'] = [{'sum': amount,
                                     'type': method}]
-        self.__data['positions'] = [{'name': ('Коррекция прихода'
-                                              if self.__data['intent'] == Intent.SELL_CORRECTION else
-                                              'Коррекция расхода'),
-                                     'price': amount,
-                                     'quantity': 1,
-                                     'total': amount,
-                                     'vat': vat
-                                     }]
+        self.__data['positions'] = [{
+            'name': ('Коррекция прихода'
+                     if self.__data['intent'] == Intent.SELL_CORRECTION else
+                     'Коррекция расхода'),
+            'price': amount,
+            'quantity': 1,
+            'total': amount,
+            'vat': vat
+        }]
         return self
 
     def set_authorised_person(self, name, inn):
