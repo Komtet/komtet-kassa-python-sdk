@@ -60,11 +60,17 @@ class VatRate(object):
     RATE_18 = '18'
     """НДС 18%"""
 
+    RATE_20 = '20'
+    """НДС 20%"""
+
     RATE_110 = '110'
     """НДС 10/110"""
 
     RATE_118 = '118'
     """НДС 18/118"""
+
+    RATE_120 = '120'
+    """НДС 20/120"""
 
     @classmethod
     def parse(cls, rate):
@@ -75,6 +81,8 @@ class VatRate(object):
             rate = cls.RATE_110
         elif rate == '18/118':
             rate = cls.RATE_118
+        elif rate == '20/120':
+            rate = cls.RATE_120
         else:
             rate = rate.replace('%', '')
             rate = rate.replace('0.', '')
