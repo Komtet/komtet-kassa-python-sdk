@@ -60,20 +60,20 @@ komtet-kassa-python-sdk
     check.add_position(position_name, position_price)
 
     # Налоговая ставка
-    vat_rate = VatRate.RATE_18  # НДС 18%
+    vat_rate = VatRate.RATE_20  # НДС 20%
     # vat_rate = VatRate.RATE_NO  # Без НДС
     # vat_rate = VatRate.RATE_0  # НДС 0%
     # vat_rate = VatRate.RATE_10  # НДС 10%
     # vat_rate = VatRate.RATE_110  # НДС 10/110
-    # vat_rate = VatRate.RATE_118  # НДС 18/118
+    # vat_rate = VatRate.RATE_120  # НДС 20/120
     # Можно указать просто число:
-    # vat_rate = 18
+    # vat_rate = 20
     # или строку:
     # vat_rate = '10'
     # или даже так:
-    # vat_rate = '18%'
+    # vat_rate = '20%'
     # а ещё вот так:
-    # vat_rate = 0.18
+    # vat_rate = 0.20
 
     # Добавление позиции
     check.add_position(
