@@ -57,35 +57,31 @@ class VatRate(object):
     RATE_10 = '10'
     """НДС 10%"""
 
-    RATE_18 = '18'
-    """НДС 18%"""
-
     RATE_20 = '20'
     """НДС 20%"""
 
     RATE_110 = '110'
     """НДС 10/110"""
 
-    RATE_118 = '118'
-    """НДС 18/118"""
-
     RATE_120 = '120'
     """НДС 20/120"""
 
     @classmethod
     def parse(cls, rate):
+        if isinstance(rate, float) and rate < 1:
+            rate = '%.2f' % rate
+
         if not isinstance(rate, str):
             rate = str(rate)
 
         if rate == '10/110':
             rate = cls.RATE_110
-        elif rate == '18/118':
-            rate = cls.RATE_118
         elif rate == '20/120':
             rate = cls.RATE_120
         else:
             rate = rate.replace('%', '')
             rate = rate.replace('0.', '')
+
         if rate not in cls.get_rates():
             raise ValueError('Unknown VAT rate: %s' % rate)
         return rate

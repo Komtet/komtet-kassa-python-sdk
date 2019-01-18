@@ -17,14 +17,14 @@ class TestVatRate(TestCase):
             (10, '10'),
             (10.0, '10'),
             ('10%', '10'),
-            (0.18, '18'),
-            ('0.18', '18'),
+            (0.2, '20'),
+            (0.20, '20'),
             (20, '20'),
+            (20.0, '20'),
+            ('20%', '20'),
             ('0.20', '20'),
             ('110', '110'),
-            ('118', '118'),
             ('10/110', '110'),
-            ('18/118', '118'),
             ('20/120', '120')
         ]:
             self.assertEqual(VatRate.parse(src), dest)
@@ -42,7 +42,7 @@ class TestCheck(TestCase):
         check.add_payment(200)
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
-        check.add_position('name 2', 100, 3, total=290, vat=18)
+        check.add_position('name 2', 100, 3, total=290, vat=20)
         check.set_callback_url('http://test.pro')
 
         expected = {
@@ -80,7 +80,7 @@ class TestCheck(TestCase):
                     'price': 100,
                     'quantity': 3,
                     'total': 290,
-                    'vat': '18'
+                    'vat': '20'
                 }
             ],
             'callback_url': 'http://test.pro'
@@ -108,7 +108,7 @@ class TestCheck(TestCase):
         check.add_payment(200)
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
-        check.add_position('name 2', 100, 3, total=290, vat=18)
+        check.add_position('name 2', 100, 3, total=290, vat=20)
 
         expected = {
             'task_id': 1,
@@ -158,7 +158,7 @@ class TestCheck(TestCase):
                     'price': 100,
                     'quantity': 3,
                     'total': 290,
-                    'vat': '18'
+                    'vat': '20'
                 }
             ]
         }
