@@ -1,10 +1,10 @@
-from .check import (Agent, AgentType, CalculationMethod, CalculationSubject, Check, CorrectionCheck,
-                    CorrectionType, Intent, PaymentMethod, TaxSystem, VatRate)
+from .check import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
+                    CorrectionCheck, CorrectionType, Intent, PaymentMethod, TaxSystem, VatRate)
 from .client import Client, CouriersInfo, OrderInfo, Task, TaskInfo
 from .order import Order
 
 __all__ = [
-    'Agent'
+    'Agent',
     'AgentType',
     'CalculationMethod',
     'CalculationSubject',
