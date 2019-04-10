@@ -3,8 +3,8 @@ from decimal import Decimal
 from unittest import TestCase
 
 from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
-                              Client, CorrectionCheck, CorrectionType, Intent, Task, TaskInfo,
-                              TaxSystem, VatRate)
+                              Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent, Order,
+                              OrderInfo, Task, TaskInfo, TaxSystem, VatRate)
 from mock import patch
 
 
@@ -331,6 +331,249 @@ class TestClient(TestCase):
                 's': '6666.77'
             })
 
+    def test_get_order_info_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            response_mock = ResponseMock(
+                id=775, client_name='test test test', client_address='обл Пензенская, Пенза',
+                client_email='', client_phone='88005553535', sno=0, is_paid=True,
+                payment_type=None, description='', state='new',
+                items=[
+                    {
+                        'name': 'Демо-товар 2',
+                        'measure_name': None,
+                        'quantity': 5.0,
+                        'total': 7500.0,
+                        'vat': '10',
+                        'external_id': '1',
+                        'id': 3590,
+                        'price': 1500.0
+                    },
+                    {
+                        'name': 'Доставка',
+                        'measure_name': None,
+                        'quantity': 1.0,
+                        'total': 500.0,
+                        'vat': 'no',
+                        'external_id': '2',
+                        'id': 3591,
+                        'price': 500.0
+                    }
+                ],
+                amount=2000.0, prepayment=None, courier=None, is_pay_to_courier=False,
+                date_start='2019-04-12 07:00',
+                date_end='2019-04-12 13:00')
+            requests.get.return_value = response_mock
+            order_info = self.client.get_order_info(775)
+            self.assertIsInstance(order_info, OrderInfo)
+            self.assertEqual(order_info.id, 775)
+            self.assertEqual(order_info.client_name, 'test test test')
+            self.assertEqual(order_info.state, 'new')
+            self.assertEqual(order_info.client_phone, '88005553535')
+
+            self.assertDictEqual(order_info.items[0], {
+                'name': 'Демо-товар 2',
+                'measure_name': None,
+                'quantity': 5.0,
+                'total': 7500.0,
+                'vat': '10',
+                'external_id': '1',
+                'id': 3590,
+                'price': 1500.0
+            })
+            self.assertDictEqual(order_info.items[1], {
+                'name': 'Доставка',
+                'measure_name': None,
+                'quantity': 1.0,
+                'total': 500.0,
+                'vat': 'no',
+                'external_id': '2',
+                'id': 3591, 'price': 500.0
+            })
+
+    def test_get_couriers_info_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            response_mock = ResponseMock(
+                couriers=[
+                    {
+                        'email': 'q@mail.ru',
+                        'id': 46,
+                        'phone': '1',
+                        'name': 'Dima D'
+                    },
+                    {
+                        'email': 'q@q.com',
+                        'id': 57,
+                        'phone': '1',
+                        'name': 'qwerty'
+                    },
+                    {
+                        'email': 'ivanov@example.com',
+                        'id': 2,
+                        'phone': '+70000000000',
+                        'name': 'Иванов И.П.'
+                    }],
+                meta={'total': 3, 'total_pages': 1}
+            )
+            requests.get.return_value = response_mock
+            couriers_info = self.client.get_couriers_info()
+            self.assertIsInstance(couriers_info, CouriersInfo)
+            self.assertDictEqual(couriers_info.meta, {'total': 3, 'total_pages': 1})
+            self.assertDictEqual(couriers_info.couriers[0], {
+                'email': 'q@mail.ru',
+                'id': 46,
+                'phone': '1',
+                'name': 'Dima D'
+            })
+            self.assertDictEqual(couriers_info.couriers[1], {
+                'email': 'q@q.com',
+                'id': 57,
+                'phone': '1',
+                'name': 'qwerty'
+            })
+            self.assertDictEqual(couriers_info.couriers[2], {
+                'email': 'ivanov@example.com',
+                'id': 2,
+                'phone': '+70000000000',
+                'name': 'Иванов И.П.'
+            })
+
+    def test_create_order_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            response_mock = ResponseMock(
+                id=775, client_name='test test test', client_address='обл Пензенская, Пенза',
+                client_email='', client_phone='88005553535', sno=0, is_paid=True,
+                payment_type=None, description='', state='new',
+                items=[
+                    {
+                        'name': 'Демо-товар 2',
+                        'measure_name': None,
+                        'quantity': 5.0,
+                        'total': 7500.0,
+                        'vat': '10',
+                        'external_id': '1',
+                        'id': 3590,
+                        'price': 1500.0
+                    },
+                    {
+                        'name': 'Доставка',
+                        'measure_name': None,
+                        'quantity': 1.0,
+                        'total': 500.0,
+                        'vat': 'no',
+                        'external_id': '2',
+                        'id': 3591,
+                        'price': 500.0
+                    }
+                ],
+                amount=2000.0, prepayment=None, courier=None, is_pay_to_courier=False,
+                date_start='2019-04-12 07:00',
+                date_end='2019-04-12 13:00')
+            requests.post.return_value = response_mock
+
+            order = Order(order_id=2589,
+                          client_name='test test test',
+                          client_address='обл Пензенская, Пенза',
+                          client_phone='88005553535',
+                          client_email='',
+                          is_paid=True,
+                          description='',
+                          state='new',
+                          date_start='2019-04-12 07:00',
+                          date_end='2019-04-12 13:00',
+                          sno=0)
+            order.add_position(num=1,
+                               type='product',
+                               name='Демо-товар 2',
+                               vat='10',
+                               quantity=5,
+                               price=1500.0,
+                               total=1500.0)
+            order.add_position(2, 'delivery', "Доставка", 500)
+
+            order_info = self.client.create_order(order)
+            self.assertIsInstance(order_info, OrderInfo)
+            self.assertEqual(order_info.id, 775)
+            self.assertEqual(order_info.state, 'new')
+            self.assertDictEqual(order_info.items[0], {
+                'name': 'Демо-товар 2',
+                'measure_name': None,
+                'quantity': 5.0,
+                'total': 7500.0,
+                'vat': '10',
+                'external_id': '1',
+                'id': 3590,
+                'price': 1500.0
+            })
+            self.assertDictEqual(order_info.items[1], {
+                'name': 'Доставка',
+                'measure_name': None,
+                'quantity': 1.0,
+                'total': 500.0,
+                'vat': 'no',
+                'external_id': '2',
+                'id': 3591,
+                'price': 500.0
+            })
+
+    def test_update_order_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            response_mock = ResponseMock(
+                id=775, client_name='test test test', client_address='обл Пензенская, Пенза',
+                client_email='', client_phone='88005553535', sno=0, is_paid=True,
+                payment_type=None, description='', state='new',
+                items=[
+                    {
+                        'name': 'Демо-товар 2',
+                        'measure_name': None,
+                        'quantity': 5.0,
+                        'total': 7500.0,
+                        'vat': '10',
+                        'external_id': '1',
+                        'id': 3590,
+                        'price': 1500.0
+                    },
+                    {
+                        'name': 'Доставка',
+                        'measure_name': None,
+                        'quantity': 1.0,
+                        'total': 500.0,
+                        'vat': 'no',
+                        'external_id': '2',
+                        'id': 3591,
+                        'price': 500.0
+                    }
+                ],
+                amount=2500.0, prepayment=None, courier=None, is_pay_to_courier=False,
+                date_start='2019-04-12 07:00',
+                date_end='2019-04-12 13:00')
+            requests.put.return_value = response_mock
+
+            order = Order(order_id=2589,
+                          client_name='test test test',
+                          client_address='обл Пензенская, Пенза',
+                          client_phone='88005553535',
+                          client_email='',
+                          is_paid=True,
+                          description='',
+                          state='new',
+                          date_start='2019-04-12 07:00',
+                          date_end='2019-04-12 13:00',
+                          sno=0)
+            order.add_position(num=1,
+                               type='product',
+                               name='Демо-товар 2',
+                               vat='10',
+                               quantity=5,
+                               price=1500.0,
+                               total=1500.0)
+            order.add_position(2, 'delivery', "Доставка", 1000)
+
+            order_info = self.client.update_order(775, order)
+            self.assertIsInstance(order_info, OrderInfo)
+            self.assertEqual(order_info.id, 775)
+            self.assertEqual(order_info.state, 'new')
+            self.assertEqual(order_info.amount, 2500.0)
+
 
 class TestAgent(TestCase):
     def setUp(self):
@@ -408,3 +651,54 @@ class TestAgent(TestCase):
             }
         }
         self.assertEqual(dict(self.agent), expected)
+
+
+class TestOrder(TestCase):
+    def test_check(self):
+        self.maxDiff = None
+        order = Order(order_id='123', client_name='Сергеев Виктор Сергеевич',
+                      client_address='г.Пенза, ул.Суворова д.10 кв.25',
+                      client_phone='+87654443322', client_email='client@email.com',
+                      description='Комментарий к заказу', state='new', sno=0,
+                      date_start="2018-02-28 14:00",
+                      date_end="2018-02-28 15:20")
+        order.add_position(num=1, type='product', name='position name1', price=555.0)
+        order.add_position(num=2, type='product', name='position name2', price=100.0,
+                           quantity=5, vat=VatRate.RATE_10, measure_name='kg')
+        expected = {
+            "order_id": '123',
+            "client_name": "Сергеев Виктор Сергеевич",
+            "client_address": "г.Пенза, ул.Суворова д.10 кв.25",
+            "client_phone": "+87654443322",
+            "client_email": "client@email.com",
+            "is_paid": False,
+            "description": "Комментарий к заказу",
+            "state": "new",
+            "date_start": "2018-02-28 14:00",
+            "date_end": "2018-02-28 15:20",
+            "items": [
+                {
+                    "order_item_id": 1,
+                    "type": "product",
+                    "name": "position name1",
+                    "price": 555.0,
+                    "quantity": 1,
+                    "total": 555.0,
+                    "vat": "no",
+                },
+                {
+                    "order_item_id": 2,
+                    "type": "product",
+                    "name": "position name2",
+                    "price": 100.0,
+                    "quantity": 5,
+                    "total": 500.0,
+                    "vat": "10",
+                    "measure_name": "kg"
+                }
+            ],
+            "sno": 0,
+            "courier_id": ''
+        }
+        for key, value in order:
+            self.assertEqual(expected[key], value)

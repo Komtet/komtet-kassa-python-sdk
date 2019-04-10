@@ -12,6 +12,11 @@ DEFAULT_HOST = 'https://kassa.komtet.ru'
 
 Task = namedtuple('Task', 'id external_id print_queue_id state')
 TaskInfo = namedtuple('TaskInfo', 'id external_id state fiscal_data error_description')
+OrderInfo = namedtuple('OrderInfo', '''id  client_name client_address client_email client_phone sno
+                                       is_paid payment_type description state items amount
+                                       prepayment courier is_pay_to_courier date_start  date_end
+                                    ''')
+CouriersInfo = namedtuple('CouriersInfo', 'couriers meta')
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -91,6 +96,65 @@ class Client(object):
         result = rep.json()
         return TaskInfo(**result)
 
+    def get_orders_info(self):
+        """
+        Возвращает информацию о совершенных заказах
+        """
+        rep = self.__get('/api/shop/v1/orders')
+        rep.raise_for_status()
+        result = rep.json()
+        return result
+
+    def get_couriers_info(self):
+        """
+        Возвращает информацию о курьерах
+        """
+        rep = self.__get('/api/shop/v1/couriers')
+        rep.raise_for_status()
+        result = rep.json()
+        return CouriersInfo(**result)
+
+    def create_order(self, order):
+        """
+        Создание заказа на доставку
+
+        :param Order order: Экземпляр заказа
+        """
+        rep = self.__post('/api/shop/v1/orders', dict(order))
+        rep.raise_for_status()
+        result = rep.json()
+        return OrderInfo(**result)
+
+    def update_order(self, oid, order):
+        """
+        Обновление заказа на доставку
+        :param int oid: Идентификатор заказа
+        :param Order order: Экземпляр заказа
+        """
+        rep = self.__put('/api/shop/v1/orders/%s' % oid, dict(order))
+        rep.raise_for_status()
+        result = rep.json()
+        return OrderInfo(**result)
+
+    def get_order_info(self, oid):
+        """
+        Просмотр информации о заказе
+        :param int oid: Идентификатор заказа
+        """
+        rep = self.__get('/api/shop/v1/orders/%s' % oid)
+        rep.raise_for_status()
+        result = rep.json()
+        return OrderInfo(**result)
+
+    def delete_order(self, oid):
+        """
+        Удаление заказа
+        :param int oid: Идентификатор заказа
+        """
+        rep = self.__delete('/api/shop/v1/orders/%s' % oid)
+        rep.raise_for_status()
+        return rep
+
     def __handle_queue_id(self, qid):
         if qid is None:
             if self.__default_queue is None:
@@ -123,3 +187,23 @@ class Client(object):
             'X-HMAC-Signature': self.__get_signature('POST', url, data)
         }
         return requests.post(url=url, headers=headers, data=data)
+
+    def __put(self, path, data):
+        url = self.__get_url(path)
+        data = json_encode(data)
+        headers = {
+            'Authorization': self.__shop_id,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-HMAC-Signature': self.__get_signature('PUT', url, data)
+        }
+        return requests.put(url=url, headers=headers, data=data)
+
+    def __delete(self, path):
+        url = self.__get_url(path)
+        headers = {
+            'Authorization': self.__shop_id,
+            'Accept': 'application/json',
+            'X-HMAC-Signature': self.__get_signature('DELETE', url)
+        }
+        return requests.delete(url=url, headers=headers, allow_redirects=True)
