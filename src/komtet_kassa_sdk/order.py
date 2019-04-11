@@ -5,30 +5,16 @@ from . import VatRate
 class Order(object):
     """
     :param int order_id: Номер операции в магазине
-    :param str client_name: Имя получателя
-    :param str client_address: Адрес доставки
-    :param str client_phone: Телефон получателя
-    :param str client_email: Email получателя
-    :param str description: Комментарий к заказу
     :param str state: Статус заказа
-    :param datetime date_start: Начальное время доставки
-    :param datetime date_end: Конечное время доставки
     :param str sno: Система налогообложения
     """
 
-    def __init__(self, order_id, client_name, client_address, client_phone, client_email,
-                 description, state, sno, date_start, date_end, is_paid=False):
+    def __init__(self, order_id, state, sno, is_paid=False):
         self.__data = {
             'order_id': order_id,
-            'client_name': client_name,
-            'client_address': client_address,
-            'client_phone': client_phone,
-            'client_email': client_email,
-            'is_paid': is_paid,
-            'description': description,
             'state': state,
-            'date_start': date_start,
-            'date_end': date_end,
+            'is_paid': is_paid,
+            'description': '',
             'items': [],
             'sno': sno,
         }
@@ -39,6 +25,35 @@ class Order(object):
 
     def __getitem__(self, item):
         return self.__data[item]
+
+    def set_clinet(self, name, address, phone, email=""):
+        """
+        :param str client_name: Имя получателя
+        :param str client_address: Адрес доставки
+        :param str client_phone: Телефон получателя
+        :param str client_email: Email получателя
+        """
+
+        self.__data['client_name'] = name
+        self.__data['client_address'] = address
+        self.__data['client_phone'] = phone
+        self.__data['client_email'] = email
+
+    def set_time_delivery(self, date_start, date_end):
+        """
+        :param datetime date_start: Начальное время доставки
+        :param datetime date_end: Конечное время доставки
+        """
+
+        self.__data['date_start'] = date_start
+        self.__data['date_end'] = date_end
+
+    def set_description(self, description):
+        """
+        :param str description: Комментарий к заказу
+        """
+
+        self.__data['description'] = description
 
     def add_position(self, num, type, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
                      measure_name=None):

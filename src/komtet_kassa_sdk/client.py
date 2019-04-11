@@ -98,7 +98,7 @@ class Client(object):
 
     def get_orders_info(self):
         """
-        Возвращает информацию о совершенных заказах
+        Возвращает информацию о заказах
         """
         rep = self.__get('/api/shop/v1/orders')
         rep.raise_for_status()
@@ -153,7 +153,7 @@ class Client(object):
         """
         rep = self.__delete('/api/shop/v1/orders/%s' % oid)
         rep.raise_for_status()
-        return rep
+        return True
 
     def __handle_queue_id(self, qid):
         if qid is None:
