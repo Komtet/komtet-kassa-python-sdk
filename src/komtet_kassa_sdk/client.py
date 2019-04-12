@@ -96,20 +96,27 @@ class Client(object):
         result = rep.json()
         return TaskInfo(**result)
 
-    def get_orders_info(self):
+    def get_orders(self, courier_id='1', date_start='2015-01-01', start='0', limit='10'):
         """
         Возвращает информацию о заказах
+        :param string courier_id: Индетификатор курьера
+        :param string date_start: Дата и время доставки (с)
+        :param string start: Начинать вывод заказов с start
+        :param string limit: Ограничить вывод заказов на limit элементов
         """
-        rep = self.__get('/api/shop/v1/orders')
+        rep = self.__get('/api/shop/v1/orders?courier_id=%s&date_start=%s&start=%s&limit=%s'
+                         % (courier_id, date_start, start, limit))
         rep.raise_for_status()
         result = rep.json()
         return result
 
-    def get_couriers_info(self):
+    def get_couriers(self, start='0', limit='10'):
         """
         Возвращает информацию о курьерах
+        :param string start: Начинать вывод курьеров с start
+        :param string limit: Ограничить вывод курьеров на limit элементов
         """
-        rep = self.__get('/api/shop/v1/couriers')
+        rep = self.__get('/api/shop/v1/couriers?start=%s&limit=%s' % (start, limit))
         rep.raise_for_status()
         result = rep.json()
         return CouriersInfo(**result)

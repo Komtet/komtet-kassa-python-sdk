@@ -9,15 +9,19 @@ class Order(object):
     :param str sno: Система налогообложения
     """
 
-    def __init__(self, order_id, state='new', sno=0, is_paid=False):
+    def __init__(self, order_id, state=None, sno=None, is_paid=False):
         self.__data = {
             'order_id': order_id,
-            'state': state,
             'is_paid': is_paid,
             'description': '',
             'items': [],
-            'sno': sno,
         }
+
+        if state:
+            self.__data['state'] = state
+
+        if sno:
+            self.__data['sno'] = sno
 
     def __iter__(self):
         for item in self.__data.items():
@@ -81,10 +85,10 @@ class Order(object):
             'vat': VatRate.parse(vat)
         }
 
-        if measure_name is not None:
+        if measure_name:
             position['measure_name'] = measure_name
 
-        if type is not None:
+        if type:
             position['type'] = type
 
         self.__data['items'].append(position)
