@@ -462,7 +462,7 @@ class TestOrder(TestCase):
         self.maxDiff = None
         order = Order(order_id='123', state='new', sno=0)
 
-        order.set_clinet(name='Сергеев Виктор Сергеевич',
+        order.set_client(name='Сергеев Виктор Сергеевич',
                          address='г.Пенза, ул.Суворова д.10 кв.25',
                          phone='+87654443322',
                          email='client@email.com')
@@ -550,7 +550,7 @@ class TestClientOrder(TestCase):
 
             order = Order(order_id=2589, is_paid=True, state='new', sno=0)
 
-            order.set_clinet(name='test test test',
+            order.set_client(name='test test test',
                              address='обл Пензенская, Пенза',
                              phone='88005553535')
             order.set_time_delivery(date_start='2019-04-12 07:00',
@@ -619,7 +619,7 @@ class TestClientOrder(TestCase):
 
             order = Order(order_id=2589, is_paid=True, state='new', sno=0)
 
-            order.set_clinet(name='test test test',
+            order.set_client(name='test test test',
                              address='обл Пензенская, Пенза',
                              phone='88005553535')
             order.set_time_delivery(date_start='2019-04-12 07:00',

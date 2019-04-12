@@ -9,7 +9,7 @@ class Order(object):
     :param str sno: Система налогообложения
     """
 
-    def __init__(self, order_id, state, sno, is_paid=False):
+    def __init__(self, order_id, state='new', sno=0, is_paid=False):
         self.__data = {
             'order_id': order_id,
             'state': state,
@@ -26,18 +26,21 @@ class Order(object):
     def __getitem__(self, item):
         return self.__data[item]
 
-    def set_clinet(self, name, address, phone, email=""):
+    def set_client(self, address, phone, email=None, name=None):
         """
         :param str client_name: Имя получателя
         :param str client_address: Адрес доставки
         :param str client_phone: Телефон получателя
         :param str client_email: Email получателя
         """
-
-        self.__data['client_name'] = name
         self.__data['client_address'] = address
         self.__data['client_phone'] = phone
-        self.__data['client_email'] = email
+
+        if email:
+            self.__data['client_email'] = email
+
+        if name:
+            self.__data['client_name'] = name
 
     def set_time_delivery(self, date_start, date_end):
         """
@@ -55,8 +58,8 @@ class Order(object):
 
         self.__data['description'] = description
 
-    def add_position(self, num, type, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
-                     measure_name=None):
+    def add_position(self, num, name, price, quantity=1, total=None,
+                     vat=VatRate.RATE_NO, measure_name=None, type=None):
         """
         :param int num: Номер позиции в заказе
         :param str type: Тип заказа
@@ -71,7 +74,6 @@ class Order(object):
 
         position = {
             'order_item_id': num,
-            'type': type,
             'name': name,
             'price': price,
             'quantity': quantity,
@@ -81,6 +83,9 @@ class Order(object):
 
         if measure_name is not None:
             position['measure_name'] = measure_name
+
+        if type is not None:
+            position['type'] = type
 
         self.__data['items'].append(position)
         return self
