@@ -12,6 +12,11 @@ DEFAULT_HOST = 'https://kassa.komtet.ru'
 
 Task = namedtuple('Task', 'id external_id print_queue_id state')
 TaskInfo = namedtuple('TaskInfo', 'id external_id state fiscal_data error_description')
+OrderInfo = namedtuple('OrderInfo', '''id  client_name client_address client_email client_phone sno
+                                       is_paid payment_type description state items amount
+                                       prepayment courier is_pay_to_courier date_start  date_end
+                                    ''')
+CouriersInfo = namedtuple('CouriersInfo', 'couriers meta')
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -91,6 +96,79 @@ class Client(object):
         result = rep.json()
         return TaskInfo(**result)
 
+    def get_orders(self, start='0', limit='10', courier_id=None, date_start=None,):
+        """
+        Возвращает информацию о заказах
+        :param string courier_id: Индетификатор курьера
+        :param string date_start: Дата и время доставки (с)
+        :param string start: Начинать вывод заказов с start
+        :param string limit: Ограничить вывод заказов на limit элементов
+        """
+
+        url = '/api/shop/v1/orders?start=%s&limit=%s' % (start, limit)
+        if courier_id:
+            url += '&courier_id=%s' % courier_id
+
+        if date_start:
+            url += '&date_start=%s' % date_start
+
+        rep = self.__get(url)
+        rep.raise_for_status()
+        result = rep.json()
+        return result
+
+    def get_couriers(self, start='0', limit='10'):
+        """
+        Возвращает информацию о курьерах
+        :param string start: Начинать вывод курьеров с start
+        :param string limit: Ограничить вывод курьеров на limit элементов
+        """
+        rep = self.__get('/api/shop/v1/couriers?start=%s&limit=%s' % (start, limit))
+        rep.raise_for_status()
+        result = rep.json()
+        return CouriersInfo(**result)
+
+    def create_order(self, order):
+        """
+        Создание заказа на доставку
+
+        :param Order order: Экземпляр заказа
+        """
+        rep = self.__post('/api/shop/v1/orders', dict(order))
+        rep.raise_for_status()
+        result = rep.json()
+        return OrderInfo(**result)
+
+    def update_order(self, oid, order):
+        """
+        Обновление заказа на доставку
+        :param int oid: Идентификатор заказа
+        :param Order order: Экземпляр заказа
+        """
+        rep = self.__put('/api/shop/v1/orders/%s' % oid, dict(order))
+        rep.raise_for_status()
+        result = rep.json()
+        return OrderInfo(**result)
+
+    def get_order_info(self, oid):
+        """
+        Просмотр информации о заказе
+        :param int oid: Идентификатор заказа
+        """
+        rep = self.__get('/api/shop/v1/orders/%s' % oid)
+        rep.raise_for_status()
+        result = rep.json()
+        return OrderInfo(**result)
+
+    def delete_order(self, oid):
+        """
+        Удаление заказа
+        :param int oid: Идентификатор заказа
+        """
+        rep = self.__delete('/api/shop/v1/orders/%s' % oid)
+        rep.raise_for_status()
+        return True
+
     def __handle_queue_id(self, qid):
         if qid is None:
             if self.__default_queue is None:
@@ -123,3 +201,23 @@ class Client(object):
             'X-HMAC-Signature': self.__get_signature('POST', url, data)
         }
         return requests.post(url=url, headers=headers, data=data)
+
+    def __put(self, path, data):
+        url = self.__get_url(path)
+        data = json_encode(data)
+        headers = {
+            'Authorization': self.__shop_id,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-HMAC-Signature': self.__get_signature('PUT', url, data)
+        }
+        return requests.put(url=url, headers=headers, data=data)
+
+    def __delete(self, path):
+        url = self.__get_url(path)
+        headers = {
+            'Authorization': self.__shop_id,
+            'Accept': 'application/json',
+            'X-HMAC-Signature': self.__get_signature('DELETE', url)
+        }
+        return requests.delete(url=url, headers=headers, allow_redirects=True)
