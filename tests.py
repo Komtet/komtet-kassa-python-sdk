@@ -466,7 +466,7 @@ class TestOrder(TestCase):
                          address='г.Пенза, ул.Суворова д.10 кв.25',
                          phone='+87654443322',
                          email='client@email.com')
-        order.set_time_delivery(date_start="2018-02-28 14:00",
+        order.set_delivery_time(date_start="2018-02-28 14:00",
                                 date_end="2018-02-28 15:20")
         order.set_description('Комментарий к заказу')
         order.add_position(num=1, type='product', name='position name1', price=555.0)
@@ -553,7 +553,7 @@ class TestClientOrder(TestCase):
             order.set_client(name='test test test',
                              address='обл Пензенская, Пенза',
                              phone='88005553535')
-            order.set_time_delivery(date_start='2019-04-12 07:00',
+            order.set_delivery_time(date_start='2019-04-12 07:00',
                                     date_end='2019-04-12 13:00')
             order.add_position(num=1, type='product', name='Демо-товар 2', vat='10', quantity=5,
                                price=1500.0, total=1500.0)
@@ -593,7 +593,7 @@ class TestClientOrder(TestCase):
             order.set_client(name='test test test',
                              address='обл Пензенская, Пенза',
                              phone='88005553535')
-            order.set_time_delivery(date_start='2019-04-12 07:00',
+            order.set_delivery_time(date_start='2019-04-12 07:00',
                                     date_end='2019-04-12 13:00')
             order.add_position(num=1, type='product', name='Демо-товар 2', vat='10', quantity=5,
                                price=1500.0, total=1500.0)

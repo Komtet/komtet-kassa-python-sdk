@@ -46,7 +46,7 @@ class Order(object):
         if name:
             self.__data['client_name'] = name
 
-    def set_time_delivery(self, date_start, date_end):
+    def set_delivery_time(self, date_start, date_end):
         """
         :param datetime date_start: Начальное время доставки
         :param datetime date_end: Конечное время доставки
