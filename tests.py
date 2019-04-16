@@ -469,8 +469,8 @@ class TestOrder(TestCase):
         order.set_delivery_time(date_start="2018-02-28 14:00",
                                 date_end="2018-02-28 15:20")
         order.set_description('Комментарий к заказу')
-        order.add_position(num=1, type='product', name='position name1', price=555.0)
-        order.add_position(num=2, type='product', name='position name2', price=100.0,
+        order.add_position(oid='1', type='product', name='position name1', price=555.0)
+        order.add_position(oid='2', type='product', name='position name2', price=100.0,
                            quantity=5, vat=VatRate.RATE_10, measure_name='kg')
         expected = {
             "order_id": '123',
@@ -485,7 +485,7 @@ class TestOrder(TestCase):
             "date_end": "2018-02-28 15:20",
             "items": [
                 {
-                    "order_item_id": 1,
+                    "order_item_id": '1',
                     "type": "product",
                     "name": "position name1",
                     "price": 555.0,
@@ -494,7 +494,7 @@ class TestOrder(TestCase):
                     "vat": "no",
                 },
                 {
-                    "order_item_id": 2,
+                    "order_item_id": '2',
                     "type": "product",
                     "name": "position name2",
                     "price": 100.0,
@@ -555,9 +555,9 @@ class TestClientOrder(TestCase):
                              phone='88005553535')
             order.set_delivery_time(date_start='2019-04-12 07:00',
                                     date_end='2019-04-12 13:00')
-            order.add_position(num=1, type='product', name='Демо-товар 2', vat='10', quantity=5,
+            order.add_position(oid='1', type='product', name='Демо-товар 2', vat='10', quantity=5,
                                price=1500.0, total=1500.0)
-            order.add_position(2, 'delivery', "Доставка", 500)
+            order.add_position(oid='2', type='delivery', name="Доставка", price=500)
 
             order_info = self.client.create_order(order)
             self.assertIsInstance(order_info, OrderInfo)
@@ -595,9 +595,9 @@ class TestClientOrder(TestCase):
                              phone='88005553535')
             order.set_delivery_time(date_start='2019-04-12 07:00',
                                     date_end='2019-04-12 13:00')
-            order.add_position(num=1, type='product', name='Демо-товар 2', vat='10', quantity=5,
+            order.add_position(oid='1', type='product', name='Демо-товар 2', vat='10', quantity=5,
                                price=1500.0, total=1500.0)
-            order.add_position(2, 'delivery', "Доставка", 500)
+            order.add_position(oid='2', type='delivery', name="Доставка", price=500)
 
             order_info = self.client.update_order(775, order)
             self.assertIsInstance(order_info, OrderInfo)
