@@ -62,10 +62,10 @@ class Order(object):
 
         self.__data['description'] = description
 
-    def add_position(self, num, name, price, quantity=1, total=None,
+    def add_position(self, oid, name, price, quantity=1, total=None,
                      vat=VatRate.RATE_NO, measure_name=None, type=None):
         """
-        :param int num: Номер позиции в заказе
+        :param str oid: Идентификатор позиции в заказе
         :param str type: Тип заказа
         :param str name: Наименование позиции
         :param int|float price: Цена позиции в чеке
@@ -77,7 +77,7 @@ class Order(object):
             total = price * quantity
 
         position = {
-            'order_item_id': num,
+            'order_item_id': oid,
             'name': name,
             'price': price,
             'quantity': quantity,
