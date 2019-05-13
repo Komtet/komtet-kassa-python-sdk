@@ -510,6 +510,62 @@ class TestOrder(TestCase):
         for key, value in order:
             self.assertEqual(expected[key], value)
 
+    def test_order_with_callback_url(self):
+        self.maxDiff = None
+        order = Order(order_id='123', state='new', sno=0)
+
+        order.set_client(name='Сергеев Виктор Сергеевич',
+                         address='г.Пенза, ул.Суворова д.10 кв.25',
+                         phone='+87654443322',
+                         email='client@email.com')
+        order.set_delivery_time(date_start="2018-02-28 14:00",
+                                date_end="2018-02-28 15:20")
+        order.set_description('Комментарий к заказу')
+        order.add_position(oid='1', type='product', name='position name1', price=555.0)
+        order.add_position(oid='2', type='product', name='position name2', price=100.0,
+                           quantity=5, vat=VatRate.RATE_10, measure_name='kg')
+
+        order.add_callback_url('https://callback_url.ru')
+
+        expected = {
+            "order_id": '123',
+            "client_name": "Сергеев Виктор Сергеевич",
+            "client_address": "г.Пенза, ул.Суворова д.10 кв.25",
+            "client_phone": "+87654443322",
+            "client_email": "client@email.com",
+            "is_paid": False,
+            "description": "Комментарий к заказу",
+            "state": "new",
+            "date_start": "2018-02-28 14:00",
+            "date_end": "2018-02-28 15:20",
+            "items": [
+                {
+                    "order_item_id": '1',
+                    "type": "product",
+                    "name": "position name1",
+                    "price": 555.0,
+                    "quantity": 1,
+                    "total": 555.0,
+                    "vat": "no",
+                },
+                {
+                    "order_item_id": '2',
+                    "type": "product",
+                    "name": "position name2",
+                    "price": 100.0,
+                    "quantity": 5,
+                    "total": 500.0,
+                    "vat": "10",
+                    "measure_name": "kg"
+                }
+            ],
+            "sno": 0,
+            "courier_id": '',
+            "callback_url": 'https://callback_url.ru'
+        }
+        for key, value in order:
+            self.assertEqual(expected[key], value)
+
 
 class TestClientOrder(TestCase):
     def setUp(self):
@@ -542,7 +598,8 @@ class TestClientOrder(TestCase):
             ],
             amount=2000.0, prepayment=None, courier=None, is_pay_to_courier=False,
             date_start='2019-04-12 07:00',
-            date_end='2019-04-12 13:00')
+            date_end='2019-04-12 13:00',
+            callback_url='https://calback_url.ru')
 
     def test_create_order_success(self):
         with patch('komtet_kassa_sdk.client.requests') as requests:
@@ -633,4 +690,48 @@ class TestClientOrder(TestCase):
                 'vat': 'no',
                 'external_id': '2',
                 'id': 3591, 'price': 500.0
+            })
+
+    def test_create_order_with_callback_url_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            requests.post.return_value = self.response_mock
+
+            order = Order(order_id=2589, is_paid=True, state='new', sno=0)
+
+            order.set_client(name='test test test',
+                             address='обл Пензенская, Пенза',
+                             phone='88005553535')
+            order.set_delivery_time(date_start='2019-04-12 07:00',
+                                    date_end='2019-04-12 13:00')
+            order.add_position(oid='1', type='product', name='Демо-товар 2', vat='10', quantity=5,
+                               price=1500.0, total=1500.0)
+            order.add_position(oid='2', type='delivery', name="Доставка", price=500)
+
+            order.add_callback_url('https://calback_url.ru')
+
+            order_info = self.client.create_order(order)
+            self.assertIsInstance(order_info, OrderInfo)
+            self.assertEqual(order_info.id, 775)
+            self.assertEqual(order_info.state, 'new')
+            self.assertEqual(order_info.callback_url, 'https://calback_url.ru')
+
+            self.assertDictEqual(order_info.items[0], {
+                'name': 'Демо-товар 2',
+                'measure_name': None,
+                'quantity': 5.0,
+                'total': 7500.0,
+                'vat': '10',
+                'external_id': '1',
+                'id': 3590,
+                'price': 1500.0
+            })
+            self.assertDictEqual(order_info.items[1], {
+                'name': 'Доставка',
+                'measure_name': None,
+                'quantity': 1.0,
+                'total': 500.0,
+                'vat': 'no',
+                'external_id': '2',
+                'id': 3591,
+                'price': 500.0
             })

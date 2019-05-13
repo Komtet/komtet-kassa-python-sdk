@@ -93,3 +93,9 @@ class Order(object):
 
         self.__data['items'].append(position)
         return self
+
+    def add_callback_url(self, callback_url):
+        """
+        :param str callback_url: URL
+        """
+        self.__data['callback_url'] = callback_url
