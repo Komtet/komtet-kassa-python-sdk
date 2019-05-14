@@ -526,6 +526,7 @@ class TestOrder(TestCase):
                            quantity=5, vat=VatRate.RATE_10, measure_name='kg')
 
         order.add_callback_url('https://callback_url.ru')
+        order.add_courier_id(1)
 
         expected = {
             "order_id": '123',
@@ -560,7 +561,7 @@ class TestOrder(TestCase):
                 }
             ],
             "sno": 0,
-            "courier_id": '',
+            "courier_id": 1,
             "callback_url": 'https://callback_url.ru'
         }
         for key, value in order:

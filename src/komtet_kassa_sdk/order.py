@@ -99,3 +99,9 @@ class Order(object):
         :param str callback_url: URL
         """
         self.__data['callback_url'] = callback_url
+
+    def add_courier_id(self, courier_id):
+        """
+        :param int courier_id: ID курьера
+        """
+        self.__data['courier_id'] = courier_id
