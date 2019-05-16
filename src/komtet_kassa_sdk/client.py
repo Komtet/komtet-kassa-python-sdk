@@ -15,6 +15,7 @@ TaskInfo = namedtuple('TaskInfo', 'id external_id state fiscal_data error_descri
 OrderInfo = namedtuple('OrderInfo', '''id  client_name client_address client_email client_phone sno
                                        is_paid payment_type description state items amount
                                        prepayment courier is_pay_to_courier date_start  date_end
+                                       callback_url
                                     ''')
 CouriersInfo = namedtuple('CouriersInfo', 'couriers meta')
 
