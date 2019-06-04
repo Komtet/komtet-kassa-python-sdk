@@ -345,7 +345,16 @@ class Check(object):
                                         'type': method})
         return self
 
-    def add_cashier(self, name, inn):
+    def set_client(self, name, inn):
+        """
+        :param str name: Наименование покупятеля
+        :param int inn: ИНН покупателя
+        """
+        self.__data['client'] = {'name': name,
+                                 'inn': inn}
+        return self
+
+    def set_cashier(self, name, inn):
         """
         :param str name: Ф.И.О. кассира
         :param int inn: ИНН кассира
@@ -353,6 +362,10 @@ class Check(object):
         self.__data['cashier'] = {'name': name,
                                   'inn': inn}
         return self
+
+    # Deprecated
+    def add_cashier(self, name, inn):
+        return self.set_cashier(name, inn)
 
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
                      measure_name=None, oid=None, calculation_method=None,
