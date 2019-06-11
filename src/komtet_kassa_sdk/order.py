@@ -1,5 +1,5 @@
 # coding: utf-8
-from . import VatRate
+from . import PaymentMethod, VatRate
 
 
 class Order(object):
@@ -9,12 +9,15 @@ class Order(object):
     :param str sno: Система налогообложения
     """
 
-    def __init__(self, order_id, state=None, sno=None, is_paid=False):
+    def __init__(self, order_id, state=None, sno=None,
+                 is_paid=False, prepayment=0, payment_type=PaymentMethod.CARD):
         self.__data = {
             'order_id': order_id,
             'is_paid': is_paid,
             'description': '',
             'items': [],
+            'payment_type': payment_type,
+            'prepayment': prepayment,
         }
 
         if state:

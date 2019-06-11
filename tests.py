@@ -4,7 +4,8 @@ from unittest import TestCase
 
 from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
                               Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent, Order,
-                              OrderInfo, Task, TaskInfo, TaxSystem, VatRate)
+                              OrderInfo, PaymentMethod, Task, TaskInfo, TaxSystem, VatRate)
+
 from mock import patch
 
 
@@ -484,6 +485,8 @@ class TestOrder(TestCase):
             "client_phone": "+87654443322",
             "client_email": "client@email.com",
             "is_paid": False,
+            "prepayment": 0,
+            "payment_type": PaymentMethod.CARD,
             "description": "Комментарий к заказу",
             "state": "new",
             "date_start": "2018-02-28 14:00",
@@ -540,6 +543,8 @@ class TestOrder(TestCase):
             "client_phone": "+87654443322",
             "client_email": "client@email.com",
             "is_paid": False,
+            "prepayment": 0,
+            "payment_type": PaymentMethod.CARD,
             "description": "Комментарий к заказу",
             "state": "new",
             "date_start": "2018-02-28 14:00",
@@ -579,7 +584,7 @@ class TestClientOrder(TestCase):
         self.response_mock = ResponseMock(
             id=775, client_name='test test test', client_address='обл Пензенская, Пенза',
             client_email='', client_phone='88005553535', sno=0, is_paid=True,
-            payment_type=None, description='', state='new',
+            payment_type='cash', description='', state='new',
             items=[
                 {
                     'name': 'Демо-товар 2',
@@ -602,7 +607,7 @@ class TestClientOrder(TestCase):
                     'price': 500.0
                 }
             ],
-            amount=2000.0, prepayment=None, courier=None, is_pay_to_courier=False,
+            amount=2000.0, prepayment=200.0, courier=None, is_pay_to_courier=False,
             date_start='2019-04-12 07:00',
             date_end='2019-04-12 13:00',
             callback_url='https://calback_url.ru')
@@ -741,3 +746,16 @@ class TestClientOrder(TestCase):
                 'id': 3591,
                 'price': 500.0
             })
+
+    def test_set_payment_type_and_prepayment(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            requests.post.return_value = self.response_mock
+
+            order = Order(order_id=2589, is_paid=True, state='new', sno=0,
+                          prepayment=200.0, payment_type=PaymentMethod.CASH)
+
+            order_info = self.client.create_order(order)
+            self.assertIsInstance(order_info, OrderInfo)
+
+            self.assertEqual(order_info.payment_type, 'cash')
+            self.assertEqual(order_info.prepayment, 200.0)
