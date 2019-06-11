@@ -95,8 +95,9 @@ class TestCheck(TestCase):
 
     def test_check_ffd_105(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_client('Петров П.П.', '1231231231')
+        check.set_cashier('Иваров И.П.', '1234567890123')
         check.add_payment(100)
-        check.add_cashier('Иваров И.П.', '1234567890123')
 
         agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
         self.assertEqual(agent['supplier_info']['inn'], '12345678901')
@@ -119,6 +120,10 @@ class TestCheck(TestCase):
             'cashier': {
                 'name': 'Иваров И.П.',
                 'inn': '1234567890123'
+            },
+            'client': {
+                'name': 'Петров П.П.',
+                'inn': '1231231231'
             },
             'payments': [
                 {'sum': 100, 'type': 'card'},
