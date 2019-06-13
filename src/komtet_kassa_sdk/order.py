@@ -7,6 +7,8 @@ class Order(object):
     :param int order_id: Номер операции в магазине
     :param str state: Статус заказа
     :param str sno: Система налогообложения
+    :param int|float prepayment: Предоплата
+    :param PaymentMethod payment_type: Тип платежа
     """
 
     def __init__(self, order_id, state=None, sno=None,
