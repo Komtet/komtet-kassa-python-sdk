@@ -8,10 +8,9 @@ from collections import namedtuple
 
 import requests
 
+
 DEFAULT_HOST = 'https://kassa.komtet.ru'
 
-Task = namedtuple('Task', 'id external_id print_queue_id state')
-TaskInfo = namedtuple('TaskInfo', 'id external_id state fiscal_data error_description')
 OrderInfo = namedtuple('OrderInfo', '''id  client_name client_address client_email client_phone sno
                                        is_paid payment_type description state items amount
                                        prepayment courier is_pay_to_courier date_start  date_end
@@ -28,6 +27,18 @@ class JSONEncoder(json.JSONEncoder):
 
 
 json_encode = functools.partial(json.dumps, cls=JSONEncoder)
+
+
+class Response(object):
+
+    def __init__(self, **data):
+        self.__data = data
+
+    def __getattr__(self, name):
+        return self.__data[name]
+
+
+Task = TaskInfo = Response
 
 
 class Client(object):
