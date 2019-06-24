@@ -37,6 +37,9 @@ class Response(object):
     def __getattr__(self, name):
         return self.__data[name]
 
+    def _asdict(self):
+        return self.__data
+
 
 Task = TaskInfo = Response
 

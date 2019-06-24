@@ -5,7 +5,7 @@ from unittest import TestCase
 from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
                               Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent, Order,
                               OrderInfo, PaymentMethod, Task, TaskInfo, TaxSystem, VatRate)
-
+from komtet_kassa_sdk.client import Response
 from mock import patch
 
 
@@ -759,3 +759,18 @@ class TestClientOrder(TestCase):
 
             self.assertEqual(order_info.payment_type, 'cash')
             self.assertEqual(order_info.prepayment, 200.0)
+
+
+class TestResponse(TestCase):
+
+    def test_response(self):
+        task = Response(id=12, uuid='978d4719-470a-409e-a6c4-574d17d3837a',
+                        error_description=None)
+        self.assertEqual(task.id, 12)
+        self.assertEqual(task.uuid, '978d4719-470a-409e-a6c4-574d17d3837a')
+        self.assertIsNone(task.error_description)
+        self.assertDictEqual(task._asdict(), {
+            'id': 12,
+            'uuid': '978d4719-470a-409e-a6c4-574d17d3837a',
+            'error_description': None
+        })
