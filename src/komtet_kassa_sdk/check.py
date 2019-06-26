@@ -84,6 +84,8 @@ class VatRate(object):
 
         if rate in ['18', 18]:
             rate = cls.RATE_20
+        elif rate in ['118', 118, '18/118']:
+            rate = cls.RATE_120
 
         if rate not in cls.get_rates():
             raise ValueError('Unknown VAT rate: %s' % rate)
