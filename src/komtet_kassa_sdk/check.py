@@ -350,13 +350,15 @@ class Check(object):
                                         'type': method})
         return self
 
-    def set_client(self, name, inn):
+    def set_client(self, name=None, inn=None):
         """
-        :param str name: Наименование покупятеля
+        :param str name: Наименование покупателя
         :param int inn: ИНН покупателя
         """
-        self.__data['client'] = {'name': name,
-                                 'inn': inn}
+        self.__data['client'] = {'inn': inn}
+        if name:
+            self.__data['client']['name'] = name
+
         return self
 
     def set_cashier(self, name, inn):
