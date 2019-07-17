@@ -206,6 +206,21 @@ class CalculationSubject(object):
     """О предмете расчета, не относящемуся к предметам расчета, которым может быть присвоено
        значение от «0» до «12» (0-12 -- это вышеперечисленные)"""
 
+    PROPERTY_RIGHT = 'property_right'
+    """Передача имущественного права"""
+
+    NON_OPERATING = 'non_operating'
+    """Внереализационный доход"""
+
+    INSURANCE = 'insurance'
+    """Страховые взносы"""
+
+    SALES_TAX = 'sales_tax'
+    """Торговый сбор"""
+
+    RESORT_FEE = 'resort_fee'
+    """Курортный сбор"""
+
 
 class AgentType(object):
     """Типы признака агента по предмету расчета"""
