@@ -268,11 +268,11 @@ class NomenclatureType(object):
 
 
 class Nomenclature(object):
-    """Код товара (маркировка
+    """Код товара (маркировка)
     :param str nomenclature_type: Тип маркировки
     :param str gtin: Идентификатор продукта GTIN
     :param str serial_number: Серийный номер
-    )"""
+    """
 
     def __init__(self, nomenclature_type, gtin, serial_number):
         self.__data = {
@@ -431,7 +431,8 @@ class Check(object):
 
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
                      measure_name=None, oid=None, calculation_method=None,
-                     calculation_subject=None, agent=None, nomenclature=None):
+                     calculation_subject=None, agent=None, nomenclature=None, excise=None,
+                     country_code=None, declaration_number=None):
         """
         :param str name: Наименование позиции
         :param int|float price: Цена позиции в чеке
@@ -467,6 +468,15 @@ class Check(object):
 
         if nomenclature is not None:
             position.update(dict(nomenclature))
+
+        if excise is not None:
+            position['excise'] = excise
+
+        if country_code is not None:
+            position['country_code'] = country_code
+
+        if declaration_number is not None:
+            position['declaration_number'] = declaration_number
 
         self.__data['positions'].append(position)
         return self

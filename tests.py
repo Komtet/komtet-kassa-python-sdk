@@ -115,7 +115,8 @@ class TestCheck(TestCase):
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
                            calculation_subject=CalculationSubject.PRODUCT,
-                           agent=agent, nomenclature=nomenclature)
+                           agent=agent, nomenclature=nomenclature, excise=19.89,
+                           country_code='643', declaration_number='10129000/220817/0211234')
         check.add_payment(200)
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
@@ -149,6 +150,9 @@ class TestCheck(TestCase):
                     'vat': 'no',
                     'calculation_method': 'full_payment',
                     'calculation_subject': 'product',
+                    'excise': 19.89,
+                    'country_code': '643',
+                    'declaration_number': '10129000/220817/0211234',
                     'agent_info': {
                         'type': 'commissionaire'
                     },
