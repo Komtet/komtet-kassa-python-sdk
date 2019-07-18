@@ -251,6 +251,46 @@ class AgentType(object):
        поверенным, комиссионером"""
 
 
+class NomenclatureType(object):
+    """Типы кода товара (маркировки)"""
+
+    FURS = 'furs'
+    """Меховые изделия"""
+
+    MEDICINES = 'medicines'
+    """Лекарства"""
+
+    TOBACCO = 'tobacco'
+    """Табачная продукция"""
+
+    SHOES = 'shoes'
+    """Обувь"""
+
+
+class Nomenclature(object):
+    """Код товара (маркировка
+    :param str nomenclature_type: Тип маркировки
+    :param str gtin: Идентификатор продукта GTIN
+    :param str serial_number: Серийный номер
+    )"""
+
+    def __init__(self, nomenclature_type, gtin, serial_number):
+        self.__data = {
+            'nomenclature_code': {
+                'type': nomenclature_type,
+                'gtin': gtin,
+                'serial': serial_number
+            }
+        }
+
+    def __iter__(self):
+        for item in self.__data.items():
+            yield item
+
+    def __getitem__(self, item):
+        return self.__data[item]
+
+
 class Agent(object):
     """Агент по предмету расчета
     :param srt agent_type: Типы признака агента по предмету расчета
@@ -391,7 +431,7 @@ class Check(object):
 
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
                      measure_name=None, oid=None, calculation_method=None,
-                     calculation_subject=None, agent=None):
+                     calculation_subject=None, agent=None, nomenclature=None):
         """
         :param str name: Наименование позиции
         :param int|float price: Цена позиции в чеке
@@ -424,6 +464,9 @@ class Check(object):
 
         if agent is not None:
             position.update(dict(agent))
+
+        if nomenclature is not None:
+            position.update(dict(nomenclature))
 
         self.__data['positions'].append(position)
         return self

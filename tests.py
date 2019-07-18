@@ -3,8 +3,9 @@ from decimal import Decimal
 from unittest import TestCase
 
 from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
-                              Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent, Order,
-                              OrderInfo, PaymentMethod, Task, TaskInfo, TaxSystem, VatRate)
+                              Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent,
+                              Nomenclature, NomenclatureType, Order, OrderInfo, PaymentMethod,
+                              Task, TaskInfo, TaxSystem, VatRate)
 from komtet_kassa_sdk.client import Response
 from mock import patch
 
@@ -109,10 +110,12 @@ class TestCheck(TestCase):
         agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
         self.assertEqual(agent['supplier_info']['inn'], '12345678901')
 
+        nomenclature = Nomenclature(NomenclatureType.SHOES, '98765432101234', 'sgEKKPPcS25y5')
+
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
                            calculation_subject=CalculationSubject.PRODUCT,
-                           agent=agent)
+                           agent=agent, nomenclature=nomenclature)
         check.add_payment(200)
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
@@ -153,6 +156,11 @@ class TestCheck(TestCase):
                         'phones': ["+77777777777"],
                         'name': "ООО 'Лютик'",
                         'inn': "12345678901"
+                    },
+                    'nomenclature_code': {
+                        'type': 'shoes',
+                        'gtin': '98765432101234',
+                        'serial': 'sgEKKPPcS25y5'
                     }
                 },
                 {
