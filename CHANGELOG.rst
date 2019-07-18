@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.5 (16.07.2019)
+------------------
+
+- Добавлены празнаки рассчета `PROPERTY_RIGHT`, `NON_OPERATING`, `INSURANCE`, `SALES_TAX`, `RESORT_FEE` в класс `CalculationSubject`
+
 1.5.4 (08.07.2019)
 ------------------
 
