@@ -268,11 +268,11 @@ class NomenclatureType(object):
 
 
 class Nomenclature(object):
-    """Код товара (маркировка
+    """Код товара (маркировка)
     :param str nomenclature_type: Тип маркировки
     :param str gtin: Идентификатор продукта GTIN
     :param str serial_number: Серийный номер
-    )"""
+    """
 
     def __init__(self, nomenclature_type, gtin, serial_number):
         self.__data = {
@@ -431,13 +431,23 @@ class Check(object):
 
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
                      measure_name=None, oid=None, calculation_method=None,
-                     calculation_subject=None, agent=None, nomenclature=None):
+                     calculation_subject=None, excise=None, country_code=None,
+                     declaration_number=None, agent=None, nomenclature=None):
         """
         :param str name: Наименование позиции
         :param int|float price: Цена позиции в чеке
         :param int|float quantity: Количество единиц
         :param int|float total: Общая стоимость позиции
         :param str vat: Налоговая ставка
+        :param str measure_name: Единица измерения
+        :param str oid: Идентификатор позиции в магазине
+        :param str calculation_method: Cпособ рассчета
+        :param str calculation_subject: Признак рассчета
+        :param int|float excise: Сумма акциза
+        :param str country_code: Цифровой код страны происхождения товара
+        :param str declaration_number: Номер таможенной декларации
+        :param Agent agent: Экземпляр агента
+        :param Nomenclature nomenclature: Экземпляр кода номенклатуры (маркировки)
         """
         if total is None:
             total = price * quantity
@@ -461,6 +471,15 @@ class Check(object):
 
         if calculation_subject is not None:
             position['calculation_subject'] = calculation_subject
+
+        if excise is not None:
+            position['excise'] = excise
+
+        if country_code is not None:
+            position['country_code'] = country_code
+
+        if declaration_number is not None:
+            position['declaration_number'] = declaration_number
 
         if agent is not None:
             position.update(dict(agent))
