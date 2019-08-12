@@ -410,9 +410,9 @@ class Check(object):
         :param str name: Наименование покупателя
         :param int inn: ИНН покупателя
         """
-        self.__data['client'] = {'inn': inn}
-        if name:
-            self.__data['client']['name'] = name
+
+        if any([name, inn]):
+            self.__data['client'] = {k: v for k, v in {'name': name, 'inn': inn}.items() if v}
 
         return self
 
