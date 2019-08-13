@@ -101,9 +101,27 @@ class TestCheck(TestCase):
         check.set_print(False)
         self.assertFalse(check['print'])
 
-    def test_check_ffd_105(self):
+    def test_check_ffd_105_with_client_name(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_client(name='Иванов И.П.')
+
+        self.assertEqual(check._Check__data['client']['name'], 'Иванов И.П.')
+
+    def test_check_ffd_105_with_client_inn(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
         check.set_client(inn='1231231231')
+
+        self.assertEqual(check._Check__data['client']['inn'], '1231231231')
+
+    def test_check_ffd_105_with_empty_client(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_client()
+
+        self.assertEqual(check._Check__data.get('client'), None)
+
+    def test_check_ffd_105(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_client(name='Иванов И.П.', inn='1231231231')
         check.set_cashier('Иваров И.П.', '1234567890123')
         check.add_payment(100)
 
@@ -133,6 +151,7 @@ class TestCheck(TestCase):
                 'inn': '1234567890123'
             },
             'client': {
+                'name': 'Иванов И.П.',
                 'inn': '1231231231'
             },
             'payments': [

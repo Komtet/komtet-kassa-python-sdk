@@ -410,9 +410,17 @@ class Check(object):
         :param str name: Наименование покупателя
         :param int inn: ИНН покупателя
         """
-        self.__data['client'] = {'inn': inn}
+
+        self.__data['client'] = {}
+
         if name:
             self.__data['client']['name'] = name
+
+        if inn:
+            self.__data['client']['inn'] = inn
+
+        if not self.__data['client']:
+            del self.__data['client']
 
         return self
 
