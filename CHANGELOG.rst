@@ -3,7 +3,7 @@ Changelog
 1.8.0 (18.11.2019)
 ------------------
 
-- Параметр `inn` функции `Check.set_client` и `CorrectionCheck.set_authorised_person` необязательнен для ввода
+- Параметр `inn` функции `Check.set_client` и `CorrectionCheck.set_authorised_person` необязателен для ввода
 
 1.7.0 (13.09.2019)
 ------------------
