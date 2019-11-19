@@ -810,3 +810,36 @@ class TestResponse(TestCase):
             'uuid': '978d4719-470a-409e-a6c4-574d17d3837a',
             'error_description': None
         })
+
+
+class TestSetCashier(TestCase):
+
+    def test_set_cashier_with_inn_in_check(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_cashier('Иваров И.П.', '1234567890123')
+        self.assertDictEqual(check['cashier'], {
+            'name': 'Иваров И.П.',
+            'inn': '1234567890123'
+        })
+
+    def test_set_cashier_without_inn_in_check(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_cashier('Иваров И.П.')
+        self.assertDictEqual(check['cashier'], {
+            'name': 'Иваров И.П.'
+        })
+
+    def test_set_cashier_with_inn_in_correction_check(self):
+        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION, TaxSystem.COMMON)
+        check.set_authorised_person('Иваров И.П.', '1234567890123')
+        self.assertDictEqual(check['authorised_person'], {
+            'name': 'Иваров И.П.',
+            'inn': '1234567890123'
+        })
+
+    def test_set_cashier_without_inn_in_correction_check(self):
+        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION, TaxSystem.COMMON)
+        check.set_authorised_person('Иваров И.П.')
+        self.assertDictEqual(check['authorised_person'], {
+            'name': 'Иваров И.П.'
+        })

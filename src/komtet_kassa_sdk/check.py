@@ -424,17 +424,20 @@ class Check(object):
 
         return self
 
-    def set_cashier(self, name, inn):
+    def set_cashier(self, name, inn=None):
         """
         :param str name: Ф.И.О. кассира
         :param int inn: ИНН кассира
         """
-        self.__data['cashier'] = {'name': name,
-                                  'inn': inn}
+        self.__data['cashier'] = {'name': name}
+
+        if inn:
+            self.__data['cashier']['inn'] = inn
+
         return self
 
     # Deprecated
-    def add_cashier(self, name, inn):
+    def add_cashier(self, name, inn=None):
         return self.set_cashier(name, inn)
 
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
@@ -570,15 +573,16 @@ class CorrectionCheck(object):
         }]
         return self
 
-    def set_authorised_person(self, name, inn):
+    def set_authorised_person(self, name, inn=None):
         """
         :param str name: Ф.И.О. кассира
         :param int inn: ИНН кассира
         """
-        self.__data['authorised_person'] = {
-            'name': name,
-            'inn': inn
-        }
+        self.__data['authorised_person'] = {'name': name}
+
+        if inn:
+            self.__data['authorised_person']['inn'] = inn
+
         return self
 
     def set_callback_url(self, url):
