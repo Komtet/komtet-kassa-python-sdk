@@ -779,3 +779,18 @@ class TestResponse(TestCase):
             'uuid': '978d4719-470a-409e-a6c4-574d17d3837a',
             'error_description': None
         })
+
+
+class TestCheckAgent(TestCase):
+
+    def test_agent(self):
+        check = Check('test_id', 'test@example.com', Intent.SELL, TaxSystem.COMMON)
+
+        agent = Agent(AgentType.AGENT, "77777777777")
+        check.set_agent(agent)
+
+        raw_check = dict(check)
+        self.assertIn('agent_info', raw_check)
+        self.assertDictEqual(raw_check['agent_info'], {"type": "agent"})
+        self.assertIn('supplier_info', raw_check)
+        self.assertDictEqual(raw_check['supplier_info'], {"phones": ["77777777777"]})
