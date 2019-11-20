@@ -9,7 +9,7 @@ with open('CHANGELOG.rst', 'r') as changelog:
 
 setup(
     name='komtet_kassa_sdk',
-    version='1.5.4',
+    version='1.8.0',
     license='MIT',
     description='Python SDK for KOMTET Kassa',
     long_description=long_description,

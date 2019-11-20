@@ -3,8 +3,9 @@ from decimal import Decimal
 from unittest import TestCase
 
 from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
-                              Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent, Order,
-                              OrderInfo, PaymentMethod, Task, TaskInfo, TaxSystem, VatRate)
+                              Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent,
+                              Nomenclature, NomenclatureType, Order, OrderInfo, PaymentMethod,
+                              Task, TaskInfo, TaxSystem, VatRate)
 from komtet_kassa_sdk.client import Response
 from mock import patch
 
@@ -100,19 +101,40 @@ class TestCheck(TestCase):
         check.set_print(False)
         self.assertFalse(check['print'])
 
-    def test_check_ffd_105(self):
+    def test_check_ffd_105_with_client_name(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_client(name='Иванов И.П.')
+
+        self.assertEqual(check._Check__data['client']['name'], 'Иванов И.П.')
+
+    def test_check_ffd_105_with_client_inn(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
         check.set_client(inn='1231231231')
+
+        self.assertEqual(check._Check__data['client']['inn'], '1231231231')
+
+    def test_check_ffd_105_with_empty_client(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_client()
+
+        self.assertEqual(check._Check__data.get('client'), None)
+
+    def test_check_ffd_105(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_client(name='Иванов И.П.', inn='1231231231')
         check.set_cashier('Иваров И.П.', '1234567890123')
         check.add_payment(100)
 
         agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
         self.assertEqual(agent['supplier_info']['inn'], '12345678901')
 
+        nomenclature = Nomenclature(NomenclatureType.SHOES, '98765432101234', 'sgEKKPPcS25y5')
+
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
                            calculation_subject=CalculationSubject.PRODUCT,
-                           agent=agent)
+                           agent=agent, nomenclature=nomenclature, excise=19.89,
+                           country_code='643', declaration_number='10129000/220817/0211234')
         check.add_payment(200)
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
@@ -129,6 +151,7 @@ class TestCheck(TestCase):
                 'inn': '1234567890123'
             },
             'client': {
+                'name': 'Иванов И.П.',
                 'inn': '1231231231'
             },
             'payments': [
@@ -146,6 +169,9 @@ class TestCheck(TestCase):
                     'vat': 'no',
                     'calculation_method': 'full_payment',
                     'calculation_subject': 'product',
+                    'excise': 19.89,
+                    'country_code': '643',
+                    'declaration_number': '10129000/220817/0211234',
                     'agent_info': {
                         'type': 'commissionaire'
                     },
@@ -153,6 +179,11 @@ class TestCheck(TestCase):
                         'phones': ["+77777777777"],
                         'name': "ООО 'Лютик'",
                         'inn': "12345678901"
+                    },
+                    'nomenclature_code': {
+                        'type': 'shoes',
+                        'gtin': '98765432101234',
+                        'serial': 'sgEKKPPcS25y5'
                     }
                 },
                 {
@@ -781,6 +812,7 @@ class TestResponse(TestCase):
         })
 
 
+
 class TestCheckAgent(TestCase):
 
     def test_agent(self):
@@ -794,3 +826,36 @@ class TestCheckAgent(TestCase):
         self.assertDictEqual(raw_check['agent_info'], {"type": "agent"})
         self.assertIn('supplier_info', raw_check)
         self.assertDictEqual(raw_check['supplier_info'], {"phones": ["77777777777"]})
+
+
+class TestSetCashier(TestCase):
+
+    def test_set_cashier_with_inn_in_check(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_cashier('Иваров И.П.', '1234567890123')
+        self.assertDictEqual(check['cashier'], {
+            'name': 'Иваров И.П.',
+            'inn': '1234567890123'
+        })
+
+    def test_set_cashier_without_inn_in_check(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_cashier('Иваров И.П.')
+        self.assertDictEqual(check['cashier'], {
+            'name': 'Иваров И.П.'
+        })
+
+    def test_set_cashier_with_inn_in_correction_check(self):
+        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION, TaxSystem.COMMON)
+        check.set_authorised_person('Иваров И.П.', '1234567890123')
+        self.assertDictEqual(check['authorised_person'], {
+            'name': 'Иваров И.П.',
+            'inn': '1234567890123'
+        })
+
+    def test_set_cashier_without_inn_in_correction_check(self):
+        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION, TaxSystem.COMMON)
+        check.set_authorised_person('Иваров И.П.')
+        self.assertDictEqual(check['authorised_person'], {
+            'name': 'Иваров И.П.'
+        })

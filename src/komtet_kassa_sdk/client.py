@@ -11,13 +11,6 @@ import requests
 
 DEFAULT_HOST = 'https://kassa.komtet.ru'
 
-OrderInfo = namedtuple('OrderInfo', '''id  client_name client_address client_email client_phone sno
-                                       is_paid payment_type description state items amount
-                                       prepayment courier is_pay_to_courier date_start  date_end
-                                       callback_url
-                                    ''')
-CouriersInfo = namedtuple('CouriersInfo', 'couriers meta')
-
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -41,7 +34,7 @@ class Response(object):
         return self.__data
 
 
-Task = TaskInfo = Response
+Task = TaskInfo = OrderInfo = CouriersInfo = Response
 
 
 class Client(object):

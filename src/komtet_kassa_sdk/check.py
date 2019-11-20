@@ -206,6 +206,21 @@ class CalculationSubject(object):
     """О предмете расчета, не относящемуся к предметам расчета, которым может быть присвоено
        значение от «0» до «12» (0-12 -- это вышеперечисленные)"""
 
+    PROPERTY_RIGHT = 'property_right'
+    """Передача имущественного права"""
+
+    NON_OPERATING = 'non_operating'
+    """Внереализационный доход"""
+
+    INSURANCE = 'insurance'
+    """Страховые взносы"""
+
+    SALES_TAX = 'sales_tax'
+    """Торговый сбор"""
+
+    RESORT_FEE = 'resort_fee'
+    """Курортный сбор"""
+
 
 class AgentType(object):
     """Типы признака агента по предмету расчета"""
@@ -234,6 +249,46 @@ class AgentType(object):
     """Осуществление расчета с покупателем (клиентом) пользователем, являющимся агентом и не
        являющимся банковским платежным агентом (субагентом), платежным агентом (субагентом),
        поверенным, комиссионером"""
+
+
+class NomenclatureType(object):
+    """Типы кода товара (маркировки)"""
+
+    FURS = 'furs'
+    """Меховые изделия"""
+
+    MEDICINES = 'medicines'
+    """Лекарства"""
+
+    TOBACCO = 'tobacco'
+    """Табачная продукция"""
+
+    SHOES = 'shoes'
+    """Обувь"""
+
+
+class Nomenclature(object):
+    """Код товара (маркировка)
+    :param str nomenclature_type: Тип маркировки
+    :param str gtin: Идентификатор продукта GTIN
+    :param str serial_number: Серийный номер
+    """
+
+    def __init__(self, nomenclature_type, gtin, serial_number):
+        self.__data = {
+            'nomenclature_code': {
+                'type': nomenclature_type,
+                'gtin': gtin,
+                'serial': serial_number
+            }
+        }
+
+    def __iter__(self):
+        for item in self.__data.items():
+            yield item
+
+    def __getitem__(self, item):
+        return self.__data[item]
 
 
 class Agent(object):
@@ -357,19 +412,30 @@ class Check(object):
         :param str name: Наименование покупателя
         :param int inn: ИНН покупателя
         """
-        self.__data['client'] = {'inn': inn}
+
+        self.__data['client'] = {}
+
         if name:
             self.__data['client']['name'] = name
 
+        if inn:
+            self.__data['client']['inn'] = inn
+
+        if not self.__data['client']:
+            del self.__data['client']
+
         return self
 
-    def set_cashier(self, name, inn):
+    def set_cashier(self, name, inn=None):
         """
         :param str name: Ф.И.О. кассира
         :param int inn: ИНН кассира
         """
-        self.__data['cashier'] = {'name': name,
-                                  'inn': inn}
+        self.__data['cashier'] = {'name': name}
+
+        if inn:
+            self.__data['cashier']['inn'] = inn
+
         return self
 
     def set_agent(self, agent):
@@ -379,18 +445,28 @@ class Check(object):
         self.__data.update(dict(agent))
 
     # Deprecated
-    def add_cashier(self, name, inn):
+    def add_cashier(self, name, inn=None):
         return self.set_cashier(name, inn)
 
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
                      measure_name=None, oid=None, calculation_method=None,
-                     calculation_subject=None, agent=None):
+                     calculation_subject=None, excise=None, country_code=None,
+                     declaration_number=None, agent=None, nomenclature=None):
         """
         :param str name: Наименование позиции
         :param int|float price: Цена позиции в чеке
         :param int|float quantity: Количество единиц
         :param int|float total: Общая стоимость позиции
         :param str vat: Налоговая ставка
+        :param str measure_name: Единица измерения
+        :param str oid: Идентификатор позиции в магазине
+        :param str calculation_method: Cпособ рассчета
+        :param str calculation_subject: Признак рассчета
+        :param int|float excise: Сумма акциза
+        :param str country_code: Цифровой код страны происхождения товара
+        :param str declaration_number: Номер таможенной декларации
+        :param Agent agent: Экземпляр агента
+        :param Nomenclature nomenclature: Экземпляр кода номенклатуры (маркировки)
         """
         if total is None:
             total = price * quantity
@@ -415,8 +491,20 @@ class Check(object):
         if calculation_subject is not None:
             position['calculation_subject'] = calculation_subject
 
+        if excise is not None:
+            position['excise'] = excise
+
+        if country_code is not None:
+            position['country_code'] = country_code
+
+        if declaration_number is not None:
+            position['declaration_number'] = declaration_number
+
         if agent is not None:
             position.update(dict(agent))
+
+        if nomenclature is not None:
+            position.update(dict(nomenclature))
 
         self.__data['positions'].append(position)
         return self
@@ -493,15 +581,16 @@ class CorrectionCheck(object):
         }]
         return self
 
-    def set_authorised_person(self, name, inn):
+    def set_authorised_person(self, name, inn=None):
         """
         :param str name: Ф.И.О. кассира
         :param int inn: ИНН кассира
         """
-        self.__data['authorised_person'] = {
-            'name': name,
-            'inn': inn
-        }
+        self.__data['authorised_person'] = {'name': name}
+
+        if inn:
+            self.__data['authorised_person']['inn'] = inn
+
         return self
 
     def set_callback_url(self, url):
