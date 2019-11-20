@@ -1,9 +1,16 @@
 Changelog
 =========
+
+1.9.0 (20.11.2019)
+------------------
+
+- Добавлен метод `set_agent` в класс `Check`
+
+
 1.8.0 (18.11.2019)
 ------------------
 
-- Параметр `inn` функции `Check.set_client` и `CorrectionCheck.set_authorised_person` необязателен для ввода
+- Параметр `inn` методов `Check.set_client` и `CorrectionCheck.set_authorised_person` необязателен для ввода
 
 1.7.0 (13.09.2019)
 ------------------
