@@ -305,20 +305,22 @@ class Agent(object):
                 'type': agent_type
             }
         }
-        if phone and name and inn:
-            self.set_supplier_info(name, [phone], inn)
+        self.set_supplier_info(name, phone and [phone], inn)
 
-    def set_supplier_info(self, name, phones, inn):
+    def set_supplier_info(self, name=None, phones=None, inn=None):
         """ Передача атрибутов поставщика
         :param str name: Наименование поставщика
         :param list phones: Телефоны поставщика
         :param str inn: ИНН поставщика
         """
-        self.__data['supplier_info'] = {
-            'phones': phones,
-            'name': name,
-            'inn': inn
-        }
+        if name or phones or inn:
+            self.__data['supplier_info'] = {}
+            if name:
+                self.__data['supplier_info']['name'] = name
+            if phones:
+                self.__data['supplier_info']['phones'] = phones
+            if inn:
+                self.__data['supplier_info']['inn'] = inn
 
     def set_paying_agent_info(self, operation, phones):
         """ Передача атрибутов платежного агента
@@ -435,6 +437,12 @@ class Check(object):
             self.__data['cashier']['inn'] = inn
 
         return self
+
+    def set_agent(self, agent):
+        """
+        :param Agent agent: агент на чек
+        """
+        self.__data.update(dict(agent))
 
     # Deprecated
     def add_cashier(self, name, inn=None):

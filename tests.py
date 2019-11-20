@@ -812,6 +812,22 @@ class TestResponse(TestCase):
         })
 
 
+
+class TestCheckAgent(TestCase):
+
+    def test_agent(self):
+        check = Check('test_id', 'test@example.com', Intent.SELL, TaxSystem.COMMON)
+
+        agent = Agent(AgentType.AGENT, "77777777777")
+        check.set_agent(agent)
+
+        raw_check = dict(check)
+        self.assertIn('agent_info', raw_check)
+        self.assertDictEqual(raw_check['agent_info'], {"type": "agent"})
+        self.assertIn('supplier_info', raw_check)
+        self.assertDictEqual(raw_check['supplier_info'], {"phones": ["77777777777"]})
+
+
 class TestSetCashier(TestCase):
 
     def test_set_cashier_with_inn_in_check(self):
