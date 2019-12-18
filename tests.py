@@ -812,7 +812,6 @@ class TestResponse(TestCase):
         })
 
 
-
 class TestCheckAgent(TestCase):
 
     def test_agent(self):
@@ -859,3 +858,97 @@ class TestSetCashier(TestCase):
         self.assertDictEqual(check['authorised_person'], {
             'name': 'Иваров И.П.'
         })
+
+
+class TestSetAgentInfoToOrder(TestCase):
+    def setUp(self):
+        self.client = Client('shop-id', 'secret-key')
+        self.response_mock = ResponseMock(
+            id=775, client_name='test test test', client_address='обл Пензенская, Пенза',
+            client_email='', client_phone='88005553535', sno=0, is_paid=True,
+            payment_type='cash', description='', state='new',
+            items=[
+                {
+                    'name': 'Демо-товар 2',
+                    'measure_name': None,
+                    'quantity': 5.0,
+                    'total': 7500.0,
+                    'vat': '10',
+                    'external_id': '1',
+                    'id': 3590,
+                    'price': 1500.0,
+                    'agent_info': {
+                        'type': 'commissionaire'
+                    },
+                    'supplier_info': {
+                        'phones': ["+77777777777"],
+                        'name': "ООО 'Лютик'",
+                        'inn': "12345678901"
+                    },
+                },
+                {
+                    'name': 'Доставка',
+                    'measure_name': None,
+                    'quantity': 1.0,
+                    'total': 500.0,
+                    'vat': 'no',
+                    'external_id': '2',
+                    'id': 3591,
+                    'price': 500.0
+                }
+            ],
+            amount=2000.0, prepayment=200.0, courier=None, is_pay_to_courier=False,
+            date_start='2019-04-12 07:00',
+            date_end='2019-04-12 13:00',
+            callback_url='https://calback_url.ru')
+
+    def test_create_order_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            requests.post.return_value = self.response_mock
+
+            order = Order(order_id=2589, is_paid=True, state='new', sno=0)
+
+            order.set_client(name='test test test',
+                             address='обл Пензенская, Пенза',
+                             phone='88005553535')
+            order.set_delivery_time(date_start='2019-04-12 07:00',
+                                    date_end='2019-04-12 13:00')
+
+            agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
+            order.add_position(oid='1', type='product', name='Демо-товар 2', vat='10', quantity=5,
+                               price=1500.0, total=1500.0, agent=agent)
+
+            order.add_position(oid='2', type='delivery', name="Доставка", price=500)
+
+            order_info = self.client.create_order(order)
+            self.assertIsInstance(order_info, OrderInfo)
+            self.assertEqual(order_info.id, 775)
+            self.assertEqual(order_info.state, 'new')
+            self.assertDictEqual(order_info.items[0], {
+                'name': 'Демо-товар 2',
+                'measure_name': None,
+                'quantity': 5.0,
+                'total': 7500.0,
+                'vat': '10',
+                'external_id': '1',
+                'id': 3590,
+                'price': 1500.0,
+                'agent_info': {
+                    'type': 'commissionaire'
+                },
+                'supplier_info': {
+                    'phones': ["+77777777777"],
+                    'name': "ООО 'Лютик'",
+                    'inn': "12345678901"
+                },
+            })
+            self.assertDictEqual(order_info.items[1], {
+                'name': 'Доставка',
+                'measure_name': None,
+                'quantity': 1.0,
+                'total': 500.0,
+                'vat': 'no',
+                'external_id': '2',
+                'id': 3591,
+                'price': 500.0
+            })

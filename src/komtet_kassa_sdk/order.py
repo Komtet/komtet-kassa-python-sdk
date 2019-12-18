@@ -1,5 +1,5 @@
 # coding: utf-8
-from . import PaymentMethod, VatRate
+from . import Agent, PaymentMethod, VatRate
 
 
 class Order(object):
@@ -68,7 +68,7 @@ class Order(object):
         self.__data['description'] = description
 
     def add_position(self, oid, name, price, quantity=1, total=None,
-                     vat=VatRate.RATE_NO, measure_name=None, type=None):
+                     vat=VatRate.RATE_NO, measure_name=None, type=None, agent=None):
         """
         :param str oid: Идентификатор позиции в заказе
         :param str type: Тип заказа
@@ -77,6 +77,7 @@ class Order(object):
         :param int|float quantity: Количество единиц
         :param int|float total: Общая стоимость позиции
         :param str vat: Налоговая ставка
+        :param Agent agent: Экземпляр агента
         """
         if total is None:
             total = price * quantity
@@ -95,6 +96,9 @@ class Order(object):
 
         if type:
             position['type'] = type
+
+        if agent is not None:
+            position.update(dict(agent))
 
         self.__data['items'].append(position)
         return self
