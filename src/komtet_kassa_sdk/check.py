@@ -270,16 +270,14 @@ class NomenclatureType(object):
 class Nomenclature(object):
     """Код товара (маркировка)
     :param str nomenclature_type: Тип маркировки
-    :param str gtin: Идентификатор продукта GTIN
-    :param str serial_number: Серийный номер
+    :param str code: Код маркировки
     """
 
-    def __init__(self, nomenclature_type, gtin, serial_number):
+    def __init__(self, nomenclature_type, code):
         self.__data = {
             'nomenclature_code': {
                 'type': nomenclature_type,
-                'gtin': gtin,
-                'serial': serial_number
+                'code': code
             }
         }
 
