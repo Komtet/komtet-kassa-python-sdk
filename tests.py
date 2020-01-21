@@ -128,7 +128,7 @@ class TestCheck(TestCase):
         agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
         self.assertEqual(agent['supplier_info']['inn'], '12345678901')
 
-        nomenclature = Nomenclature(NomenclatureType.SHOES, '98765432101234', 'sgEKKPPcS25y5')
+        nomenclature = Nomenclature(NomenclatureType.SHOES, '019876543210123421sgEKKPPcS25y5')
 
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
@@ -182,8 +182,7 @@ class TestCheck(TestCase):
                     },
                     'nomenclature_code': {
                         'type': 'shoes',
-                        'gtin': '98765432101234',
-                        'serial': 'sgEKKPPcS25y5'
+                        'code': '019876543210123421sgEKKPPcS25y5',
                     }
                 },
                 {
