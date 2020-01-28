@@ -136,7 +136,12 @@ class TestCheck(TestCase):
                            agent=agent, nomenclature=nomenclature, excise=19.89,
                            country_code='643', declaration_number='10129000/220817/0211234')
         check.add_payment(200)
-        check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
+        nomenclature = Nomenclature(
+            NomenclatureType.SHOES,
+            '019876543210123421sgEKKPPcS25y5',
+            '444D00000096b43f303132333432317367454b4b5050635332357935')
+        check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2',
+                           nomenclature=nomenclature)
         check.add_payment(300)
         check.add_position('name 2', 100, 3, total=290, vat=20)
 
@@ -182,7 +187,7 @@ class TestCheck(TestCase):
                     },
                     'nomenclature_code': {
                         'type': 'shoes',
-                        'code': '019876543210123421sgEKKPPcS25y5',
+                        'code': '019876543210123421sgEKKPPcS25y5'
                     }
                 },
                 {
@@ -192,7 +197,12 @@ class TestCheck(TestCase):
                     'quantity': 2,
                     'total': 200,
                     'vat': 'no',
-                    'measure_name': 'kg'
+                    'measure_name': 'kg',
+                    'nomenclature_code': {
+                        'type': 'shoes',
+                        'code': '019876543210123421sgEKKPPcS25y5',
+                        'byte_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
+                    }
                 },
                 {
                     'name': 'name 2',
