@@ -201,7 +201,7 @@ class TestCheck(TestCase):
                     'nomenclature_code': {
                         'type': 'shoes',
                         'code': '019876543210123421sgEKKPPcS25y5',
-                        'byte_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
+                        'hex_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
                     }
                 },
                 {
