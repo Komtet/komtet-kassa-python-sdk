@@ -271,15 +271,19 @@ class Nomenclature(object):
     """Код товара (маркировка)
     :param str nomenclature_type: Тип маркировки
     :param str code: Код маркировки
+    :param str hex_code: Код маркировки в HEX представлении
     """
 
-    def __init__(self, nomenclature_type, code):
+    def __init__(self, nomenclature_type, code, hex_code=None):
         self.__data = {
             'nomenclature_code': {
                 'type': nomenclature_type,
                 'code': code
             }
         }
+
+        if hex_code:
+            self.__data['nomenclature_code']['hex_code'] = hex_code
 
     def __iter__(self):
         for item in self.__data.items():
