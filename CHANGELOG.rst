@@ -4,7 +4,7 @@ Changelog
 2.2.0 (02.03.2020)
 ------------------
 
-- Для заказов добавлена поддержка `exices`, `country_code`, `declaration_number`
+- Для заказов добавлена поддержка `excise`, `country_code`, `declaration_number`
 
 2.1.0 (27.01.2020)
 ------------------
