@@ -68,7 +68,8 @@ class Order(object):
         self.__data['description'] = description
 
     def add_position(self, oid, name, price, quantity=1, total=None,
-                     vat=VatRate.RATE_NO, measure_name=None, type=None, agent=None):
+                     vat=VatRate.RATE_NO, measure_name=None, type=None, agent=None,
+                     excise=None, country_code=None, declaration_number=None):
         """
         :param str oid: Идентификатор позиции в заказе
         :param str type: Тип заказа
@@ -78,6 +79,9 @@ class Order(object):
         :param int|float total: Общая стоимость позиции
         :param str vat: Налоговая ставка
         :param Agent agent: Экземпляр агента
+        :param int|float excise: Сумма акциза
+        :param str country_code: Цифровой код страны происхождения товара
+        :param str declaration_number: Номер таможенной декларации
         """
         if total is None:
             total = price * quantity
@@ -99,6 +103,15 @@ class Order(object):
 
         if agent is not None:
             position.update(dict(agent))
+
+        if excise is not None:
+            position['excise'] = excise
+
+        if country_code is not None:
+            position['country_code'] = country_code
+
+        if declaration_number is not None:
+            position['declaration_number'] = declaration_number
 
         self.__data['items'].append(position)
         return self

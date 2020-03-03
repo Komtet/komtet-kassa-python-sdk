@@ -523,6 +523,10 @@ class TestOrder(TestCase):
         order.add_position(oid='1', type='product', name='position name1', price=555.0)
         order.add_position(oid='2', type='product', name='position name2', price=100.0,
                            quantity=5, vat=VatRate.RATE_10, measure_name='kg')
+        order.add_position(oid='3', type='product', name='position name3', price=555.0,
+                           excise=19.89, country_code='643',
+                           declaration_number='10129000/220817/0211234')
+
         expected = {
             "order_id": '123',
             "client_name": "Сергеев Виктор Сергеевич",
@@ -555,6 +559,18 @@ class TestOrder(TestCase):
                     "total": 500.0,
                     "vat": "10",
                     "measure_name": "kg"
+                },
+                {
+                    "order_item_id": '3',
+                    "type": "product",
+                    "name": "position name3",
+                    "price": 555.0,
+                    "quantity": 1,
+                    "total": 555.0,
+                    "vat": "no",
+                    "excise": 19.89,
+                    "country_code": '643',
+                    "declaration_number": "10129000/220817/0211234"
                 }
             ],
             "sno": 0,
