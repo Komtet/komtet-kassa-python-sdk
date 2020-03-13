@@ -277,6 +277,17 @@ class ResponseMock(object):
         return self.data
 
 
+class ResponseListMock(object):
+    def __init__(self, data):
+        self.data = data
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return self.data
+
+
 class TestClient(TestCase):
     def setUp(self):
         self.client = Client('shop-id', 'secret-key')
@@ -326,7 +337,8 @@ class TestClient(TestCase):
 
     def test_create_task_success(self):
         with patch('komtet_kassa_sdk.client.requests') as requests:
-            response_mock = ResponseMock(id=1, external_id=2, print_queue_id=3, state='new')
+            response_mock = ResponseListMock(
+                {1: dict(id=1, external_id=2, print_queue_id=3, state='new')})
             requests.post.return_value = response_mock
             task = self.client.create_task({'key': Decimal('10.0')}, 3)
             self.assertIsInstance(task, Task)
@@ -338,11 +350,11 @@ class TestClient(TestCase):
                 headers={
                     'Authorization': 'shop-id',
                     'Accept': 'application/json',
-                    'X-HMAC-Signature': '5bfe6ef2290053624fdda725177caa33',
+                    'X-HMAC-Signature': '9093db5f962b1874e44338227c0964a6',
                     'Content-Type': 'application/json'
                 },
-                url='https://kassa.komtet.ru/api/shop/v1/queues/3/task',
-                data='{"key": 10.0}'
+                url='https://kassa.komtet.ru/api/shop/v1/queues/3/multi-tasks',
+                data='[{"key": 10.0}]'
             )
 
             with self.assertRaises(ValueError) as ctx:
@@ -977,3 +989,36 @@ class TestSetAgentInfoToOrder(TestCase):
                 'id': 3591,
                 'price': 500.0
             })
+
+
+class TestMultiTasks(TestCase):
+    def setUp(self):
+        self.client = Client('shop-id', 'secret-key')
+        self.response_mock = ResponseListMock(
+            {idx: dict(id=idx, external_id=idx, print_queue_id=3, state='new') for idx in range(5)})
+
+    def test_create_multi_tasks_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            requests.post.return_value = self.response_mock
+            checks = []
+            for i in range(5):
+                check = Check(1, 'user@host', Intent.SELL,
+                              TaxSystem.COMMON, payment_address='ул.Мира')
+                check.add_payment(100)
+                check.add_position('name 0', price=100, oid=1)
+                check.add_payment(200)
+                check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
+                check.add_payment(300)
+                check.add_position('name 2', 100, 3, total=290, vat=20)
+                check.set_callback_url('http://test.pro')
+
+                checks.append(check)
+
+            checks_info = self.client.create_tasks(checks, 2)
+            self.assertIsInstance(checks_info, list)
+
+            for idx, check_info in enumerate(checks_info):
+                self.assertIsInstance(check_info, TaskInfo)
+                expected = dict(id=idx, external_id=idx, print_queue_id=3, state='new')
+                for key, value in expected.items():
+                    self.assertEqual(value, getattr(check_info, key))
