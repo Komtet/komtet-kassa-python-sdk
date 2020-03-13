@@ -98,7 +98,7 @@ class Client(object):
         """
         qid = self.__handle_queue_id(qid)
         rep = self.__post('/api/shop/v1/queues/%s/multi-tasks' % qid,
-                        [dict(check) for check in checks])
+                          [dict(check) for check in checks])
         rep.raise_for_status()
         result = rep.json()
         return [Task(**value) for value in result.values()]
