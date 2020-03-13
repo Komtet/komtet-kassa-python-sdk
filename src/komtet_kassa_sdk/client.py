@@ -93,6 +93,20 @@ class Client(object):
         result = rep.json()
         return Task(**result)
 
+    def create_multi_tasks(self, checks, qid=None):
+        """
+        Постановка множества задач в очередь на фискализацию
+
+        :param list check: Список экземпляров чека
+        :param int qid: Идентификатор очереди
+        """
+        qid = self.__handle_queue_id(qid)
+        rep = self.__post('/api/shop/v1/queues/%s/multi-tasks' % qid,
+                          [dict(check) for check in checks])
+        rep.raise_for_status()
+        results = rep.json()
+        return [Task(**value) for value in results.values()]
+
     def get_task_info(self, task_id):
         """
         Возвращает информацию о поставленной на фискализацию задаче

@@ -277,6 +277,17 @@ class ResponseMock(object):
         return self.data
 
 
+class ResponseListMock(object):
+    def __init__(self, data):
+        self.data = data
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return self.data
+
+
 class TestClient(TestCase):
     def setUp(self):
         self.client = Client('shop-id', 'secret-key')
@@ -977,3 +988,36 @@ class TestSetAgentInfoToOrder(TestCase):
                 'id': 3591,
                 'price': 500.0
             })
+
+
+class TestMultiTasks(TestCase):
+    def setUp(self):
+        self.client = Client('shop-id', 'secret-key')
+        self.response_mock = ResponseListMock(
+            {idx: dict(id=idx, external_id=idx, print_queue_id=3, state='new') for idx in range(5)})
+
+    def test_create_multi_tasks_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            requests.post.return_value = self.response_mock
+            checks = []
+            for i in range(5):
+                check = Check(1, 'user@host', Intent.SELL,
+                              TaxSystem.COMMON, payment_address='ул.Мира')
+                check.add_payment(100)
+                check.add_position('name 0', price=100, oid=1)
+                check.add_payment(200)
+                check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
+                check.add_payment(300)
+                check.add_position('name 2', 100, 3, total=290, vat=20)
+                check.set_callback_url('http://test.pro')
+
+                checks.append(check)
+
+            checks_info = self.client.create_multi_tasks(checks, 2)
+            self.assertIsInstance(checks_info, list)
+
+            for idx, check_info in enumerate(checks_info):
+                self.assertIsInstance(check_info, TaskInfo)
+                expected = dict(id=idx, external_id=idx, print_queue_id=3, state='new')
+                for key, value in expected.items():
+                    self.assertEqual(value, getattr(check_info, key))
