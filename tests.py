@@ -337,7 +337,8 @@ class TestClient(TestCase):
 
     def test_create_task_success(self):
         with patch('komtet_kassa_sdk.client.requests') as requests:
-            response_mock = ResponseMock(id=1, external_id=2, print_queue_id=3, state='new')
+            response_mock = ResponseListMock(
+                {1: dict(id=1, external_id=2, print_queue_id=3, state='new')})
             requests.post.return_value = response_mock
             task = self.client.create_task({'key': Decimal('10.0')}, 3)
             self.assertIsInstance(task, Task)
@@ -349,11 +350,11 @@ class TestClient(TestCase):
                 headers={
                     'Authorization': 'shop-id',
                     'Accept': 'application/json',
-                    'X-HMAC-Signature': '5bfe6ef2290053624fdda725177caa33',
+                    'X-HMAC-Signature': '9093db5f962b1874e44338227c0964a6',
                     'Content-Type': 'application/json'
                 },
-                url='https://kassa.komtet.ru/api/shop/v1/queues/3/task',
-                data='{"key": 10.0}'
+                url='https://kassa.komtet.ru/api/shop/v1/queues/3/multi-tasks',
+                data='[{"key": 10.0}]'
             )
 
             with self.assertRaises(ValueError) as ctx:
@@ -1013,7 +1014,7 @@ class TestMultiTasks(TestCase):
 
                 checks.append(check)
 
-            checks_info = self.client.create_multi_tasks(checks, 2)
+            checks_info = self.client.create_tasks(checks, 2)
             self.assertIsInstance(checks_info, list)
 
             for idx, check_info in enumerate(checks_info):

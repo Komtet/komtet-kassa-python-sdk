@@ -87,13 +87,9 @@ class Client(object):
         :param Check check: Экземпляр чека
         :param int qid: Идентификатор очереди
         """
-        qid = self.__handle_queue_id(qid)
-        rep = self.__post('/api/shop/v1/queues/%s/task' % qid, dict(check))
-        rep.raise_for_status()
-        result = rep.json()
-        return Task(**result)
+        return self.create_tasks([check], qid)[0]
 
-    def create_multi_tasks(self, checks, qid=None):
+    def create_tasks(self, checks, qid=None):
         """
         Постановка множества задач в очередь на фискализацию
 
@@ -102,10 +98,10 @@ class Client(object):
         """
         qid = self.__handle_queue_id(qid)
         rep = self.__post('/api/shop/v1/queues/%s/multi-tasks' % qid,
-                          [dict(check) for check in checks])
+                        [dict(check) for check in checks])
         rep.raise_for_status()
-        results = rep.json()
-        return [Task(**value) for value in results.values()]
+        result = rep.json()
+        return [Task(**value) for value in result.values()]
 
     def get_task_info(self, task_id):
         """
