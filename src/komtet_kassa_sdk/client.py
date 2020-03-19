@@ -87,7 +87,11 @@ class Client(object):
         :param Check check: Экземпляр чека
         :param int qid: Идентификатор очереди
         """
-        return self.create_tasks([check], qid)[0]
+        qid = self.__handle_queue_id(qid)
+        rep = self.__post('/api/shop/v1/queues/%s/task' % qid, dict(check))
+        rep.raise_for_status()
+        result = rep.json()
+        return Task(**result)
 
     def create_tasks(self, checks, qid=None):
         """
