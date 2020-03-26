@@ -221,6 +221,11 @@ class TestCheck(TestCase):
         check.set_print(False)
         self.assertFalse(check['print'])
 
+    def test_set_additional_check_props(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_additional_check_props('Дополнительный реквизит чека')
+        self.assertEqual(check['additional_check_props'], 'Дополнительный реквизит чека')
+
 
 class TestCorrectionCheck(TestCase):
     def test_check(self):
