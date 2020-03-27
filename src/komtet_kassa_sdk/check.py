@@ -446,6 +446,12 @@ class Check(object):
         """
         self.__data.update(dict(agent))
 
+    def set_additional_check_props(self, value):
+        """
+        :param str value: Дополнительный реквизит чека
+        """
+        self.__data['additional_check_props'] = value
+
     # Deprecated
     def add_cashier(self, name, inn=None):
         return self.set_cashier(name, inn)
