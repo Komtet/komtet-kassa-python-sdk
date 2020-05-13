@@ -127,3 +127,22 @@ class Order(object):
         :param int courier_id: ID курьера
         """
         self.__data['courier_id'] = courier_id
+
+    def apply_discount(self, discount):
+        """
+        :param int|float discount: сумма скидки
+        """
+        items_total = sum(item['total'] for item in self.__data['items'])
+
+        items_count = len(self.__data['items'])
+        accumulated_discount = 0
+
+        for index, position in enumerate(self.__data['items']):
+            if index < items_count - 1:
+                item_price_percent = position['total'] / items_total * 100
+                cur_item_discount = round(discount * item_price_percent / 100, 2)
+                accumulated_discount += cur_item_discount
+            else:
+                cur_item_discount = round(discount - accumulated_discount, 2)
+
+            position['total'] = round(position['total'] - cur_item_discount, 2)
