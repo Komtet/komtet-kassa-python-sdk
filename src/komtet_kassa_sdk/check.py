@@ -1,5 +1,5 @@
 # coding: utf-8
-from decimal import Decimal
+from komtet_kassa_sdk.lib.helpers import to_decimal
 
 
 class Intent(object):
@@ -536,13 +536,13 @@ class Check(object):
 
         for index, position in enumerate(self.__data['positions']):
             if index < positions_count - 1:
-                position_price_percent = Decimal(position['total'] / positions_total * 100)
-                cur_position_discount = round(Decimal(discount) * position_price_percent / 100, 2)
+                position_price_percent = position['total'] / positions_total * 100
+                cur_position_discount = to_decimal(discount * position_price_percent / 100)
                 accumulated_discount += cur_position_discount
             else:
-                cur_position_discount = round(Decimal(discount) - accumulated_discount, 2)
+                cur_position_discount = to_decimal(discount - accumulated_discount)
 
-            position['total'] = round(Decimal(position['total']) - cur_position_discount, 2)
+            position['total'] = to_decimal(position['total']) - cur_position_discount
 
 
 class CorrectionCheck(object):

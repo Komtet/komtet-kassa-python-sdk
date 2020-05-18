@@ -1,6 +1,5 @@
 # coding: utf-8
-from decimal import Decimal
-
+from komtet_kassa_sdk.lib.helpers import to_decimal
 from . import PaymentMethod, VatRate
 
 
@@ -141,10 +140,10 @@ class Order(object):
 
         for index, position in enumerate(self.__data['items']):
             if index < items_count - 1:
-                item_price_percent = Decimal(position['total'] / items_total * 100)
-                cur_item_discount = round(Decimal(discount) * item_price_percent / 100, 2)
+                item_price_percent = position['total'] / items_total * 100
+                cur_item_discount = to_decimal(discount * item_price_percent / 100)
                 accumulated_discount += cur_item_discount
             else:
-                cur_item_discount = round(Decimal(discount) - accumulated_discount, 2)
+                cur_item_discount = to_decimal(discount - accumulated_discount)
 
-            position['total'] = round(Decimal(position['total']) - cur_item_discount, 2)
+            position['total'] = to_decimal(position['total']) - cur_item_discount
