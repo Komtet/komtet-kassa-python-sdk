@@ -1,5 +1,7 @@
 # coding: utf-8
-from . import Agent, PaymentMethod, VatRate
+from decimal import Decimal
+
+from . import PaymentMethod, VatRate
 
 
 class Order(object):
@@ -139,10 +141,10 @@ class Order(object):
 
         for index, position in enumerate(self.__data['items']):
             if index < items_count - 1:
-                item_price_percent = position['total'] / items_total * 100
-                cur_item_discount = round(discount * item_price_percent / 100, 2)
+                item_price_percent = Decimal(position['total'] / items_total * 100)
+                cur_item_discount = round(Decimal(discount) * item_price_percent / 100, 2)
                 accumulated_discount += cur_item_discount
             else:
-                cur_item_discount = round(discount - accumulated_discount, 2)
+                cur_item_discount = round(Decimal(discount) - accumulated_discount, 2)
 
-            position['total'] = round(position['total'] - cur_item_discount, 2)
+            position['total'] = round(Decimal(position['total']) - cur_item_discount, 2)

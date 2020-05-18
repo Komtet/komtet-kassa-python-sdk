@@ -1,4 +1,5 @@
 # coding: utf-8
+from decimal import Decimal
 
 
 class Intent(object):
@@ -529,20 +530,19 @@ class Check(object):
         :param int|float discount: сумма скидки
         """
         positions_total = sum(position['total'] for position in self.__data['positions'])
-        check_positions = self.__data['positions']
 
-        positions_count = len(check_positions)
+        positions_count = len(self.__data['positions'])
         accumulated_discount = 0
 
-        for index, position in enumerate(check_positions):
+        for index, position in enumerate(self.__data['positions']):
             if index < positions_count - 1:
-                position_price_percent = position['total'] / positions_total * 100
-                cur_position_discount = round(discount * position_price_percent / 100, 2)
+                position_price_percent = Decimal(position['total'] / positions_total * 100)
+                cur_position_discount = round(Decimal(discount) * position_price_percent / 100, 2)
                 accumulated_discount += cur_position_discount
             else:
-                cur_position_discount = round(discount - accumulated_discount, 2)
+                cur_position_discount = round(Decimal(discount) - accumulated_discount, 2)
 
-            position['total'] = round(position['total'] - cur_position_discount, 2)
+            position['total'] = round(Decimal(position['total']) - cur_position_discount, 2)
 
 
 class CorrectionCheck(object):

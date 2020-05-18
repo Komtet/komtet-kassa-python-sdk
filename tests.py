@@ -238,8 +238,8 @@ class TestCheck(TestCase):
                            calculation_subject=CalculationSubject.PRODUCT)
         check.apply_discount(50)
 
-        self.assertEqual(check['positions'][0]['total'], 94.91)
-        self.assertEqual(check['positions'][1]['total'], 89.30)
+        self.assertEqual(check['positions'][0]['total'], Decimal('94.91'))
+        self.assertEqual(check['positions'][1]['total'], Decimal('89.30'))
 
 
 class TestCorrectionCheck(TestCase):
@@ -675,8 +675,8 @@ class TestOrder(TestCase):
         order.add_position(oid='2', type='product', name='position name2', price=113.54)
         order.apply_discount(50)
 
-        self.assertEqual(order['items'][0]['total'], 94.91)
-        self.assertEqual(order['items'][1]['total'], 89.30)
+        self.assertEqual(order['items'][0]['total'], Decimal('94.91'))
+        self.assertEqual(order['items'][1]['total'], Decimal('89.30'))
 
 
 class TestClientOrder(TestCase):
