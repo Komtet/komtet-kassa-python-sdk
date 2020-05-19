@@ -251,22 +251,6 @@ class AgentType(object):
        поверенным, комиссионером"""
 
 
-class NomenclatureType(object):
-    """Типы кода товара (маркировки)"""
-
-    FURS = 'furs'
-    """Меховые изделия"""
-
-    MEDICINES = 'medicines'
-    """Лекарства"""
-
-    TOBACCO = 'tobacco'
-    """Табачная продукция"""
-
-    SHOES = 'shoes'
-    """Обувь"""
-
-
 class Nomenclature(object):
     """Код товара (маркировка)
     :param str code: Код маркировки
