@@ -134,17 +134,3 @@ class Order(object):
         :param int|float discount: сумма скидки
         """
         apply_discount(discount, self.__data['items'])
-        # items_total = sum(item['total'] for item in self.__data['items'])
-
-        # items_count = len(self.__data['items'])
-        # accumulated_discount = 0
-
-        # for index, position in enumerate(self.__data['items']):
-        #     if index < items_count - 1:
-        #         item_price_percent = position['total'] / items_total * 100
-        #         cur_item_discount = to_decimal(discount * item_price_percent / 100)
-        #         accumulated_discount += cur_item_discount
-        #     else:
-        #         cur_item_discount = to_decimal(discount - accumulated_discount)
-
-        #     position['total'] = to_decimal(position['total']) - cur_item_discount
