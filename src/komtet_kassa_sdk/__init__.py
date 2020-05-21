@@ -1,8 +1,9 @@
 from .check import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
-                    CorrectionCheck, CorrectionType, Intent, Nomenclature, NomenclatureType,
-                    PaymentMethod, TaxSystem, VatRate)
+                    CorrectionCheck, CorrectionType, Intent, Nomenclature, PaymentMethod,
+                    TaxSystem, VatRate)
 from .client import Client, CouriersInfo, OrderInfo, Task, TaskInfo
 from .order import Order
+
 
 __all__ = [
     'Agent',
@@ -16,7 +17,6 @@ __all__ = [
     'CouriersInfo',
     'Intent',
     'Nomenclature',
-    'NomenclatureType',
     'PaymentMethod',
     'Order',
     'OrderInfo',

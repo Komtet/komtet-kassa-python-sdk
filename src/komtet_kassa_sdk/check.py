@@ -1,5 +1,5 @@
 # coding: utf-8
-from komtet_kassa_sdk.lib.helpers import to_decimal
+from komtet_kassa_sdk.lib.helpers import apply_discount, to_decimal
 
 
 class Intent(object):
@@ -252,33 +252,15 @@ class AgentType(object):
        поверенным, комиссионером"""
 
 
-class NomenclatureType(object):
-    """Типы кода товара (маркировки)"""
-
-    FURS = 'furs'
-    """Меховые изделия"""
-
-    MEDICINES = 'medicines'
-    """Лекарства"""
-
-    TOBACCO = 'tobacco'
-    """Табачная продукция"""
-
-    SHOES = 'shoes'
-    """Обувь"""
-
-
 class Nomenclature(object):
     """Код товара (маркировка)
-    :param str nomenclature_type: Тип маркировки
     :param str code: Код маркировки
     :param str hex_code: Код маркировки в HEX представлении
     """
 
-    def __init__(self, nomenclature_type, code, hex_code=None):
+    def __init__(self, code, hex_code=None):
         self.__data = {
             'nomenclature_code': {
-                'type': nomenclature_type,
                 'code': code
             }
         }
@@ -529,20 +511,7 @@ class Check(object):
         """
         :param int|float discount: сумма скидки
         """
-        positions_total = sum(position['total'] for position in self.__data['positions'])
-
-        positions_count = len(self.__data['positions'])
-        accumulated_discount = 0
-
-        for index, position in enumerate(self.__data['positions']):
-            if index < positions_count - 1:
-                position_price_percent = position['total'] / positions_total * 100
-                cur_position_discount = to_decimal(discount * position_price_percent / 100)
-                accumulated_discount += cur_position_discount
-            else:
-                cur_position_discount = to_decimal(discount - accumulated_discount)
-
-            position['total'] = to_decimal(position['total']) - cur_position_discount
+        apply_discount(discount, self.__data['positions'])
 
 
 class CorrectionCheck(object):

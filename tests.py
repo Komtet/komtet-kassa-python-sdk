@@ -4,8 +4,8 @@ from unittest import TestCase
 
 from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
                               Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent,
-                              Nomenclature, NomenclatureType, Order, OrderInfo, PaymentMethod,
-                              Task, TaskInfo, TaxSystem, VatRate)
+                              Nomenclature, Order, OrderInfo, PaymentMethod, Task, TaskInfo,
+                              TaxSystem, VatRate)
 from komtet_kassa_sdk.client import Response
 from mock import patch
 
@@ -128,7 +128,7 @@ class TestCheck(TestCase):
         agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
         self.assertEqual(agent['supplier_info']['inn'], '12345678901')
 
-        nomenclature = Nomenclature(NomenclatureType.SHOES, '019876543210123421sgEKKPPcS25y5')
+        nomenclature = Nomenclature('019876543210123421sgEKKPPcS25y5')
 
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
@@ -137,7 +137,6 @@ class TestCheck(TestCase):
                            country_code='643', declaration_number='10129000/220817/0211234')
         check.add_payment(200)
         nomenclature = Nomenclature(
-            NomenclatureType.SHOES,
             '019876543210123421sgEKKPPcS25y5',
             '444D00000096b43f303132333432317367454b4b5050635332357935')
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2',
@@ -186,7 +185,6 @@ class TestCheck(TestCase):
                         'inn': "12345678901"
                     },
                     'nomenclature_code': {
-                        'type': 'shoes',
                         'code': '019876543210123421sgEKKPPcS25y5'
                     }
                 },
@@ -199,7 +197,6 @@ class TestCheck(TestCase):
                     'vat': 'no',
                     'measure_name': 'kg',
                     'nomenclature_code': {
-                        'type': 'shoes',
                         'code': '019876543210123421sgEKKPPcS25y5',
                         'hex_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
                     }
@@ -1022,8 +1019,9 @@ class TestSetAgentInfoToOrder(TestCase):
 class TestMultiTasks(TestCase):
     def setUp(self):
         self.client = Client('shop-id', 'secret-key')
-        self.response_mock = ResponseListMock(
-            {idx: dict(id=idx, external_id=idx, print_queue_id=3, state='new') for idx in range(5)})
+        self.response_mock = ResponseListMock({
+            idx: dict(id=idx, external_id=idx, print_queue_id=3, state='new') for idx in range(5)
+        })
 
     def test_create_multi_tasks_success(self):
         with patch('komtet_kassa_sdk.client.requests') as requests:
