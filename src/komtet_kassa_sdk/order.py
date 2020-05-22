@@ -1,5 +1,6 @@
 # coding: utf-8
-from . import Agent, PaymentMethod, VatRate
+from komtet_kassa_sdk.lib.helpers import apply_discount, to_decimal
+from . import PaymentMethod, VatRate
 
 
 class Order(object):
@@ -127,3 +128,9 @@ class Order(object):
         :param int courier_id: ID курьера
         """
         self.__data['courier_id'] = courier_id
+
+    def apply_discount(self, discount):
+        """
+        :param int|float discount: сумма скидки
+        """
+        apply_discount(discount, self.__data['items'])

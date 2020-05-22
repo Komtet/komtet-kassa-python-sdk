@@ -223,6 +223,21 @@ class TestCheck(TestCase):
         check.set_additional_check_props('Дополнительный реквизит чека')
         self.assertEqual(check['additional_check_props'], 'Дополнительный реквизит чека')
 
+    def test_apply_discount(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_client(name='Иванов И.П.', inn='1231231231')
+        check.set_cashier('Иваров И.П.', '1234567890123')
+        check.add_position('name 0', price=120.67, oid=1,
+                           calculation_method=CalculationMethod.FULL_PAYMENT,
+                           calculation_subject=CalculationSubject.PRODUCT)
+        check.add_position('name 1', price=113.54, oid=2,
+                           calculation_method=CalculationMethod.FULL_PAYMENT,
+                           calculation_subject=CalculationSubject.PRODUCT)
+        check.apply_discount(50)
+
+        self.assertEqual(check['positions'][0]['total'], Decimal('94.91'))
+        self.assertEqual(check['positions'][1]['total'], Decimal('89.30'))
+
 
 class TestCorrectionCheck(TestCase):
     def test_check(self):
@@ -650,6 +665,15 @@ class TestOrder(TestCase):
         }
         for key, value in order:
             self.assertEqual(expected[key], value)
+
+    def test_apply_discount(self):
+        order = Order(order_id='123', state='new', sno=0)
+        order.add_position(oid='1', type='product', name='position name1', price=120.67)
+        order.add_position(oid='2', type='product', name='position name2', price=113.54)
+        order.apply_discount(50)
+
+        self.assertEqual(order['items'][0]['total'], Decimal('94.91'))
+        self.assertEqual(order['items'][1]['total'], Decimal('89.30'))
 
 
 class TestClientOrder(TestCase):

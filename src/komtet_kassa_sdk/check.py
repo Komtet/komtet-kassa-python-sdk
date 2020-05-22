@@ -1,4 +1,5 @@
 # coding: utf-8
+from komtet_kassa_sdk.lib.helpers import apply_discount, to_decimal
 
 
 class Intent(object):
@@ -505,6 +506,12 @@ class Check(object):
         """
         self.__data['callback_url'] = url
         return self
+
+    def apply_discount(self, discount):
+        """
+        :param int|float discount: сумма скидки
+        """
+        apply_discount(discount, self.__data['positions'])
 
 
 class CorrectionCheck(object):
