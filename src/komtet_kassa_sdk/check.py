@@ -358,7 +358,7 @@ class Check(object):
 
     def __init__(self, oid, email, intent, tax_system, payment_address=None):
         self.__data = {
-            'task_id': oid,
+            'external_id': oid,
             'user': email,
             'print': False,
             'intent': intent,
@@ -526,7 +526,7 @@ class CorrectionCheck(object):
     def __init__(self, oid, printer_number, intent, tax_system=None):
 
         self.__data = {
-            'task_id': oid,
+            'external_id': oid,
             'printer_number': printer_number,
             'intent': intent,
             'payments': [],

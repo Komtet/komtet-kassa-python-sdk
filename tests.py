@@ -54,7 +54,7 @@ class TestCheck(TestCase):
         check.set_callback_url('http://test.pro')
 
         expected = {
-            'task_id': 1,
+            'external_id': 1,
             'user': 'user@host',
             'print': False,
             'intent': 'sell',
@@ -145,7 +145,7 @@ class TestCheck(TestCase):
         check.add_position('name 2', 100, 3, total=290, vat=20)
 
         expected = {
-            'task_id': 1,
+            'external_id': 1,
             'user': 'user@host',
             'print': False,
             'intent': 'sell',
@@ -249,7 +249,7 @@ class TestCorrectionCheck(TestCase):
         check.set_callback_url('http://test.pro')
 
         expected = {
-            'task_id': 2,
+            'external_id': 2,
             'printer_number': '00112233445566',
             'intent': 'sellCorrection',
             'sno': 0,
