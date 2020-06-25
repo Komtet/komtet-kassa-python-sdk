@@ -128,21 +128,26 @@ class TestCheck(TestCase):
         agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
         self.assertEqual(agent['supplier_info']['inn'], '12345678901')
 
-        nomenclature = Nomenclature('019876543210123421sgEKKPPcS25y5')
-
+        nomenclature = Nomenclature()
+        nomenclature.set_str_code('019876543210123421sgEKKPPcS25y5')
         check.add_position('name 0', price=100, oid=1,
                            calculation_method=CalculationMethod.FULL_PAYMENT,
                            calculation_subject=CalculationSubject.PRODUCT,
                            agent=agent, nomenclature=nomenclature, excise=19.89,
                            country_code='643', declaration_number='10129000/220817/0211234')
-        check.add_payment(200)
-        nomenclature = Nomenclature(
-            '019876543210123421sgEKKPPcS25y5',
-            '444D00000096b43f303132333432317367454b4b5050635332357935')
+
+        nomenclature = Nomenclature()
+        nomenclature.set_str_code('019876543210123421sgEKKPPcS25y5')
+        nomenclature.set_hex_code('444D00000096b43f303132333432317367454b4b5050635332357935')
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2',
                            nomenclature=nomenclature)
+
+        nomenclature = Nomenclature()
+        nomenclature.set_hex_code('444D00000096b43f303132333432317367454b4b5050635332357935')
+        check.add_position('name 2', 100, 3, total=290, vat=20, nomenclature=nomenclature)
+
+        check.add_payment(200)
         check.add_payment(300)
-        check.add_position('name 2', 100, 3, total=290, vat=20)
 
         expected = {
             'external_id': 1,
@@ -206,7 +211,10 @@ class TestCheck(TestCase):
                     'price': 100,
                     'quantity': 3,
                     'total': 290,
-                    'vat': '20'
+                    'vat': '20',
+                    'nomenclature_code': {
+                        'hex_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
+                    }
                 }
             ]
         }
