@@ -262,22 +262,26 @@ class Nomenclature(object):
         self.__data = {'nomenclature_code': {}}
 
         if code:
-            self.set_str_code(code)
+            self.code = code
 
         if hex_code:
-            self.set_hex_code(hex_code)
+            self.hex_code = hex_code
 
-    def set_str_code(self, code):
-        """Установить код товарной номенклатуры в ASCII
-        :param str code: Код маркировки
-        """
-        self.__data['nomenclature_code']['code'] = code
+    @property
+    def code(self):
+        return self.__data['nomenclature_code'].get('code')
 
-    def set_hex_code(self, code):
-        """Установить код товарной номенклатуры в HEX
-        :param str code: Код маркировки
-        """
-        self.__data['nomenclature_code']['hex_code'] = code
+    @code.setter
+    def code(self, value):
+        self.__data['nomenclature_code']['code'] = value
+
+    @property
+    def hex_code(self):
+        return self.__data['nomenclature_code'].get('hex_code')
+
+    @hex_code.setter
+    def hex_code(self, value):
+        self.__data['nomenclature_code']['hex_code'] = value
 
     def __iter__(self):
         for item in self.__data.items():
