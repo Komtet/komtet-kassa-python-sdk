@@ -258,15 +258,30 @@ class Nomenclature(object):
     :param str hex_code: Код маркировки в HEX представлении
     """
 
-    def __init__(self, code, hex_code=None):
-        self.__data = {
-            'nomenclature_code': {
-                'code': code
-            }
-        }
+    def __init__(self, code=None, hex_code=None):
+        self.__data = {'nomenclature_code': {}}
+
+        if code:
+            self.code = code
 
         if hex_code:
-            self.__data['nomenclature_code']['hex_code'] = hex_code
+            self.hex_code = hex_code
+
+    @property
+    def code(self):
+        return self.__data['nomenclature_code'].get('code')
+
+    @code.setter
+    def code(self, value):
+        self.__data['nomenclature_code']['code'] = value
+
+    @property
+    def hex_code(self):
+        return self.__data['nomenclature_code'].get('hex_code')
+
+    @hex_code.setter
+    def hex_code(self, value):
+        self.__data['nomenclature_code']['hex_code'] = value
 
     def __iter__(self):
         for item in self.__data.items():
