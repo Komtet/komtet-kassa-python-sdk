@@ -450,6 +450,16 @@ class Check(object):
         """
         self.__data['additional_check_props'] = value
 
+    def set_additional_user_props(self, name, value):
+        """
+        :param str name: Наименование дополнительного реквизита пользователя
+        :param str value: Значение дополнительного реквизита пользователя
+        """
+        self.__data['additional_user_props'] = {
+            'name': name,
+            'value': value
+        }
+
     # Deprecated
     def add_cashier(self, name, inn=None):
         return self.set_cashier(name, inn)

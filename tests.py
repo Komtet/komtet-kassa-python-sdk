@@ -231,6 +231,12 @@ class TestCheck(TestCase):
         check.set_additional_check_props('Дополнительный реквизит чека')
         self.assertEqual(check['additional_check_props'], 'Дополнительный реквизит чека')
 
+    def test_set_additional_user_props(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.set_additional_user_props('Наименование', 'Значение')
+        self.assertEqual(check['additional_user_props'],
+                         {'name': 'Наименование', 'value': 'Значение'})
+
     def test_apply_discount(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
         check.set_client(name='Иванов И.П.', inn='1231231231')
