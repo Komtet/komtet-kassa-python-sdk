@@ -198,7 +198,6 @@ class Client(object):
     def create_employee(self, employee):
         """
         Создание сотрудника
-
         :param Employee employee: Экземпляр сотрудника
         """
         rep = self.__post('/api/shop/v1/employees', dict(employee))
