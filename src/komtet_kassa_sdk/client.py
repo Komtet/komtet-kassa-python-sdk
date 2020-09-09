@@ -216,7 +216,7 @@ class Client(object):
         result = rep.json()
         return EmployeeInfo(**result)
 
-    def get_employee_info(self, oid):
+    def get_employee_info(self, eid):
         """
         Просмотр информации о сотруднике
         :param int eid: Идентификатор сотрудника
