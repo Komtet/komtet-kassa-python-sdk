@@ -3,9 +3,9 @@ from decimal import Decimal
 from unittest import TestCase
 
 from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSubject, Check,
-                              Client, CorrectionCheck, CorrectionType, CouriersInfo, Intent,
-                              Nomenclature, Order, OrderInfo, PaymentMethod, Task, TaskInfo,
-                              TaxSystem, VatRate)
+                              Client, CorrectionCheck, CorrectionType, Employee, EmployeeInfo,
+                              EmployeeType, Intent, Nomenclature, Order, OrderInfo, PaymentMethod,
+                              Task, TaskInfo, TaxSystem, VatRate)
 from komtet_kassa_sdk.client import Response
 from mock import patch
 
@@ -427,7 +427,7 @@ class TestClient(TestCase):
     def test_get_couriers_success(self):
         with patch('komtet_kassa_sdk.client.requests') as requests:
             response_mock = ResponseMock(
-                couriers=[
+                account_employees=[
                     {
                         'email': 'q@mail.ru',
                         'id': 46,
@@ -449,22 +449,21 @@ class TestClient(TestCase):
                 meta={'total': 3, 'total_pages': 1}
             )
             requests.get.return_value = response_mock
-            couriers_info = self.client.get_couriers()
-            self.assertIsInstance(couriers_info, CouriersInfo)
-            self.assertDictEqual(couriers_info.meta, {'total': 3, 'total_pages': 1})
-            self.assertDictEqual(couriers_info.couriers[0], {
+            couriers_info = self.client.get_employees(type=EmployeeType.COURIER)
+            self.assertDictEqual(couriers_info['meta'], {'total': 3, 'total_pages': 1})
+            self.assertDictEqual(couriers_info['account_employees'][0], {
                 'email': 'q@mail.ru',
                 'id': 46,
                 'phone': '1',
                 'name': 'Dima D'
             })
-            self.assertDictEqual(couriers_info.couriers[1], {
+            self.assertDictEqual(couriers_info['account_employees'][1], {
                 'email': 'q@q.com',
                 'id': 57,
                 'phone': '1',
                 'name': 'qwerty'
             })
-            self.assertDictEqual(couriers_info.couriers[2], {
+            self.assertDictEqual(couriers_info['account_employees'][2], {
                 'email': 'ivanov@example.com',
                 'id': 2,
                 'phone': '+70000000000',
@@ -1062,3 +1061,48 @@ class TestMultiTasks(TestCase):
                 expected = dict(id=idx, external_id=idx, print_queue_id=3, state='new')
                 for key, value in expected.items():
                     self.assertEqual(value, getattr(check_info, key))
+
+
+class TestEmployee(TestCase):
+    def setUp(self):
+        self.client = Client('shop-id', 'secret-key')
+        self.response_mock = ResponseMock(
+            id=1, name='Ivanov Ivan Ivanovich', login='test_login',
+            password='test_password', pos_id='POS_KEY')
+
+    def test_create_order_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            requests.post.return_value = self.response_mock
+
+            employee = Employee(type=EmployeeType.CASHIER, name='Ivanov Ivan Ivanovich',
+                                login='test_login', password='test_password', pos_id='POS_KEY')
+
+            employee_info = self.client.create_employee(employee)
+            self.assertIsInstance(employee_info, EmployeeInfo)
+            self.assertEqual(employee_info.id, 1)
+            self.assertEqual(employee_info.name, 'Ivanov Ivan Ivanovich')
+            self.assertEqual(employee_info.login, 'test_login')
+            self.assertEqual(employee_info.password, 'test_password')
+            self.assertEqual(employee_info.pos_id, 'POS_KEY')
+
+    def test_update_order_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            requests.put.return_value = self.response_mock
+
+            employee = Employee(type=EmployeeType.CASHIER, name='Ivanov Ivan Ivanovich',
+                                login='test_login', password='test_password', pos_id='POS_KEY')
+
+            employee_info = self.client.update_employee(1, employee)
+            self.assertIsInstance(employee_info, EmployeeInfo)
+            self.assertEqual(employee_info.id, 1)
+            self.assertEqual(employee_info.name, 'Ivanov Ivan Ivanovich')
+            self.assertEqual(employee_info.login, 'test_login')
+            self.assertEqual(employee_info.password, 'test_password')
+            self.assertEqual(employee_info.pos_id, 'POS_KEY')
+
+    def test_delete_order_success(self):
+        with patch('komtet_kassa_sdk.client.requests') as requests:
+            requests.delete.return_value = ResponseMock()
+
+            result = self.client.delete_employee(1)
+            self.assertEqual(result, True)

@@ -1,5 +1,12 @@
 Changelog
 =========
+5.0.0 (08.09.2020)
+------------------
+
+- Добавлен класс `Employee` для создания, просмотра, редактирования сотрудников
+- В классе `Client` метод `get_couriers` заменен на `get_employees`
+- В класс `Client` добавлены методы `create_employee`, `update_employee`, `get_employee_info`, `delete_employee`
+
 4.2.0 (10.07.2020)
 ------------------
 

@@ -4,7 +4,6 @@ import functools
 import hashlib
 import hmac
 import json
-from collections import namedtuple
 
 import requests
 
@@ -34,7 +33,7 @@ class Response(object):
         return self.__data
 
 
-Task = TaskInfo = OrderInfo = CouriersInfo = Response
+Task = TaskInfo = OrderInfo = EmployeeInfo = Response
 
 
 class Client(object):
@@ -139,17 +138,6 @@ class Client(object):
         result = rep.json()
         return result
 
-    def get_couriers(self, start='0', limit='10'):
-        """
-        Возвращает информацию о курьерах
-        :param string start: Начинать вывод курьеров с start
-        :param string limit: Ограничить вывод курьеров на limit элементов
-        """
-        rep = self.__get('/api/shop/v1/couriers?start=%s&limit=%s' % (start, limit))
-        rep.raise_for_status()
-        result = rep.json()
-        return CouriersInfo(**result)
-
     def create_order(self, order):
         """
         Создание заказа на доставку
@@ -188,6 +176,62 @@ class Client(object):
         :param int oid: Идентификатор заказа
         """
         rep = self.__delete('/api/shop/v1/orders/%s' % oid)
+        rep.raise_for_status()
+        return True
+
+    def get_employees(self, type=None, start='0', limit='10'):
+        """
+        Возвращает информацию о курьерах
+        :param EmployeeType type: Тип сотрудника
+        :param string start: Начинать вывод сотрудников с start
+        :param string limit: Ограничить вывод сотрудников на limit элементов
+        """
+        url = '/api/shop/v1/employees?start=%s&limit=%s' % (start, limit)
+        if type:
+            url += '&type=%s' % type
+
+        rep = self.__get(url)
+        rep.raise_for_status()
+        result = rep.json()
+        return result
+
+    def create_employee(self, employee):
+        """
+        Создание сотрудника
+        :param Employee employee: Экземпляр сотрудника
+        """
+        rep = self.__post('/api/shop/v1/employees', dict(employee))
+        rep.raise_for_status()
+        result = rep.json()
+        return EmployeeInfo(**result)
+
+    def update_employee(self, eid, employee):
+        """
+        Обновление информации о сотруднике
+        :param int eid: Идентификатор сотрудника
+        :param Employee employee: Экземпляр сотрудника
+        """
+        rep = self.__put('/api/shop/v1/employees/%s' % eid, dict(employee))
+        rep.raise_for_status()
+        result = rep.json()
+        return EmployeeInfo(**result)
+
+    def get_employee_info(self, eid):
+        """
+        Просмотр информации о сотруднике
+        :param int eid: Идентификатор сотрудника
+        """
+        rep = self.__get('/api/shop/v1/employees/%s' % oid)
+        rep.raise_for_status()
+        result = rep.json()
+        return EmployeeInfo(**result)
+
+    def delete_employee(self, eid):
+        """
+        Удаление сотрудника
+        :param int eid: Идентификатор сотрудника
+        """
+        rep = self.__delete('/api/shop/v1/employees/%s' % eid)
         rep.raise_for_status()
         return True
 

@@ -1,5 +1,5 @@
 # coding: utf-8
-from komtet_kassa_sdk.lib.helpers import apply_discount, to_decimal
+from komtet_kassa_sdk.lib.helpers import apply_discount
 
 
 class Intent(object):
