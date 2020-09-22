@@ -71,7 +71,8 @@ class Order(object):
 
     def add_position(self, oid, name, price, quantity=1, total=None,
                      vat=VatRate.RATE_NO, measure_name=None, type=None, agent=None,
-                     excise=None, country_code=None, declaration_number=None):
+                     excise=None, country_code=None, declaration_number=None,
+                     nomenclature_code=None, is_need_nomenclature_code=None):
         """
         :param str oid: Идентификатор позиции в заказе
         :param str type: Тип заказа
@@ -84,6 +85,8 @@ class Order(object):
         :param int|float excise: Сумма акциза
         :param str country_code: Цифровой код страны происхождения товара
         :param str declaration_number: Номер таможенной декларации
+        :param str nomenclature_code: Код товара считанный с марки
+        :param bool is_need_nomenclature_code: Требуется считать маркировку
         """
         if total is None:
             total = price * quantity
@@ -114,6 +117,12 @@ class Order(object):
 
         if declaration_number is not None:
             position['declaration_number'] = declaration_number
+
+        if nomenclature_code is not None:
+            position['nomenclature_code'] = nomenclature_code
+
+        if is_need_nomenclature_code is not None:
+            position['is_need_nomenclature_code'] = is_need_nomenclature_code
 
         self.__data['items'].append(position)
         return self

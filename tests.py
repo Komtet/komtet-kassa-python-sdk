@@ -688,6 +688,15 @@ class TestOrder(TestCase):
         self.assertEqual(order['items'][0]['total'], Decimal('94.91'))
         self.assertEqual(order['items'][1]['total'], Decimal('89.30'))
 
+    def test_position_add_nomenclature_code(self):
+        order = Order(order_id='123', state='new', sno=0)
+        order.add_position(oid='1', type='product', name='position name1', price=120.67,
+                           nomenclature_code='019876543210123421sgEKKPPcS25y5',
+                           is_need_nomenclature_code=False)
+
+        self.assertEqual(order['items'][0]['nomenclature_code'], '019876543210123421sgEKKPPcS25y5')
+        self.assertFalse(order['items'][0]['is_need_nomenclature_code'])
+
 
 class TestClientOrder(TestCase):
     def setUp(self):
