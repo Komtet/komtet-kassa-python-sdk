@@ -57,7 +57,7 @@ def correction_positions(items):
             quantity -= 1
             base_position_total = to_decimal(price * quantity)
             price = total - base_position_total
-            
+
             new_items.append(update_item(item.copy(), {
                 'price': price,
                 'quantity': 1,
