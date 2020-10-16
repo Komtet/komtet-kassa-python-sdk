@@ -1,5 +1,5 @@
 # coding: utf-8
-from komtet_kassa_sdk.lib.helpers import apply_discount
+from komtet_kassa_sdk.lib.helpers import apply_discount, correction_positions
 
 from . import PaymentMethod, VatRate
 
@@ -144,3 +144,9 @@ class Order(object):
         :param int|float discount: сумма скидки
         """
         apply_discount(discount, self.__data['items'])
+
+    def apply_correction_positions(self):
+        """
+        Кооректировка позиций с расхождениями между price * quantity и total
+        """
+        self.__data['items'] = correction_positions(self.__data['items'])

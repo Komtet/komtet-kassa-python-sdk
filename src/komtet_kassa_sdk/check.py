@@ -1,5 +1,5 @@
 # coding: utf-8
-from komtet_kassa_sdk.lib.helpers import apply_discount
+from komtet_kassa_sdk.lib.helpers import apply_discount, correction_positions
 
 
 class Intent(object):
@@ -537,6 +537,12 @@ class Check(object):
         :param int|float discount: сумма скидки
         """
         apply_discount(discount, self.__data['positions'])
+
+    def apply_correction_positions(self):
+        """
+        Кооректировка позиций с расхождениями между price * quantity и total
+        """
+        self.__data['positions'] = correction_positions(self.__data['positions'])
 
 
 class CorrectionCheck(object):

@@ -7,6 +7,7 @@ from komtet_kassa_sdk import (Agent, AgentType, CalculationMethod, CalculationSu
                               EmployeeType, Intent, Nomenclature, Order, OrderInfo, PaymentMethod,
                               Task, TaskInfo, TaxSystem, VatRate)
 from komtet_kassa_sdk.client import Response
+from komtet_kassa_sdk.lib.helpers import correction_positions
 from mock import patch
 
 
@@ -251,6 +252,19 @@ class TestCheck(TestCase):
 
         self.assertEqual(check['positions'][0]['total'], Decimal('94.91'))
         self.assertEqual(check['positions'][1]['total'], Decimal('89.30'))
+
+    def test_apply_correction_positions(self):
+        '''
+        Тест применения алгоритма корректировки позиции
+        '''
+
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.add_position(oid=1, name='Позиция 1', price=Decimal('42.4'),
+                           quantity=2, total=Decimal(84.5))
+
+        check.add_position(oid='2', name="Доставка", price=10)
+        check.apply_correction_positions()
+        self.assertEqual(len(check['positions']), 3)
 
 
 class TestCorrectionCheck(TestCase):
@@ -880,6 +894,18 @@ class TestClientOrder(TestCase):
             self.assertEqual(order_info.payment_type, 'cash')
             self.assertEqual(order_info.prepayment, 200.0)
 
+    def test_apply_correction_positions(self):
+        '''
+        Тест применения алгоритма корректировки позиции
+        '''
+        order = Order(order_id=2589, is_paid=True, state='new', sno=0)
+
+        order.add_position(oid='1', type='product', name='Позиция 1', vat='10', quantity=2,
+                           price=Decimal('42.4'), total=Decimal(84.5))
+        order.add_position(oid='2', type='delivery', name="Доставка", price=10)
+        order.apply_correction_positions()
+        self.assertEqual(len(order['items']), 3)
+
 
 class TestResponse(TestCase):
 
@@ -1115,3 +1141,19 @@ class TestEmployee(TestCase):
 
             result = self.client.delete_employee(1)
             self.assertEqual(result, True)
+
+
+class TestHelpers(TestCase):
+    def test_correction_positions(self):
+        '''
+        Тест корректировки позиций
+        '''
+        result = correction_positions([
+            {'price': Decimal('42.4'), 'quantity': 2, 'total': Decimal('84.5')},
+            {'price': Decimal('10'), 'quantity': 1, 'total': Decimal('10')}
+        ])
+        self.assertListEqual(result, [
+            {'price': Decimal('42.10'), 'quantity': 1, 'total': Decimal('42.10')},
+            {'price': Decimal('42.4'), 'quantity': 1, 'total': Decimal('42.40')},
+            {'price': Decimal('10'), 'quantity': 1, 'total': Decimal('10')}
+        ])
