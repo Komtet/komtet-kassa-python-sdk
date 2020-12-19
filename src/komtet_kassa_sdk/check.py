@@ -410,7 +410,7 @@ class Check(object):
     def set_client(self, name=None, inn=None):
         """
         :param str name: Наименование покупателя
-        :param int inn: ИНН покупателя
+        :param str inn: ИНН покупателя
         """
 
         self.__data['client'] = {}
@@ -429,7 +429,7 @@ class Check(object):
     def set_cashier(self, name, inn=None):
         """
         :param str name: Ф.И.О. кассира
-        :param int inn: ИНН кассира
+        :param str inn: ИНН кассира
         """
         self.__data['cashier'] = {'name': name}
 
@@ -612,7 +612,7 @@ class CorrectionCheck(object):
     def set_authorised_person(self, name, inn=None):
         """
         :param str name: Ф.И.О. кассира
-        :param int inn: ИНН кассира
+        :param str inn: ИНН кассира
         """
         self.__data['authorised_person'] = {'name': name}
 
