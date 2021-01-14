@@ -37,14 +37,13 @@ class Order(object):
     def __getitem__(self, item):
         return self.__data[item]
 
-    def set_client(self, address, phone, email=None, name=None, latitude=None, longitude=None):
+    def set_client(self, address, phone, email=None, name=None, coordinate=None):
         """
         :param str client_name: Имя получателя
         :param str client_address: Адрес доставки
         :param str client_phone: Телефон получателя
         :param str client_email: Email получателя
-        :param str client_address_latitude: Координаты широты
-        :param str client_address_longitude: Координаты долготы
+        :param dict client_address_coordinate: Координата адреса получателя
         """
         self.__data['client_address'] = address
         self.__data['client_phone'] = phone
@@ -55,11 +54,8 @@ class Order(object):
         if name:
             self.__data['client_name'] = name
 
-        if latitude:
-            self.__data['client_address_latitude'] = latitude
-
-        if longitude:
-            self.__data['client_address_longitude'] = longitude
+        if coordinate:
+            self.__data['client_address_coordinate'] = coordinate
 
     def set_delivery_time(self, date_start, date_end):
         """

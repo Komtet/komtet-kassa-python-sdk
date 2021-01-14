@@ -718,11 +718,13 @@ class TestOrder(TestCase):
                          address='г.Пенза, ул.Суворова д.144а',
                          phone='+79273784183',
                          email='client@email.com',
-                         latitude='53.202838856701206',
-                         longitude='44.99768890421866')
+                         coordinate={'latitude': '53.202838856701206',
+                                     'longitude': '44.99768890421866'})
 
-        self.assertEqual(order._Order__data['client_address_latitude'], '53.202838856701206')
-        self.assertEqual(order._Order__data['client_address_longitude'], '44.99768890421866')
+        self.assertEqual(
+            order._Order__data['client_address_coordinate']['latitude'], '53.202838856701206')
+        self.assertEqual(
+            order._Order__data['client_address_coordinate']['longitude'], '44.99768890421866')
 
 
 class TestClientOrder(TestCase):
