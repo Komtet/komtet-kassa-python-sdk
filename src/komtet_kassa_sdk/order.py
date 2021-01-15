@@ -43,7 +43,7 @@ class Order(object):
         :param str client_address: Адрес доставки
         :param str client_phone: Телефон получателя
         :param str client_email: Email получателя
-        :param dict client_address_coordinate: Координата адреса получателя
+        :param dict client_coordinate: Координата адреса получателя
         """
         self.__data['client_address'] = address
         self.__data['client_phone'] = phone
@@ -55,7 +55,7 @@ class Order(object):
             self.__data['client_name'] = name
 
         if coordinate:
-            self.__data['client_address_coordinate'] = coordinate
+            self.__data['client_coordinate'] = coordinate
 
     def set_delivery_time(self, date_start, date_end):
         """

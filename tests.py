@@ -722,9 +722,9 @@ class TestOrder(TestCase):
                                      'longitude': '44.99768890421866'})
 
         self.assertEqual(
-            order._Order__data['client_address_coordinate']['latitude'], '53.202838856701206')
+            order._Order__data['client_coordinate']['latitude'], '53.202838856701206')
         self.assertEqual(
-            order._Order__data['client_address_coordinate']['longitude'], '44.99768890421866')
+            order._Order__data['client_coordinate']['longitude'], '44.99768890421866')
 
 
 class TestClientOrder(TestCase):
