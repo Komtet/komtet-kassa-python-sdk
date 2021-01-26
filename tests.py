@@ -711,6 +711,21 @@ class TestOrder(TestCase):
         self.assertEqual(order['items'][0]['nomenclature_code'], '019876543210123421sgEKKPPcS25y5')
         self.assertFalse(order['items'][0]['is_need_nomenclature_code'])
 
+    def test_add_client_longitude_latitude(self):
+        order = Order(order_id='123', state='new', sno=0)
+        order.add_position(oid='1', type='product', name='test position1', price=1990)
+        order.set_client(name='Иванов Иван Петрович',
+                         address='г.Пенза, ул.Суворова д.144а',
+                         phone='+79273784183',
+                         email='client@email.com',
+                         coordinate={'latitude': '53.202838856701206',
+                                     'longitude': '44.99768890421866'})
+
+        self.assertEqual(
+            order._Order__data['client_coordinate']['latitude'], '53.202838856701206')
+        self.assertEqual(
+            order._Order__data['client_coordinate']['longitude'], '44.99768890421866')
+
 
 class TestClientOrder(TestCase):
     def setUp(self):
