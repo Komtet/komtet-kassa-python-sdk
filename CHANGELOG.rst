@@ -5,6 +5,7 @@ Unreleased
 ----------
 
 - Правка типа ИНН в описании методов классов `Check` и `CorrectionCheck`
+- Добавлены поля `client_address_latitude` и `client_address_longitude`
 
 5.2.0 (08.10.2020)
 ------------------
