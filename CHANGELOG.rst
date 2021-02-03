@@ -4,8 +4,11 @@ Changelog
 Unreleased
 ----------
 
+5.3.0 (03.02.2021)
+------------------
+
 - Правка типа ИНН в описании методов классов `Check` и `CorrectionCheck`
-- Добавлены поля `client_address_latitude` и `client_address_longitude`
+- В класс `Order` в метод `set_client` добавлен параметр `client_coordinate`
 - Добавлен признак расчёта `pay`
 
 5.2.0 (08.10.2020)
