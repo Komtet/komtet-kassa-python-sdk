@@ -7,8 +7,8 @@ from . import PaymentMethod, VatRate
 class Order(object):
     """
     :param int order_id: Номер операции в магазине
-    :param str state: Статус заказа
     :param str sno: Система налогообложения
+    :param str state: Статус заказа
     :param int|float prepayment: Предоплата
     :param PaymentMethod payment_type: Тип платежа
     """
