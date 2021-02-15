@@ -7,14 +7,14 @@ from . import PaymentMethod, VatRate
 class Order(object):
     """
     :param int order_id: Номер операции в магазине
-    :param str state: Статус заказа
     :param str sno: Система налогообложения
+    :param str state: Статус заказа
     :param int|float prepayment: Предоплата
     :param PaymentMethod payment_type: Тип платежа
     """
 
-    def __init__(self, order_id, state=None, sno=None,
-                 is_paid=False, prepayment=0, payment_type=PaymentMethod.CARD):
+    def __init__(self, order_id, sno, state=None, is_paid=False,
+                 prepayment=0, payment_type=PaymentMethod.CARD):
         self.__data = {
             'order_id': order_id,
             'is_paid': is_paid,
@@ -22,13 +22,11 @@ class Order(object):
             'items': [],
             'payment_type': payment_type,
             'prepayment': prepayment,
+            'sno': sno
         }
 
         if state:
             self.__data['state'] = state
-
-        if sno:
-            self.__data['sno'] = sno
 
     def __iter__(self):
         for item in self.__data.items():
