@@ -1,7 +1,5 @@
 .PHONY: all build test test_legacy test_all create_eggs
 
-BOOTSTRAP_BUILDOUT = "https://bootstrap.pypa.io/bootstrap-buildout.py"
-
 all:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
@@ -23,4 +21,3 @@ eggs:
 	@docker-compose run python2 bash -c 'python setup.py bdist_egg'
 	@docker-compose run python3 bash -c 'python setup.py bdist_egg'
 	@sudo chown $$USER:$$USER -R ./dist
-	@sudo chown $$USER:$$USER -R ./src
