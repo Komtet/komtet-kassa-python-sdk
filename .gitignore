@@ -4,10 +4,4 @@ __pycache__/
 *.egg-info/
 
 # Buildout
-buildout/
-.installed.cfg
-bootstrap.py
-
-# Setuptools
-build/
 dist/
