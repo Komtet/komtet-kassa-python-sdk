@@ -19,7 +19,8 @@ services:
       dockerfile: ./config/docker/Python3
     volumes:
       - ./src:/src
+      - ./tests:/tests
       - ./dist:/dist
-      - ./tests.py:/tests.py
+      # - ./tests.py:/tests.py
       - ./setup.py:/setup.py
     container_name: kk_sdk_python3

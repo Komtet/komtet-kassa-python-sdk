@@ -1,5 +1,7 @@
 FROM python:2.7
 
+ENV PYTHONDONTWRITEBYTECODE yes
+
 COPY ./ /
 WORKDIR ./
 
