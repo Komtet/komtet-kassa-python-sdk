@@ -1,0 +1,25 @@
+version: "3"
+services:
+
+  python2:
+    build:
+      context: ./
+      dockerfile: ./config/docker/Python2
+    volumes:
+      - ./src:/src
+      - ./dist:/dist
+      - ./tests.py:/tests.py
+      - ./setup.py:/setup.py
+    container_name: kk_sdk_python2
+
+
+  python3:
+    build:
+      context: ./
+      dockerfile: ./config/docker/Python3
+    volumes:
+      - ./src:/src
+      - ./dist:/dist
+      - ./tests.py:/tests.py
+      - ./setup.py:/setup.py
+    container_name: kk_sdk_python3
