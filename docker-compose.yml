@@ -7,8 +7,8 @@ services:
       dockerfile: ./config/docker/Python2
     volumes:
       - ./src:/src
+      - ./tests:/tests
       - ./dist:/dist
-      - ./tests.py:/tests.py
       - ./setup.py:/setup.py
     container_name: kk_sdk_python2
 
@@ -21,6 +21,5 @@ services:
       - ./src:/src
       - ./tests:/tests
       - ./dist:/dist
-      # - ./tests.py:/tests.py
       - ./setup.py:/setup.py
     container_name: kk_sdk_python3
