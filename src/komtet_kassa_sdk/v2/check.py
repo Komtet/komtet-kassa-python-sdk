@@ -2,6 +2,21 @@
 from komtet_kassa_sdk.v1.lib.helpers import apply_discount, correction_positions
 
 
+class MarkTypes(object):
+    """Типы маркировок"""
+
+    UNKNOWN = 'unknown'
+    EAN8 = 'ean8'
+    EAN13 = 'ean13'
+    ITF14 = 'itf14'
+    GS10 = 'gs10'
+    GS1M = 'GS1M'
+    SHORT = 'short'
+    FUR = 'fur'
+    EGAIS20 = 'egais20'
+    EGAIS30 = 'egais30'
+
+
 class Intent(object):
     """Направление платежа"""
 
@@ -99,7 +114,34 @@ class VatRate(object):
         return cls.rates
 
 
-class PaymentMethod(object):
+class MesureTypes(object):
+    PIECE = 0
+    GRAMM = 10
+    KG = 11
+    TON = 12
+    CENTIMETER = 20
+    DECIMETER = 21
+    METER = 22
+    SQUARE_CENTIMETER = 30
+    SQUARE_DECIMETER = 31
+    SQUARE_METER = 32
+    MILLILITER = 40
+    LITER = 41
+    CUBIC_METER = 42
+    KWT_HOUR = 50
+    GIGA_CALORIE = 51
+    DAY = 70
+    HOUR = 71
+    MINUTE = 72
+    SECOND = 73
+    KILOBYTE = 80
+    MEGABYTE = 81
+    GIGABYTE = 82
+    TERABYTE = 83
+    OTHER_MEASURMENTS = 255
+
+
+class PaymentType(object):
     """Метод оплаты"""
 
     CARD = 'card'
@@ -128,7 +170,7 @@ class CorrectionType(object):
     """По предписанию"""
 
 
-class CalculationMethod(object):
+class PaymentMethod(object):
     """Cпособ рассчета"""
 
     PRE_PAYMENT_FULL = 'pre_payment_full'
@@ -157,74 +199,125 @@ class CalculationMethod(object):
        кредит - «ПЕРЕДАЧА В КРЕДИТ»"""
 
 
-class CalculationSubject(object):
+class PaymentObject(object):
     """Признак рассчета"""
 
-    PRODUCT = 'product'
+    PRODUCT = 0
     """Товар, за исключением подакцизного товара"""
 
-    PRODUCT_PRACTICAL = 'product_practical'
+    PRODUCT_PRACTICAL = 1
     """Подакцизный товар"""
 
-    WORK = 'work'
+    WORK = 2
     """Работа"""
 
-    SERVICE = 'service'
+    SERVICE = 3
     """Услуга"""
 
-    GAMBLING_BET = 'gambling_bet'
+    GAMBLING_BET = 4
     """Прием ставок при осуществлении деятельности по проведению азартных игр"""
 
-    GAMBLING_WIN = 'gambling_win'
+    GAMBLING_WIN = 5
     """Выплата денежных средств в виде выигрыша при осуществлении деятельности по проведению
        азартных игр"""
 
-    LOTTERY_BET = 'lottery_bet'
+    LOTTERY_BET = 6
     """Прием денежных средств при реализации лотерейных билетов, электронных лотерейных билетов,
        приеме лотерейных ставок при осуществлении деятельности по проведению лотерей"""
 
-    LOTTERY_WIN = 'lottery_win'
+    LOTTERY_WIN = 7
     """Выплате денежных средств в виде выигрыша при осуществлении деятельности по проведению
        лотерей"""
 
-    RID = 'rid'
+    RID = 8
     """Предоставление прав на использование результатов интеллектуальной деятельности или средств
        индивидуализации «ПРЕДОСТАВЛЕНИЕ РИД» или «РИД»"""
 
-    PAYMENT = 'payment'
+    PAYMENT = 9
     """Об авансе, задатке, предоплате, кредите, взносе в счет оплаты, пени, штрафе, вознаграждении,
        бонусе и ином аналогичном предмете расчета"""
 
-    COMMISSION = 'commission'
+    COMMISSION = 10
     """Вознаграждении пользователя, являющегося платежным агентом (субагентом), банковским
        платежным агентом (субагентом), комиссионером, поверенным или иным агентом"""
 
-    COMPOSITE = 'composite'
+    COMPOSITE = 11
     """О предмете расчета, состоящем из предметов, каждому из которых может быть присвоено
        значение от «0» до «11» (0-11 -- это вышеперечисленные)"""
 
-    PAY = 'pay'
+    PAY = 12
     """Взнос в счет оплаты пени, штрафа, вознаграждения, бонуса или
        иного аналогичного предмета расчета"""
 
-    OTHER = 'other'
+    OTHER = 13
     """О предмете расчета, не относящемуся к предметам расчета, которым может быть присвоено
        значение от «0» до «12» (0-12 -- это вышеперечисленные)"""
 
-    PROPERTY_RIGHT = 'property_right'
+    PROPERTY_RIGHT = 14
     """Передача имущественного права"""
 
-    NON_OPERATING = 'non_operating'
+    NON_OPERATING = 15
     """Внереализационный доход"""
 
-    INSURANCE = 'insurance'
+    INSURANCE = 16
     """Страховые взносы"""
 
-    SALES_TAX = 'sales_tax'
+    SALES_TAX = 17
     """Торговый сбор"""
 
-    RESORT_FEE = 'resort_fee'
+    RESORT_FEE = 18
     """Курортный сбор"""
+
+    DEPOSIT = 19
+    """Залог"""
+
+    CONSUMPTION = 20
+    """Расход"""
+
+    SOLE_PROPRIETOR_CPI_CONTRIBUTINS = 21
+    """взносы на ОПС ИП"""
+
+    CPI_CONTRIBUTINS = 22
+    """взносы на ОПС"""
+
+    SOLE_PROPRIETOR_CMI_CONTRIBUTINS = 23
+    """взносы на ОМС ИП"""
+
+    CMI_CONTRIBUTINS = 24
+    """взносы на ОМС"""
+
+    CSI_CONTRIBUTINS = 25
+    """взносы на ОСС"""
+
+    CASINO_PAYMENT = 26
+    """платеж казино"""
+
+    PAYMENT_OF_THE_MONEY = 27
+    """выдача денежных средств банковским платежным агентом"""
+
+    ATHM = 30
+    """
+    Реализация подакцизного товара, подлежащего маркировке средством
+    идентификации, но не имеющего кода маркировки
+    """
+
+    ATM = 31
+    """
+    Реализация подакцизного товара, подлежащего маркировке средством идентификации,
+    и  имеющего код маркировки
+    """
+
+    THM = 32
+    """
+    Реализация товара, подлежащего маркировке средством идентификации,
+    но не имеющего кода маркировки, за исключением подакцизного товара
+    """
+
+    TM = 33
+    """
+    Реализация товара, подлежащего маркировке средством идентификации,
+    и имеющего код маркировки, за исключением подакцизного товара
+    """
 
 
 class AgentType(object):
@@ -256,77 +349,19 @@ class AgentType(object):
        поверенным, комиссионером"""
 
 
-class Nomenclature(object):
-    """Код товара (маркировка)
-    :param str code: Код маркировки
-    :param str hex_code: Код маркировки в HEX представлении
-    """
-
-    def __init__(self, code=None, hex_code=None):
-        self.__data = {'nomenclature_code': {}}
-
-        if code:
-            self.code = code
-
-        if hex_code:
-            self.hex_code = hex_code
-
-    @property
-    def code(self):
-        return self.__data['nomenclature_code'].get('code')
-
-    @code.setter
-    def code(self, value):
-        self.__data['nomenclature_code']['code'] = value
-
-    @property
-    def hex_code(self):
-        return self.__data['nomenclature_code'].get('hex_code')
-
-    @hex_code.setter
-    def hex_code(self, value):
-        self.__data['nomenclature_code']['hex_code'] = value
-
-    def __iter__(self):
-        for item in self.__data.items():
-            yield item
-
-    def __getitem__(self, item):
-        return self.__data[item]
-
-
 class Agent(object):
     """Агент по предмету расчета
     :param srt agent_type: Типы признака агента по предмету расчета
-    :param str phone: Телефон агента
-    :param str name: Название агента (пример:"OOO 'Лютик'")
-    :param str inn: ИНН Агента
     """
 
-    def __init__(self, agent_type, phone=None, name=None, inn=None):
+    def __init__(self, agent_type):
         self.__data = {
             'agent_info': {
                 'type': agent_type
             }
         }
-        self.set_supplier_info(name, phone and [phone], inn)
 
-    def set_supplier_info(self, name=None, phones=None, inn=None):
-        """ Передача атрибутов поставщика
-        :param str name: Наименование поставщика
-        :param list phones: Телефоны поставщика
-        :param str inn: ИНН поставщика
-        """
-        if name or phones or inn:
-            self.__data['supplier_info'] = {}
-            if name:
-                self.__data['supplier_info']['name'] = name
-            if phones:
-                self.__data['supplier_info']['phones'] = phones
-            if inn:
-                self.__data['supplier_info']['inn'] = inn
-
-    def set_paying_agent_info(self, operation, phones):
+    def set_paying_agent(self, operation, phones):
         """ Передача атрибутов платежного агента
         :param str oparation: Наименование операции (максимальная длина строки – 24 символа)
         :param list phones: Телефоны платежного агента
@@ -336,7 +371,7 @@ class Agent(object):
             'phones': phones
         }
 
-    def set_receive_payments_operator_info(self, phones):
+    def set_receive_payments_operator(self, phones):
         """ Передача атрибутов оператора по приему платежей
         :param list phones: Телефоны оператора по приему платежей
         """
@@ -344,7 +379,7 @@ class Agent(object):
             'phones': phones
         }
 
-    def set_money_transfer_operator_info(self, name, phones, address, inn):
+    def set_money_transfer_operator(self, name, phones, address, inn):
         """ Передача атрибутов оператора перевода
         :param str name: Наименование оператора перевода
         :param list phones: Телефоны оператора по приему платежей
@@ -369,24 +404,20 @@ class Agent(object):
 class Check(object):
     """
     :param oid: Номер операции в магазине
-    :param str email: E-Mail пользователя для отправки электронного чека
     :param str intent: Направление платежа
-    :param int tax_system: Система налогообложения
-    :param str payment_address: Место расчетов
     """
 
-    def __init__(self, oid, email, intent, tax_system, payment_address=None):
+    def __init__(self, oid, intent):
         self.__data = {
             'external_id': oid,
-            'user': email,
+            'client': {},
+            'company': {},
             'print': False,
             'intent': intent,
-            'sno': tax_system,
             'payments': [],
-            'positions': []
+            'positions': [],
+            'cashier': {}
         }
-        if payment_address:
-            self.__data['payment_address'] = payment_address
 
     def __iter__(self):
         for item in self.__data.items():
@@ -402,7 +433,7 @@ class Check(object):
         self.__data['print'] = bool(value)
         return self
 
-    def add_payment(self, amount, method=PaymentMethod.CARD):
+    def add_payment(self, amount, method=PaymentType.CARD):
         """
         :param int|float amount: Сумма платежа
         :param str method: Метод оплаты
@@ -411,22 +442,34 @@ class Check(object):
                                         'type': method})
         return self
 
-    def set_client(self, name=None, inn=None):
+    def set_client(self, email, phone=None, name=None, inn=None):
         """
+        :param str email: Email покупателя
+        :param str phone: Телефон покупателя
         :param str name: Наименование покупателя
         :param str inn: ИНН покупателя
         """
 
-        self.__data['client'] = {}
+        self.__data['client'] = {'email': email}
 
         if name:
             self.__data['client']['name'] = name
 
+        if phone:
+            self.__data['client']['phone'] = phone
+
         if inn:
             self.__data['client']['inn'] = inn
 
-        if not self.__data['client']:
-            del self.__data['client']
+        return self
+
+    def set_company(self, payment_address, tax_system):
+        """
+        :param str payment_address: Платёжный адрес компании
+        :param str tax_system: Система налогообложения
+        """
+
+        self.__data['company'] = {'payment_address': payment_address, 'sno': tax_system}
 
         return self
 
@@ -441,12 +484,6 @@ class Check(object):
             self.__data['cashier']['inn'] = inn
 
         return self
-
-    def set_agent(self, agent):
-        """
-        :param Agent agent: агент на чек
-        """
-        self.__data.update(dict(agent))
 
     def set_additional_check_props(self, value):
         """
@@ -464,70 +501,11 @@ class Check(object):
             'value': value
         }
 
-    # Deprecated
-    def add_cashier(self, name, inn=None):
-        return self.set_cashier(name, inn)
-
-    def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
-                     measure_name=None, oid=None, calculation_method=None,
-                     calculation_subject=None, excise=None, country_code=None,
-                     declaration_number=None, agent=None, nomenclature=None):
+    def add_position(self, position):
         """
-        :param str name: Наименование позиции
-        :param int|float price: Цена позиции в чеке
-        :param int|float quantity: Количество единиц
-        :param int|float total: Общая стоимость позиции
-        :param str vat: Налоговая ставка
-        :param str measure_name: Единица измерения
-        :param str oid: Идентификатор позиции в магазине
-        :param str calculation_method: Cпособ рассчета
-        :param str calculation_subject: Признак рассчета
-        :param int|float excise: Сумма акциза
-        :param str country_code: Цифровой код страны происхождения товара
-        :param str declaration_number: Номер таможенной декларации
-        :param Agent agent: Экземпляр агента
-        :param Nomenclature nomenclature: Экземпляр кода номенклатуры (маркировки)
+        :param Position position: Экземпляр позиции
         """
-        if total is None:
-            total = price * quantity
-
-        position = {
-            'name': name,
-            'price': price,
-            'quantity': quantity,
-            'total': total,
-            'vat': VatRate.parse(vat)
-        }
-
-        if measure_name is not None:
-            position['measure_name'] = measure_name
-
-        if oid is not None:
-            position['id'] = oid
-
-        if calculation_method is not None:
-            position['calculation_method'] = calculation_method
-
-        if calculation_subject is not None:
-            position['calculation_subject'] = calculation_subject
-
-        if excise is not None:
-            position['excise'] = excise
-
-        if country_code is not None:
-            position['country_code'] = country_code
-
-        if declaration_number is not None:
-            position['declaration_number'] = declaration_number
-
-        if agent is not None:
-            position.update(dict(agent))
-
-        if nomenclature is not None:
-            position.update(dict(nomenclature))
-
-        self.__data['positions'].append(position)
-        return self
+        self.__data['positions'].append(dict(position))
 
     def set_callback_url(self, url):
         """
@@ -594,7 +572,7 @@ class CorrectionCheck(object):
         }
         return self
 
-    def set_payment(self, amount, vat, method=PaymentMethod.CARD):
+    def set_payment(self, amount, vat, method=PaymentType.CARD):
         """
         :param int|float amount: Сумма платежа
         :param str vat: Налоговая ставка
@@ -631,3 +609,106 @@ class CorrectionCheck(object):
         """
         self.__data['callback_url'] = url
         return self
+
+
+class Position(object):
+    """
+        :param str name: Наименование позиции
+        :param int|float price: Цена позиции в чеке
+        :param int|float quantity: Количество единиц
+        :param str measure: Единица измерения
+        :param str payment_method: Cпособ рассчета
+        :param str payment_subject: Признак рассчета
+        :param int|float total: Общая стоимость позиции
+        :param str user_data: Дополнительный реквизит предмета расчета
+        :param int|float excise: Сумма акциза
+        :param str id: Идентификатор позиции в магазине
+        :param str country_code: Цифровой код страны происхождения товара
+        :param str declaration_number: Номер таможенной декларации
+        :param str vat: Налоговая ставка
+    """
+
+    def __init__(self, name, price, quantity, measure, payment_object, payment_method, total=None,
+                 user_data=None, excise=None, id=None, country_code=None, declaration_number=None,
+                 vat=VatRate.RATE_NO):
+        if total is None:
+            total = price * quantity
+
+        self.__data = {
+            'name': name,
+            'measure': measure,
+            'price': price,
+            'quantity': quantity,
+            'payment_object': payment_object,
+            'payment_method': payment_method,
+            'total': total,
+            'vat': VatRate.parse(vat)
+        }
+
+        if measure is not None:
+            self.__data['measure'] = measure
+
+        if id is not None:
+            self.__data['id'] = id
+
+        if excise is not None:
+            self.__data['excise'] = excise
+
+        if country_code is not None:
+            self.__data['country_code'] = country_code
+
+        if user_data is not None:
+            self.__data['user_data'] = user_data
+
+        if declaration_number is not None:
+            self.__data['declaration_number'] = declaration_number
+
+    def set_agent(self, agent):
+        """
+        :param Agent agent: агент на позицию
+        """
+        self.__data.update(dict(agent))
+
+    def set_mark_code(self, type, code):
+        """ Установка кода маркировки
+        :param str type: Тип маркировки
+        :param str code: Код маркировки
+        """
+        self.__data['mark_code'] = {type: code}
+
+    def set_mark_quantity(self, numerator, denominator):
+        """ Установка дробного колличества маркировки
+        :param int numerator: Делимое
+        :param int denominator: Делитель
+        """
+        self.__data['mark_quantity'] = {
+            'numerator': numerator,
+            'denominator': denominator
+        }
+
+    def set_supplier(self, phones=None, name=None, inn=None):
+        """ Установка данных поставщика
+        :param list phones: Телефоны поставщика
+        :param str name: Название поставщика
+        :param str inn: ИНН поставщика
+        """
+        if not phones and not name and not inn:
+            return
+
+        self.__data['supplier_info'] = {}
+
+        if phones is not None:
+            self.__data['supplier_info']['phones'] = phones
+
+        if name is not None:
+            self.__data['supplier_info']['name'] = name
+
+        if inn is not None:
+            self.__data['supplier_info']['inn'] = inn
+
+    def __iter__(self):
+        for item in self.__data.items():
+            yield item
+
+    def __getitem__(self, item):
+        return self.__data[item]

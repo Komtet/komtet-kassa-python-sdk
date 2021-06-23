@@ -1,7 +1,7 @@
 # coding: utf-8
 from komtet_kassa_sdk.v1.lib.helpers import apply_discount, correction_positions
 
-from . import PaymentMethod, VatRate
+from . import PaymentType, VatRate
 
 
 class Order(object):
@@ -10,11 +10,11 @@ class Order(object):
     :param str sno: Система налогообложения
     :param str state: Статус заказа
     :param int|float prepayment: Предоплата
-    :param PaymentMethod payment_type: Тип платежа
+    :param PaymentType payment_type: Тип платежа
     """
 
     def __init__(self, order_id, sno, state=None, is_paid=False,
-                 prepayment=0, payment_type=PaymentMethod.CARD):
+                 prepayment=0, payment_type=PaymentType.CARD):
         self.__data = {
             'order_id': order_id,
             'is_paid': is_paid,
