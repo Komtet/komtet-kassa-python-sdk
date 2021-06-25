@@ -1,5 +1,5 @@
 # coding: utf-8
-from komtet_kassa_sdk.v1.lib.helpers import apply_discount, correction_positions
+from komtet_kassa_sdk.v2.lib.helpers import apply_discount, correction_positions
 
 
 class MarkTypes(object):
@@ -117,7 +117,7 @@ class VatRate(object):
 class MesureTypes(object):
     PIECE = 0
     GRAMM = 10
-    KG = 11
+    KILOGRAMM = 11
     TON = 12
     CENTIMETER = 20
     DECIMETER = 21
@@ -166,7 +166,7 @@ class CorrectionType(object):
     SELF = 'self'
     """Самостоятельно"""
 
-    FORCED = 'forced'
+    INSTRUCTION = 'instruction'
     """По предписанию"""
 
 
@@ -354,12 +354,29 @@ class Agent(object):
     :param srt agent_type: Типы признака агента по предмету расчета
     """
 
-    def __init__(self, agent_type):
+    def __init__(self, agent_type, phone=None, name=None, inn=None):
         self.__data = {
             'agent_info': {
                 'type': agent_type
             }
         }
+
+        self.set_supplier_info(name, phone and [phone], inn)
+
+    def set_supplier_info(self, name=None, phones=None, inn=None):
+        """ Передача атрибутов поставщика
+        :param str name: Наименование поставщика
+        :param list phones: Телефоны поставщика
+        :param str inn: ИНН поставщика
+        """
+        if name or phones or inn:
+            self.__data['supplier_info'] = {}
+            if name:
+                self.__data['supplier_info']['name'] = name
+            if phones:
+                self.__data['supplier_info']['phones'] = phones
+            if inn:
+                self.__data['supplier_info']['inn'] = inn
 
     def set_paying_agent(self, operation, phones):
         """ Передача атрибутов платежного агента
@@ -396,9 +413,6 @@ class Agent(object):
     def __iter__(self):
         for item in self.__data.items():
             yield item
-
-    def __getitem__(self, item):
-        return self.__data[item]
 
 
 class Check(object):
@@ -536,7 +550,7 @@ class CorrectionCheck(object):
     :param str vat: Налоговая ставка
     """
 
-    def __init__(self, oid, printer_number, intent, tax_system=None):
+    def __init__(self, oid, printer_number, intent):
 
         self.__data = {
             'external_id': oid,
@@ -544,10 +558,7 @@ class CorrectionCheck(object):
             'intent': intent,
             'payments': [],
             'positions': [],
-            'correction': None
         }
-        if tax_system is not None:
-            self.__data['sno'] = tax_system
 
     def __iter__(self):
         for item in self.__data.items():
@@ -556,39 +567,38 @@ class CorrectionCheck(object):
     def __getitem__(self, item):
         return self.__data[item]
 
-    def set_correction_data(self, type, date, document_number, description):
+    def set_correction_info(self, type, base_date, base_number, base_name):
         """
         :param int type: Тип коррекции
-        :param str date: Дата документа коррекции
-        :param str document_number: № документа коррекции
-        :param str description: Описание коррекции
+        :param str base_date: Дата документа коррекции
+        :param str base_number: № документа коррекции
+        :param str base_name: Описание коррекции
         """
 
-        self.__data['correction'] = {
+        self.__data['correction_info'] = {
             'type': type,
-            'date': date,
-            'document': document_number,
-            'description': description
+            'base_date': base_date,
+            'base_number': base_number,
+            'base_name': base_name
         }
         return self
 
-    def set_payment(self, amount, vat, method=PaymentType.CARD):
+    def set_company(self, payment_address, tax_system):
+        """
+        :param str payment_address: Платёжный адрес компании
+        :param str tax_system: Система налогообложения
+        """
+
+        self.__data['company'] = {'payment_address': payment_address, 'sno': tax_system}
+
+        return self
+
+    def set_payment(self, amount, method=PaymentType.CARD):
         """
         :param int|float amount: Сумма платежа
-        :param str vat: Налоговая ставка
         :param str method: Метод оплаты
         """
-        self.__data['payments'] = [{'sum': amount,
-                                    'type': method}]
-        self.__data['positions'] = [{
-            'name': ('Коррекция прихода'
-                     if self.__data['intent'] == Intent.SELL_CORRECTION else
-                     'Коррекция расхода'),
-            'price': amount,
-            'quantity': 1,
-            'total': amount,
-            'vat': vat
-        }]
+        self.__data['payments'] = [{'sum': amount, 'type': method}]
         return self
 
     def set_authorised_person(self, name, inn=None):
@@ -609,6 +619,12 @@ class CorrectionCheck(object):
         """
         self.__data['callback_url'] = url
         return self
+
+    def add_position(self, position):
+        """
+        :param Position position: Экземпляр позиции
+        """
+        self.__data['positions'].append(dict(position))
 
 
 class Position(object):
@@ -686,29 +702,6 @@ class Position(object):
             'denominator': denominator
         }
 
-    def set_supplier(self, phones=None, name=None, inn=None):
-        """ Установка данных поставщика
-        :param list phones: Телефоны поставщика
-        :param str name: Название поставщика
-        :param str inn: ИНН поставщика
-        """
-        if not phones and not name and not inn:
-            return
-
-        self.__data['supplier_info'] = {}
-
-        if phones is not None:
-            self.__data['supplier_info']['phones'] = phones
-
-        if name is not None:
-            self.__data['supplier_info']['name'] = name
-
-        if inn is not None:
-            self.__data['supplier_info']['inn'] = inn
-
     def __iter__(self):
         for item in self.__data.items():
             yield item
-
-    def __getitem__(self, item):
-        return self.__data[item]

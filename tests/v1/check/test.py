@@ -228,3 +228,38 @@ class TestCheck(TestCase):
         check.add_position(oid='2', name="Доставка", price=10)
         check.apply_correction_positions()
         self.assertEqual(len(check['positions']), 3)
+
+    def test_add_casheir(self):
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.add_cashier('Pupkin', '7867234764782')
+
+        expected = {
+            'external_id': 1,
+            'user': 'user@host',
+            'print': False,
+            'intent': 'sell',
+            'sno': 0,
+            'cashier': {
+                'name': 'Pupkin',
+                'inn': '7867234764782'
+            },
+            'payments': [],
+            'positions': []
+        }
+
+        for key, value in check:
+            self.assertEqual(expected[key], value)
+
+
+class TestNomenklature(TestCase):
+
+    def test_nomenklature(self):
+        nomenclature = Nomenclature('019876543210123421sgEKKPPcS25y5',
+                                    '444D00000096b43f303132333432317367454b4b5050635332357935')
+
+        self.assertEqual(nomenclature.code,
+                         '019876543210123421sgEKKPPcS25y5')
+        self.assertEqual(nomenclature['nomenclature_code']['code'],
+                         '019876543210123421sgEKKPPcS25y5')
+        self.assertEqual(nomenclature.hex_code,
+                         '444D00000096b43f303132333432317367454b4b5050635332357935')

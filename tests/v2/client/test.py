@@ -2,7 +2,7 @@
 from decimal import Decimal
 from unittest import TestCase
 
-from komtet_kassa_sdk.v1 import (Client, EmployeeType, Task, TaskInfo)
+from komtet_kassa_sdk.v2 import (Client, EmployeeType, Task, TaskInfo, Order)
 from ...helpers.mock import ResponseMock, ResponseListMock
 from mock import patch
 
@@ -12,7 +12,7 @@ class TestClient(TestCase):
         self.client = Client('shop-id', 'secret-key')
 
     def test_is_queue_active(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             requests.get.return_value = ResponseMock(state='active')
             self.assertTrue(self.client.is_queue_active(1))
             requests.get.assert_called_with(
@@ -20,9 +20,9 @@ class TestClient(TestCase):
                 headers={
                     'Authorization': 'shop-id',
                     'Accept': 'application/json',
-                    'X-HMAC-Signature': 'b72f98703ccaea912cdf06e364d81885'
+                    'X-HMAC-Signature': '4f055e21e84b0d014b3e0b235e391c64'
                 },
-                url='https://kassa.komtet.ru/api/shop/v1/queues/1'
+                url='https://kassa.komtet.ru/api/shop/v2/queues/1'
             )
 
             self.assertIs(self.client, self.client.set_host('new-host'))
@@ -33,9 +33,9 @@ class TestClient(TestCase):
                 headers={
                     'Authorization': 'shop-id',
                     'Accept': 'application/json',
-                    'X-HMAC-Signature': 'd7f30739a1cf280291f763d80d6d5bfd'
+                    'X-HMAC-Signature': 'b1ce832566f229582b4ac9e950bd9e75'
                 },
-                url='new-host/api/shop/v1/queues/1'
+                url='new-host/api/shop/v2/queues/1'
             )
 
             with self.assertRaises(ValueError) as ctx:
@@ -49,13 +49,13 @@ class TestClient(TestCase):
                 headers={
                     'Authorization': 'shop-id',
                     'Accept': 'application/json',
-                    'X-HMAC-Signature': '000ed801dae724e047bc74b67743af1d'
+                    'X-HMAC-Signature': '01fa439a93cbe7230b9dd14e331431ce'
                 },
-                url='new-host/api/shop/v1/queues/2'
+                url='new-host/api/shop/v2/queues/2'
             )
 
     def test_create_task_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             response_mock = ResponseMock(id=1, external_id=2, print_queue_id=3, state='new')
             requests.post.return_value = response_mock
             task = self.client.create_task({'key': Decimal('10.0')}, 3)
@@ -68,10 +68,10 @@ class TestClient(TestCase):
                 headers={
                     'Authorization': 'shop-id',
                     'Accept': 'application/json',
-                    'X-HMAC-Signature': '5bfe6ef2290053624fdda725177caa33',
+                    'X-HMAC-Signature': 'd5aa2f6177ba2f4f94218ed9587454be',
                     'Content-Type': 'application/json'
                 },
-                url='https://kassa.komtet.ru/api/shop/v1/queues/3/task',
+                url='https://kassa.komtet.ru/api/shop/v2/queues/3/task',
                 data='{"key": 10.0}'
             )
 
@@ -85,7 +85,7 @@ class TestClient(TestCase):
             self.assertIn('is not JSON serializable', ctx.exception.args[0])
 
     def test_get_task_info_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             response_mock = ResponseMock(
                 id=234, external_id='4321', state='done', error_description=None,
                 fiscal_data={
@@ -113,7 +113,7 @@ class TestClient(TestCase):
             })
 
     def test_get_couriers_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             response_mock = ResponseMock(
                 account_employees=[
                     {
@@ -159,7 +159,7 @@ class TestClient(TestCase):
             })
 
     def test_get_orders_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             expected = {
                 'orders': [
                     {
@@ -227,7 +227,7 @@ class TestClient(TestCase):
             self.assertEqual(response['meta']['total'], 2)
 
     def test_delete_orders_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             expected = {
                 'text': None,
                 'content': b'',
@@ -248,7 +248,7 @@ class TestClient(TestCase):
             self.assertEqual(isDeleted, True)
 
     def test_get_employee_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             expected = {
                 'id': 71,
                 'name': 'Пупкин',

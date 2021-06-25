@@ -30,7 +30,7 @@ komtet-kassa-python-sdk
 .. code:: python
 
     from requests.exceptions import HTTPError
-    from komtet_kassa_sdk import (
+    from komtet_kassa_sdk.v1 import (
         Check, CorrectionCheck, Client, Intent, TaxSystem, VatRate, CorrectionType, PaymentMethod,
         Agent, AgentType, CalculationSubject, CalculationMethod
     )

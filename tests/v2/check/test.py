@@ -14,7 +14,8 @@ class TestCheck(TestCase):
         check.set_company(payment_address='ул. им Дедушки на деревне д.5',
                           tax_system=TaxSystem.COMMON)
 
-        agent_info = Agent(agent_type=AgentType.AGENT)
+        agent_info = Agent(agent_type=AgentType.AGENT, phone='+79998887766',
+                           name='Названиепоставщика', inn='287381373424')
         agent_info.set_paying_agent(operation='Операция1', phones=['+79998887766'])
         agent_info.set_receive_payments_operator(phones=['+79998887766'])
         agent_info.set_money_transfer_operator(phones=['+79998887766'], name='Операторперевода',
@@ -29,8 +30,6 @@ class TestCheck(TestCase):
         position.set_mark_code(type=MarkTypes.EAN13, code='1234567890123')
         position.set_mark_quantity(numerator=1, denominator=2)
         position.set_agent(agent_info)
-        position.set_supplier(phones=['+79998887766'], name='Названиепоставщика',
-                              inn='287381373424')
 
         check.add_position(position)
         check.set_cashier(name='Кассир', inn='8634330201')
@@ -115,166 +114,172 @@ class TestCheck(TestCase):
         check.set_print(False)
         self.assertFalse(check['print'])
 
-    # def test_check_ffd_105_with_client_name(self):
-    #     check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
-    #     check.set_client(name='Иванов И.П.')
+    def test_minimal_check(self):
+        check = Check(oid=2, intent=Intent.SELL)
+        check.set_client(email='client@client.ru')
+        check.set_company(payment_address='ул. им Дедушки на деревне д.5',
+                          tax_system=TaxSystem.COMMON)
 
-    #     self.assertEqual(check._Check__data['client']['name'], 'Иванов И.П.')
+        position = Position(id=1, name='Товар', price=10, quantity=1,
+                            measure=MesureTypes.PIECE, payment_method=PaymentMethod.FULL_PAYMENT,
+                            payment_object=PaymentObject.PRODUCT, vat=VatRate.RATE_NO)
+        check.add_position(position)
+        check.set_cashier(name='Кассир')
+        check.add_payment(10)
 
-    # def test_check_ffd_105_with_client_inn(self):
-    #     check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
-    #     check.set_client(inn='1231231231')
+        expected = {
+            'external_id': 2,
+            'intent': 'sell',
+            'print': False,
+            'client': {
+                'email': 'client@client.ru'
+            },
+            'company': {
+                'payment_address': 'ул. им Дедушки на деревне д.5',
+                'sno': 0
+            },
+            'positions': [{
+                'id': 1,
+                'name': 'Товар',
+                'price': 10,
+                'quantity': 1,
+                'total': 10,
+                'measure': 0,
+                'payment_method': 'full_payment',
+                'payment_object': 0,
+                'vat': 'no',
+            }],
+            'cashier': {
+                'name': 'Кассир',
+            },
+            'payments': [{
+                'type': 'card',
+                'sum': 10
+            }]
+        }
 
-    #     self.assertEqual(check._Check__data['client']['inn'], '1231231231')
+        for key, value in check:
+            self.assertEqual(expected[key], value)
 
-    # def test_check_ffd_105_with_empty_client(self):
-    #     check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
-    #     check.set_client()
+        check.set_print(True)
+        self.assertTrue(check['print'])
+        check.set_print(False)
+        self.assertFalse(check['print'])
 
-    #     self.assertEqual(check._Check__data.get('client'), None)
+    def test_apply_discount(self):
+        check = Check(oid=2043, intent=Intent.SELL)
+        position = Position(id=1, name='Товар1', price=120.67, quantity=1,
+                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            payment_method=PaymentMethod.FULL_PAYMENT,
+                            payment_object=PaymentObject.PRODUCT)
+        check.add_position(position)
+        position = Position(id=2, name='Товар2', price=113.54, quantity=1,
+                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            payment_method=PaymentMethod.FULL_PAYMENT,
+                            payment_object=PaymentObject.PRODUCT)
+        check.add_position(position)
+        check.apply_discount(50)
 
-    # def test_check_ffd_105(self):
-    #     check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
-    #     check.set_client(name='Иванов И.П.', inn='1231231231')
-    #     check.set_cashier('Иваров И.П.', '1234567890123')
-    #     check.add_payment(100)
+        self.assertEqual(check['positions'][0]['total'], Decimal('94.91'))
+        self.assertEqual(check['positions'][1]['total'], Decimal('89.30'))
 
-    #     agent = Agent(AgentType.COMMISSIONAIRE, "+77777777777", "ООО 'Лютик'", "12345678901")
-    #     self.assertEqual(agent['supplier_info']['inn'], '12345678901')
+    def test_apply_correction_positions(self):
+        '''
+        Тест применения алгоритма корректировки позиции
+        '''
+        check = Check(oid=2043, intent=Intent.SELL)
+        position = Position(id=1, name='Товар', price=Decimal('42.4'), quantity=2,
+                            total=Decimal(84.5), measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            payment_method=PaymentMethod.FULL_PAYMENT,
+                            payment_object=PaymentObject.PRODUCT)
+        check.add_position(position)
+        check.apply_correction_positions()
 
-    #     nomenclature = Nomenclature()
-    #     nomenclature.code = '019876543210123421sgEKKPPcS25y5'
-    #     check.add_position('name 0', price=100, oid=1,
-    #                        calculation_method=CalculationMethod.FULL_PAYMENT,
-    #                        calculation_subject=CalculationSubject.PRODUCT,
-    #                        agent=agent, nomenclature=nomenclature, excise=19.89,
-    #                        country_code='643', declaration_number='10129000/220817/0211234')
+        self.assertEqual(len(check['positions']), 2)
 
-    #     nomenclature = Nomenclature()
-    #     nomenclature.code = '019876543210123421sgEKKPPcS25y5'
-    #     nomenclature.hex_code = '444D00000096b43f303132333432317367454b4b5050635332357935'
-    #     check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2',
-    #                        nomenclature=nomenclature)
+    def test_marked_position(self):
+        '''
+        Тест маркированной позиции
+        '''
+        check = Check(oid=2043, intent=Intent.SELL)
+        position = Position(id=1, name='Товар', price=10, quantity=1,
+                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            payment_method=PaymentMethod.FULL_PAYMENT,
+                            payment_object=PaymentObject.PRODUCT)
+        position.set_mark_code(type=MarkTypes.EAN13, code='1234567890123')
+        position.set_mark_quantity(numerator=1, denominator=2)
+        check.add_position(position)
 
-    #     nomenclature = Nomenclature()
-    #     nomenclature.hex_code = '444D00000096b43f303132333432317367454b4b5050635332357935'
-    #     check.add_position('name 2', 100, 3, total=290, vat=20, nomenclature=nomenclature)
+        self.assertEqual(check['positions'][0]['mark_code']['ean13'], '1234567890123')
+        self.assertEqual(check['positions'][0]['mark_quantity']['numerator'], 1)
+        self.assertEqual(check['positions'][0]['mark_quantity']['denominator'], 2)
 
-    #     check.add_payment(200)
-    #     check.add_payment(300)
+    def test_additional_user_props(self):
+        '''
+        Тест дополнительных параметров чека
+        '''
+        check = Check(oid=2043, intent=Intent.SELL)
+        check.set_additional_user_props('получатель', 'Васильев')
 
-    #     expected = {
-    #         'external_id': 1,
-    #         'user': 'user@host',
-    #         'print': False,
-    #         'intent': 'sell',
-    #         'sno': 0,
-    #         'cashier': {
-    #             'name': 'Иваров И.П.',
-    #             'inn': '1234567890123'
-    #         },
-    #         'client': {
-    #             'name': 'Иванов И.П.',
-    #             'inn': '1231231231'
-    #         },
-    #         'payments': [
-    #             {'sum': 100, 'type': 'card'},
-    #             {'sum': 200, 'type': 'card'},
-    #             {'sum': 300, 'type': 'card'}
-    #         ],
-    #         'positions': [
-    #             {
-    #                 'id': 1,
-    #                 'name': 'name 0',
-    #                 'price': 100,
-    #                 'quantity': 1,
-    #                 'total': 100,
-    #                 'vat': 'no',
-    #                 'calculation_method': 'full_payment',
-    #                 'calculation_subject': 'product',
-    #                 'excise': 19.89,
-    #                 'country_code': '643',
-    #                 'declaration_number': '10129000/220817/0211234',
-    #                 'agent_info': {
-    #                     'type': 'commissionaire'
-    #                 },
-    #                 'supplier_info': {
-    #                     'phones': ["+77777777777"],
-    #                     'name': "ООО 'Лютик'",
-    #                     'inn': "12345678901"
-    #                 },
-    #                 'nomenclature_code': {
-    #                     'code': '019876543210123421sgEKKPPcS25y5'
-    #                 }
-    #             },
-    #             {
-    #                 'id': '2',
-    #                 'name': 'name 1',
-    #                 'price': 100,
-    #                 'quantity': 2,
-    #                 'total': 200,
-    #                 'vat': 'no',
-    #                 'measure_name': 'kg',
-    #                 'nomenclature_code': {
-    #                     'code': '019876543210123421sgEKKPPcS25y5',
-    #                     'hex_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
-    #                 }
-    #             },
-    #             {
-    #                 'name': 'name 2',
-    #                 'price': 100,
-    #                 'quantity': 3,
-    #                 'total': 290,
-    #                 'vat': '20',
-    #                 'nomenclature_code': {
-    #                     'hex_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
-    #                 }
-    #             }
-    #         ]
-    #     }
-    #     for key, value in check:
-    #         self.assertEqual(expected[key], value)
+        self.assertEqual(check['additional_user_props']['name'], 'получатель')
+        self.assertEqual(check['additional_user_props']['value'], 'Васильев')
 
-    #     check.set_print(True)
-    #     self.assertTrue(check['print'])
-    #     check.set_print(False)
-    #     self.assertFalse(check['print'])
 
-    # def test_set_additional_check_props(self):
-    #     check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
-    #     check.set_additional_check_props('Дополнительный реквизит чека')
-    #     self.assertEqual(check['additional_check_props'], 'Дополнительный реквизит чека')
+class TestCheckAgent(TestCase):
 
-    # def test_set_additional_user_props(self):
-    #     check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
-    #     check.set_additional_user_props('Наименование', 'Значение')
-    #     self.assertEqual(check['additional_user_props'],
-    #                      {'name': 'Наименование', 'value': 'Значение'})
+    def test_agent(self):
+        check = Check(oid=2043, intent=Intent.SELL)
 
-    # def test_apply_discount(self):
-    #     check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
-    #     check.set_client(name='Иванов И.П.', inn='1231231231')
-    #     check.set_cashier('Иваров И.П.', '1234567890123')
-    #     check.add_position('name 0', price=120.67, oid=1,
-    #                        calculation_method=CalculationMethod.FULL_PAYMENT,
-    #                        calculation_subject=CalculationSubject.PRODUCT)
-    #     check.add_position('name 1', price=113.54, oid=2,
-    #                        calculation_method=CalculationMethod.FULL_PAYMENT,
-    #                        calculation_subject=CalculationSubject.PRODUCT)
-    #     check.apply_discount(50)
+        agent_info = Agent(agent_type=AgentType.AGENT, phone='+79998887766',
+                           name='Названиепоставщика', inn='287381373424')
+        agent_info.set_paying_agent(operation='Операция1', phones=['+79998887766'])
+        agent_info.set_receive_payments_operator(phones=['+78005553535'])
+        agent_info.set_money_transfer_operator(phones=['+79998887766'], name='Операторперевода',
+                                               address='г. Москва, ул. Складочная д.3',
+                                               inn='8634330204')
+        position = Position(id=1, name='Товар1', price=100, quantity=1,
+                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            payment_method=PaymentMethod.FULL_PAYMENT,
+                            payment_object=PaymentObject.PRODUCT)
+        position.set_agent(agent_info)
+        check.add_position(position)
 
-    #     self.assertEqual(check['positions'][0]['total'], Decimal('94.91'))
-    #     self.assertEqual(check['positions'][1]['total'], Decimal('89.30'))
+        position = dict(check)['positions'][0]
+        self.assertIn('agent_info', position)
+        self.assertEqual(position['agent_info']['type'], 'agent')
 
-    # def test_apply_correction_positions(self):
-    #     '''
-    #     Тест применения алгоритма корректировки позиции
-    #     '''
+        self.assertIn('paying_agent', position['agent_info'])
+        self.assertDictEqual(position['agent_info']['paying_agent'],
+                             {'operation': 'Операция1', 'phones': ['+79998887766']})
 
-    #     check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
-    #     check.add_position(oid=1, name='Позиция 1', price=Decimal('42.4'),
-    #                        quantity=2, total=Decimal(84.5))
+        self.assertIn('receive_payments_operator', position['agent_info'])
+        self.assertDictEqual(position['agent_info']['receive_payments_operator'], {
+                             "phones": ["+78005553535"]})
 
-    #     check.add_position(oid='2', name="Доставка", price=10)
-    #     check.apply_correction_positions()
-    #     self.assertEqual(len(check['positions']), 3)
+        self.assertIn('money_transfer_operator', position['agent_info'])
+        self.assertDictEqual(position['agent_info']['money_transfer_operator'],
+                             {'phones': ['+79998887766'], 'name': 'Операторперевода',
+                              'address': 'г. Москва, ул. Складочная д.3', 'inn': '8634330204'})
+
+        self.assertIn('supplier_info', position)
+        self.assertDictEqual(position['supplier_info'],
+                             {'phones': ['+79998887766'], 'name': 'Названиепоставщика',
+                              'inn': '287381373424'})
+
+
+class TestSetCashier(TestCase):
+
+    def test_set_cashier_with_inn_in_check(self):
+        check = Check(oid=1, intent=Intent.SELL)
+        check.set_cashier('Иваров И.П.', '1234567890123')
+        self.assertDictEqual(check['cashier'], {
+            'name': 'Иваров И.П.',
+            'inn': '1234567890123'
+        })
+
+    def test_set_cashier_without_inn_in_check(self):
+        check = Check(oid=1, intent=Intent.SELL)
+        check.set_cashier('Иваров И.П.')
+        self.assertDictEqual(check['cashier'], {
+            'name': 'Иваров И.П.'
+        })

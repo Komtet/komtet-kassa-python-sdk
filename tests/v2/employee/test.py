@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
+from unittest.case import expectedFailure
 
-from komtet_kassa_sdk.v1 import (Client, Employee, EmployeeInfo, EmployeeType)
+from komtet_kassa_sdk.v2 import (Client, Employee, EmployeeInfo, EmployeeType)
 from mock import patch
 from ...helpers.mock import (ResponseMock,)
 
@@ -14,7 +15,7 @@ class TestEmployee(TestCase):
             password='test_password', pos_id='POS_KEY')
 
     def test_create_order_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             requests.post.return_value = self.response_mock
 
             employee = Employee(type=EmployeeType.CASHIER, name='Ivanov Ivan Ivanovich',
@@ -29,7 +30,7 @@ class TestEmployee(TestCase):
             self.assertEqual(employee_info.pos_id, 'POS_KEY')
 
     def test_update_order_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             requests.put.return_value = self.response_mock
 
             employee = Employee(type=EmployeeType.CASHIER, name='Ivanov Ivan Ivanovich',
@@ -44,7 +45,7 @@ class TestEmployee(TestCase):
             self.assertEqual(employee_info.pos_id, 'POS_KEY')
 
     def test_delete_order_success(self):
-        with patch('komtet_kassa_sdk.v1.client.requests') as requests:
+        with patch('komtet_kassa_sdk.v2.client.requests') as requests:
             requests.delete.return_value = ResponseMock()
 
             result = self.client.delete_employee(1)

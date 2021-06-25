@@ -32,6 +32,10 @@ class Response(object):
     def _asdict(self):
         return self.__data
 
+    def __iter__(self):
+        for item in self.__data.items():
+            yield item
+
 
 Task = TaskInfo = OrderInfo = EmployeeInfo = Response
 
@@ -221,7 +225,7 @@ class Client(object):
         Просмотр информации о сотруднике
         :param int eid: Идентификатор сотрудника
         """
-        rep = self.__get('/api/shop/v1/employees/%s' % oid)
+        rep = self.__get('/api/shop/v1/employees/%s' % eid)
         rep.raise_for_status()
         result = rep.json()
         return EmployeeInfo(**result)
