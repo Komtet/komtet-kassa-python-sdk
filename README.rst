@@ -181,23 +181,23 @@ komtet-kassa-python-sdk
 
     # Если нужна информация о агенте
 
-        # Создание агента
-        agent_info = Agent(agent_type=AgentType.AGENT, phone='+79998887766',
-                            name='Названиепоставщика', inn='287381373424')
+    # Создание агента
+    agent_info = Agent(agent_type=AgentType.AGENT, phone='+79998887766',
+                        name='Названиепоставщика', inn='287381373424')
 
-        # Если нужно, установка платёжного агента
-        agent_info.set_paying_agent(operation='Операция1', phones=['+79998887766'])
+    # Если нужно, установка платёжного агента
+    agent_info.set_paying_agent(operation='Операция1', phones=['+79998887766'])
 
-        # Если нужно, установка оператора приёма платежей
-        agent_info.set_receive_payments_operator(phones=['+79998887766'])
+    # Если нужно, установка оператора приёма платежей
+    agent_info.set_receive_payments_operator(phones=['+79998887766'])
 
-        # Если нужно, установка оператора перевода средств
-        agent_info.set_money_transfer_operator(phones=['+79998887766'], name='Операторперевода',
-                                                address='г. Москва, ул. Складочная д.3',
-                                                inn='8634330204')
+    # Если нужно, установка оператора перевода средств
+    agent_info.set_money_transfer_operator(phones=['+79998887766'], name='Операторперевода',
+                                            address='г. Москва, ул. Складочная д.3',
+                                            inn='8634330204')
 
-        # Добавление агента в позицию
-        position.set_agent(agent_info)
+    # Добавление агента в позицию
+    position.set_agent(agent_info)
 
     # Добавление позиции
     check.add_position(position)
