@@ -128,7 +128,7 @@ class MesureTypes(object):
     MILLILITER = 40
     LITER = 41
     CUBIC_METER = 42
-    KWT_HOUR = 50
+    KILOWATT_HOUR = 50
     GIGA_CALORIE = 51
     DAY = 70
     HOUR = 71
