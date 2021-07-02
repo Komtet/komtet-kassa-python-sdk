@@ -429,8 +429,7 @@ class Check(object):
             'print': False,
             'intent': intent,
             'payments': [],
-            'positions': [],
-            'cashier': {}
+            'positions': []
         }
 
     def __iter__(self):
@@ -477,13 +476,19 @@ class Check(object):
 
         return self
 
-    def set_company(self, payment_address, tax_system):
+    def set_company(self, payment_address, tax_system, inn=None, place_address=None):
         """
         :param str payment_address: Платёжный адрес компании
         :param str tax_system: Система налогообложения
         """
 
         self.__data['company'] = {'payment_address': payment_address, 'sno': tax_system}
+
+        if inn:
+            self.__data['company']['inn'] = inn
+
+        if place_address:
+            self.__data['company']['place_address'] = place_address
 
         return self
 

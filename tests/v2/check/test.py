@@ -166,6 +166,29 @@ class TestCheck(TestCase):
         check.set_print(False)
         self.assertFalse(check['print'])
 
+    def test_company_in_check(self):
+        check = Check(oid=2, intent=Intent.SELL)
+        check.set_company(payment_address='ул. им Дедушки на деревне д.5', inn='123456789',
+                          tax_system=TaxSystem.COMMON, place_address='Ещё один аддрес')
+
+        expected = {
+            'external_id': 2,
+            'intent': 'sell',
+            'print': False,
+            'company': {
+                'payment_address': 'ул. им Дедушки на деревне д.5',
+                'sno': 0,
+                'inn': '123456789',
+                'place_address': 'Ещё один аддрес'
+            },
+            'client': {},
+            'payments': [],
+            'positions': []
+        }
+
+        for key, value in check:
+            self.assertEqual(expected[key], value)
+
     def test_apply_discount(self):
         check = Check(oid=2043, intent=Intent.SELL)
         position = Position(id=1, name='Товар1', price=120.67, quantity=1,
