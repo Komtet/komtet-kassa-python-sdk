@@ -202,118 +202,118 @@ class PaymentMethod(object):
 class PaymentObject(object):
     """Признак рассчета"""
 
-    PRODUCT = 0
+    PRODUCT = 'product'
     """Товар, за исключением подакцизного товара"""
 
-    PRODUCT_PRACTICAL = 1
+    PRODUCT_PRACTICAL = 'product_practical'
     """Подакцизный товар"""
 
-    WORK = 2
+    WORK = 'work'
     """Работа"""
 
-    SERVICE = 3
+    SERVICE = 'service'
     """Услуга"""
 
-    GAMBLING_BET = 4
+    GAMBLING_BET = 'gambling_bet'
     """Прием ставок при осуществлении деятельности по проведению азартных игр"""
 
-    GAMBLING_WIN = 5
+    GAMBLING_WIN = 'gambling_win'
     """Выплата денежных средств в виде выигрыша при осуществлении деятельности по проведению
        азартных игр"""
 
-    LOTTERY_BET = 6
+    LOTTERY_BET = 'lottery_bet'
     """Прием денежных средств при реализации лотерейных билетов, электронных лотерейных билетов,
        приеме лотерейных ставок при осуществлении деятельности по проведению лотерей"""
 
-    LOTTERY_WIN = 7
+    LOTTERY_WIN = 'lottery_win'
     """Выплате денежных средств в виде выигрыша при осуществлении деятельности по проведению
        лотерей"""
 
-    RID = 8
+    RID = 'rid'
     """Предоставление прав на использование результатов интеллектуальной деятельности или средств
        индивидуализации «ПРЕДОСТАВЛЕНИЕ РИД» или «РИД»"""
 
-    PAYMENT = 9
+    PAYMENT = 'payment'
     """Об авансе, задатке, предоплате, кредите, взносе в счет оплаты, пени, штрафе, вознаграждении,
        бонусе и ином аналогичном предмете расчета"""
 
-    COMMISSION = 10
+    COMMISSION = 'commission'
     """Вознаграждении пользователя, являющегося платежным агентом (субагентом), банковским
        платежным агентом (субагентом), комиссионером, поверенным или иным агентом"""
 
-    COMPOSITE = 11
+    COMPOSITE = 'composite'
     """О предмете расчета, состоящем из предметов, каждому из которых может быть присвоено
        значение от «0» до «11» (0-11 -- это вышеперечисленные)"""
 
-    PAY = 12
+    PAY = 'pay'
     """Взнос в счет оплаты пени, штрафа, вознаграждения, бонуса или
        иного аналогичного предмета расчета"""
 
-    OTHER = 13
+    OTHER = 'other'
     """О предмете расчета, не относящемуся к предметам расчета, которым может быть присвоено
        значение от «0» до «12» (0-12 -- это вышеперечисленные)"""
 
-    PROPERTY_RIGHT = 14
+    PROPERTY_RIGHT = 'property_right'
     """Передача имущественного права"""
 
-    NON_OPERATING = 15
+    NON_OPERATING = 'non_operating'
     """Внереализационный доход"""
 
-    INSURANCE = 16
+    INSURANCE = 'insurance'
     """Страховые взносы"""
 
-    SALES_TAX = 17
+    SALES_TAX = 'sales_tax'
     """Торговый сбор"""
 
-    RESORT_FEE = 18
+    RESORT_FEE = 'resort_fee'
     """Курортный сбор"""
 
-    DEPOSIT = 19
+    DEPOSIT = 'deposit'
     """Залог"""
 
-    CONSUMPTION = 20
+    CONSUMPTION = 'consumption'
     """Расход"""
 
-    SOLE_PROPRIETOR_CPI_CONTRIBUTINS = 21
+    SOLE_PROPRIETOR_CPI_CONTRIBUTINS = 'sole_proprietor_cpi_contributins'
     """взносы на ОПС ИП"""
 
-    CPI_CONTRIBUTINS = 22
+    CPI_CONTRIBUTINS = 'cpi_contributins'
     """взносы на ОПС"""
 
-    SOLE_PROPRIETOR_CMI_CONTRIBUTINS = 23
+    SOLE_PROPRIETOR_CMI_CONTRIBUTINS = 'sole_proprietor_cmi_contributins'
     """взносы на ОМС ИП"""
 
-    CMI_CONTRIBUTINS = 24
+    CMI_CONTRIBUTINS = 'cmi_contributins'
     """взносы на ОМС"""
 
-    CSI_CONTRIBUTINS = 25
+    CSI_CONTRIBUTINS = 'csi_contributins'
     """взносы на ОСС"""
 
-    CASINO_PAYMENT = 26
+    CASINO_PAYMENT = 'casino_payment'
     """платеж казино"""
 
-    PAYMENT_OF_THE_MONEY = 27
+    PAYMENT_OF_THE_MONEY = 'payment_of_the_money'
     """выдача денежных средств банковским платежным агентом"""
 
-    ATHM = 30
+    ATNM = 'atnm'
     """
     Реализация подакцизного товара, подлежащего маркировке средством
     идентификации, но не имеющего кода маркировки
     """
 
-    ATM = 31
+    ATM = 'atm'
     """
     Реализация подакцизного товара, подлежащего маркировке средством идентификации,
     и  имеющего код маркировки
     """
 
-    THM = 32
+    TNM = 'tnm'
     """
     Реализация товара, подлежащего маркировке средством идентификации,
     но не имеющего кода маркировки, за исключением подакцизного товара
     """
 
-    TM = 33
+    TM = 'tm'
     """
     Реализация товара, подлежащего маркировке средством идентификации,
     и имеющего код маркировки, за исключением подакцизного товара

@@ -63,7 +63,7 @@ class TestCheck(TestCase):
                 'country_code': '056',
                 'declaration_number': '12332234533',
                 'payment_method': 'full_payment',
-                'payment_object': 0,
+                'payment_object': 'product',
                 'mark_code': {
                     'ean13': '1234567890123'
                 },
@@ -146,7 +146,7 @@ class TestCheck(TestCase):
                 'total': 10,
                 'measure': 0,
                 'payment_method': 'full_payment',
-                'payment_object': 0,
+                'payment_object': 'product',
                 'vat': 'no',
             }],
             'cashier': {

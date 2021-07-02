@@ -41,7 +41,7 @@ class TestCorrectionCheck(TestCase):
                 'total': 50,
                 'measure': 0,
                 'payment_method': 'full_payment',
-                'payment_object': 0,
+                'payment_object': 'product',
                 'vat': 'no'
             }],
             'authorised_person': {
