@@ -229,6 +229,17 @@ class TestCheck(TestCase):
         check.apply_correction_positions()
         self.assertEqual(len(check['positions']), 3)
 
+    def test_position_user_data(self):
+        '''
+        Тест добавления дополнительного предмета расчёта
+        '''
+
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+        check.add_position(oid=1, name='Позиция 1', price=Decimal('4'),
+                           quantity=2, total=Decimal(8), user_data='предмет расёта')
+
+        self.assertEqual(check['positions'][0]['user_data'], 'предмет расёта')
+
     def test_add_casheir(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
         check.add_cashier('Pupkin', '7867234764782')

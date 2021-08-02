@@ -471,7 +471,7 @@ class Check(object):
     def add_position(self, name, price, quantity=1, total=None, vat=VatRate.RATE_NO,
                      measure_name=None, oid=None, calculation_method=None,
                      calculation_subject=None, excise=None, country_code=None,
-                     declaration_number=None, agent=None, nomenclature=None):
+                     declaration_number=None, agent=None, nomenclature=None, user_data=None):
         """
         :param str name: Наименование позиции
         :param int|float price: Цена позиции в чеке
@@ -487,6 +487,7 @@ class Check(object):
         :param str declaration_number: Номер таможенной декларации
         :param Agent agent: Экземпляр агента
         :param Nomenclature nomenclature: Экземпляр кода номенклатуры (маркировки)
+        :param str user_data: Дополнительный предмет расчёта
         """
         if total is None:
             total = price * quantity
@@ -525,6 +526,9 @@ class Check(object):
 
         if nomenclature is not None:
             position.update(dict(nomenclature))
+
+        if user_data is not None:
+            position['user_data'] = user_data
 
         self.__data['positions'].append(position)
         return self
