@@ -344,7 +344,7 @@ class Agent(object):
             'phones': phones
         }
 
-    def set_money_transfer_operator(self, name=None, phones=None, address=None, inn=None):
+    def set_money_transfer_operator_info(self, name=None, phones=None, address=None, inn=None):
         """ Передача атрибутов оператора перевода
         :param str name: Наименование оператора перевода
         :param list phones: Телефоны оператора по приему платежей
