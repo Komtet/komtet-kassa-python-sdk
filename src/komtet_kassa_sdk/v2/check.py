@@ -396,19 +396,26 @@ class Agent(object):
             'phones': phones
         }
 
-    def set_money_transfer_operator(self, name, phones, address, inn):
+    def set_money_transfer_operator(self, name=None, phones=None, address=None, inn=None):
         """ Передача атрибутов оператора перевода
         :param str name: Наименование оператора перевода
         :param list phones: Телефоны оператора по приему платежей
         :param str address: Адрес оператора перевода
         :param str inn: ИНН оператора перевода
         """
-        self.__data['agent_info']['money_transfer_operator'] = {
-            'name': name,
-            'phones': phones,
-            'address': address,
-            'inn': inn
-        }
+        self.__data['agent_info']['money_transfer_operator'] = {}
+
+        if name is not None:
+            self.__data['agent_info']['money_transfer_operator']['name'] = name
+
+        if phones is not None:
+            self.__data['agent_info']['money_transfer_operator']['phones'] = phones
+
+        if address is not None:
+            self.__data['agent_info']['money_transfer_operator']['address'] = address
+
+        if inn is not None:
+            self.__data['agent_info']['money_transfer_operator']['inn'] = inn
 
     def __iter__(self):
         for item in self.__data.items():
