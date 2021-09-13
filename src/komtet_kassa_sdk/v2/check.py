@@ -579,7 +579,56 @@ class CorrectionCheck(object):
     def __getitem__(self, item):
         return self.__data[item]
 
-    def set_correction_info(self, type, base_date, base_number, base_name):
+    def set_client(self, email, phone=None, name=None, inn=None):
+        """
+        :param str email: Email покупателя
+        :param str phone: Телефон покупателя
+        :param str name: Наименование покупателя
+        :param str inn: ИНН покупателя
+        """
+
+        self.__data['client'] = {'email': email}
+
+        if name:
+            self.__data['client']['name'] = name
+
+        if phone:
+            self.__data['client']['phone'] = phone
+
+        if inn:
+            self.__data['client']['inn'] = inn
+
+        return self
+
+    def set_cashier(self, name, inn=None):
+        """
+        :param str name: Ф.И.О. кассира
+        :param str inn: ИНН кассира
+        """
+        self.__data['cashier'] = {'name': name}
+
+        if inn:
+            self.__data['cashier']['inn'] = inn
+
+        return self
+
+    def set_additional_check_props(self, value):
+        """
+        :param str value: Дополнительный реквизит чека
+        """
+        self.__data['additional_check_props'] = value
+
+    def set_additional_user_props(self, name, value):
+        """
+        :param str name: Наименование дополнительного реквизита пользователя
+        :param str value: Значение дополнительного реквизита пользователя
+        """
+        self.__data['additional_user_props'] = {
+            'name': name,
+            'value': value
+        }
+
+    def set_correction_info(self, type, base_date, base_number, base_name=''):
         """
         :param int type: Тип коррекции
         :param str base_date: Дата документа коррекции
