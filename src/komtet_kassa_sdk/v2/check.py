@@ -562,11 +562,10 @@ class CorrectionCheck(object):
     :param str vat: Налоговая ставка
     """
 
-    def __init__(self, oid, printer_number, intent):
+    def __init__(self, oid, intent):
 
         self.__data = {
             'external_id': oid,
-            'printer_number': printer_number,
             'intent': intent,
             'payments': [],
             'positions': [],

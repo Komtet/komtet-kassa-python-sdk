@@ -7,7 +7,7 @@ from komtet_kassa_sdk.v2 import (CorrectionCheck, CorrectionType, Intent, Mesure
 
 class TestCorrectionCheck(TestCase):
     def test_check(self):
-        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION)
+        check = CorrectionCheck(2, Intent.SELL_CORRECTION)
         check.set_company(payment_address='ул. им Дедушки на деревне д.5',
                           tax_system=TaxSystem.COMMON)
         check.set_client(email='client@client.ru', phone='+79992410085',
@@ -27,7 +27,6 @@ class TestCorrectionCheck(TestCase):
         expected = {
             'external_id': 2,
             'intent': 'sellCorrection',
-            'printer_number': '00112233445566',
             'correction_info': {
                 'type': 'instruction',
                 'base_date': '2017-09-28',
@@ -70,13 +69,11 @@ class TestCorrectionCheck(TestCase):
         for key, value in check:
             self.assertEqual(expected[key], value)
 
-        self.assertEqual(check['printer_number'], '00112233445566')
-
     def test_additional_user_props(self):
         '''
         Тест дополнительных параметров чека
         '''
-        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION)
+        check = CorrectionCheck(2, Intent.SELL_CORRECTION)
         check.set_additional_user_props('получатель', 'Васильев')
 
         self.assertEqual(check['additional_user_props']['name'], 'получатель')
@@ -86,7 +83,7 @@ class TestCorrectionCheck(TestCase):
 class TestSetCashier(TestCase):
 
     def test_set_cashier_with_inn_in_correction_check(self):
-        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION)
+        check = CorrectionCheck(2, Intent.SELL_CORRECTION)
         check.set_authorised_person('Иваров И.П.', '1234567890123')
         self.assertDictEqual(check['authorised_person'], {
             'name': 'Иваров И.П.',
@@ -94,7 +91,7 @@ class TestSetCashier(TestCase):
         })
 
     def test_set_cashier_without_inn_in_correction_check(self):
-        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION)
+        check = CorrectionCheck(2, Intent.SELL_CORRECTION)
         check.set_authorised_person('Иваров И.П.')
         self.assertDictEqual(check['authorised_person'], {
             'name': 'Иваров И.П.'
