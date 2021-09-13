@@ -653,12 +653,13 @@ class CorrectionCheck(object):
 
         return self
 
-    def set_payment(self, amount, method=PaymentType.CARD):
+    def add_payment(self, amount, method=PaymentType.CARD):
         """
         :param int|float amount: Сумма платежа
         :param str method: Метод оплаты
         """
-        self.__data['payments'] = [{'sum': amount, 'type': method}]
+        self.__data['payments'].append({'sum': amount,
+                                        'type': method})
         return self
 
     def set_authorised_person(self, name, inn=None):
