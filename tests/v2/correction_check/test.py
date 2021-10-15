@@ -12,7 +12,7 @@ class TestCorrectionCheck(TestCase):
                           tax_system=TaxSystem.COMMON)
         check.set_client(email='client@client.ru', phone='+79992410085',
                          name='Иванов Иван', inn='516974792202')
-        check.set_payment(50)
+        check.add_payment(50)
         check.set_correction_info(CorrectionType.INSTRUCTION, '2017-09-28', 'K11',
                                   'Отключение электричества')
         position = Position(name='Товар', price=10, quantity=5, total=50,
@@ -78,6 +78,60 @@ class TestCorrectionCheck(TestCase):
 
         self.assertEqual(check['additional_user_props']['name'], 'получатель')
         self.assertEqual(check['additional_user_props']['value'], 'Васильев')
+
+    def test_client_in_check(self):
+        check = CorrectionCheck(oid=2, intent=Intent.SELL)
+        check.set_client(email='client@client.ru', phone='+70002410085',
+                         name='Иванов Иван Иванович', inn='516974792202', birthdate='18.11.1990',
+                         citizenship='643', document_code='21', document_data='4507 443564',
+                         address='г.Москва, Ленинский проспект д.1 кв 43')
+
+        expected = {
+            'external_id': 2,
+            'intent': 'sell',
+            'print': False,
+            'company': {},
+            'client': {
+                'email': 'client@client.ru',
+                'phone': '+70002410085',
+                'name': 'Иванов Иван Иванович',
+                'inn': '516974792202',
+                'birthdate': '18.11.1990',
+                'citizenship': '643',
+                'document_code': '21',
+                'document_data': '4507 443564',
+                'address': 'г.Москва, Ленинский проспект д.1 кв 43'
+            },
+            'payments': [],
+            'positions': []
+        }
+
+        for key, value in check:
+            self.assertEqual(expected[key], value)
+
+    def test_sectoral_check_props(self):
+        '''
+        Тест данных об отраслевой принадлежности чека
+        '''
+        check = CorrectionCheck(oid=2043, intent=Intent.SELL)
+        check.set_sectoral_check_props('001', '01.01.2001', '170/21',
+                                       'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
+
+        self.assertEqual(check['sectoral_check_props']['federal_id'], '001')
+        self.assertEqual(check['sectoral_check_props']['date'], '01.01.2001')
+        self.assertEqual(check['sectoral_check_props']['number'], '170/21')
+        self.assertEqual(check['sectoral_check_props']['value'], 'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
+
+    def test_operating_check_props(self):
+        '''
+        Тест данных об отраслевой принадлежности чека
+        '''
+        check = CorrectionCheck(oid=2043, intent=Intent.SELL)
+        check.set_operating_check_props('0', 'Данные операции', '03.11.2020 12:05:31')
+
+        self.assertEqual(check['operating_check_props']['name'], '0')
+        self.assertEqual(check['operating_check_props']['value'], 'Данные операции')
+        self.assertEqual(check['operating_check_props']['timestamp'], '03.11.2020 12:05:31')
 
 
 class TestSetCashier(TestCase):

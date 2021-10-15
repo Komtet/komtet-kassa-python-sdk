@@ -189,6 +189,36 @@ class TestCheck(TestCase):
         for key, value in check:
             self.assertEqual(expected[key], value)
 
+    def test_client_in_check(self):
+        check = Check(oid=2, intent=Intent.SELL)
+        check.set_client(email='client@client.ru', phone='+70002410085',
+                         name='Иванов Иван Иванович', inn='516974792202', birthdate='18.11.1990',
+                         citizenship='643', document_code='21', document_data='4507 443564',
+                         address='г.Москва, Ленинский проспект д.1 кв 43')
+
+        expected = {
+            'external_id': 2,
+            'intent': 'sell',
+            'print': False,
+            'company': {},
+            'client': {
+                'email': 'client@client.ru',
+                'phone': '+70002410085',
+                'name': 'Иванов Иван Иванович',
+                'inn': '516974792202',
+                'birthdate': '18.11.1990',
+                'citizenship': '643',
+                'document_code': '21',
+                'document_data': '4507 443564',
+                'address': 'г.Москва, Ленинский проспект д.1 кв 43'
+            },
+            'payments': [],
+            'positions': []
+        }
+
+        for key, value in check:
+            self.assertEqual(expected[key], value)
+
     def test_apply_discount(self):
         check = Check(oid=2043, intent=Intent.SELL)
         position = Position(id=1, name='Товар1', price=120.67, quantity=1,
@@ -246,6 +276,49 @@ class TestCheck(TestCase):
 
         self.assertEqual(check['additional_user_props']['name'], 'получатель')
         self.assertEqual(check['additional_user_props']['value'], 'Васильев')
+
+    def test_sectoral_check_props(self):
+        '''
+        Тест данных об отраслевой принадлежности чека
+        '''
+        check = Check(oid=2043, intent=Intent.SELL)
+        check.set_sectoral_check_props('001', '01.01.2001', '170/21',
+                                       'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
+
+        self.assertEqual(check['sectoral_check_props']['federal_id'], '001')
+        self.assertEqual(check['sectoral_check_props']['date'], '01.01.2001')
+        self.assertEqual(check['sectoral_check_props']['number'], '170/21')
+        self.assertEqual(check['sectoral_check_props']['value'], 'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
+
+    def test_sectoral_item_props(self):
+        '''
+        Тест данных об отраслевой принадлежности чека
+        '''
+        check = Check(oid=2043, intent=Intent.SELL)
+        position = Position(id=1, name='Товар1', price=120.67, quantity=1,
+                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            payment_method=PaymentMethod.FULL_PAYMENT,
+                            payment_object=PaymentObject.PRODUCT)
+        position.set_sectoral_item_props('001', '01.01.2001', '170/21',
+                                         'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
+        check.add_position(position)
+
+        self.assertEqual(check['positions'][0]['sectoral_item_props']['federal_id'], '001')
+        self.assertEqual(check['positions'][0]['sectoral_item_props']['date'], '01.01.2001')
+        self.assertEqual(check['positions'][0]['sectoral_item_props']['number'], '170/21')
+        self.assertEqual(check['positions'][0]['sectoral_item_props']
+                         ['value'], 'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
+
+    def test_operating_check_props(self):
+        '''
+        Тест данных об отраслевой принадлежности чека
+        '''
+        check = Check(oid=2043, intent=Intent.SELL)
+        check.set_operating_check_props('0', 'Данные операции', '03.11.2020 12:05:31')
+
+        self.assertEqual(check['operating_check_props']['name'], '0')
+        self.assertEqual(check['operating_check_props']['value'], 'Данные операции')
+        self.assertEqual(check['operating_check_props']['timestamp'], '03.11.2020 12:05:31')
 
 
 class TestCheckAgent(TestCase):
