@@ -53,9 +53,6 @@ class TestOrder(TestCase):
         order.apply_discount(50)
         order.apply_correction_positions()
 
-        import pdb
-        pdb.set_trace()
-
 
 #     def test_order(self):
 #         self.maxDiff = None
