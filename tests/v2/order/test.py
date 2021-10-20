@@ -24,7 +24,7 @@ class TestOrder(TestCase):
         order.add_courier_id(20)
         order.set_additional_user_props('получатель', 'Васильев')
         order.set_additional_check_props('445334544')
-        order.set_sectoral_check_props('001', '01.01.2001', '170/21',
+        order.add_sectoral_check_props('001', '01.01.2001', '170/21',
                                        'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
         order.set_operating_check_props('0', 'Данные операции', '03.11.2020 12:05:31')
 
@@ -45,7 +45,7 @@ class TestOrder(TestCase):
         position.set_agent(agent_info)
         position.set_mark_code(type=MarkTypes.EAN13, code='1234567890123')
         position.set_mark_quantity(numerator=1, denominator=2)
-        position.set_sectoral_item_props('001', '01.01.2001', '170/21',
+        position.add_sectoral_item_props('001', '01.01.2001', '170/21',
                                          'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
 
         order.add_item(position)
@@ -53,8 +53,8 @@ class TestOrder(TestCase):
         order.apply_discount(50)
         order.apply_correction_positions()
 
-        # import pdb
-        # pdb.set_trace()
+        import pdb
+        pdb.set_trace()
 
 
 #     def test_order(self):

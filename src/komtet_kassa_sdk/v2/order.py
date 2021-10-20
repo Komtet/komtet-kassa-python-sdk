@@ -112,19 +112,22 @@ class Order(object):
         """
         self.__data['additional_check_props'] = value
 
-    def set_sectoral_check_props(self, federal_id, date, number, value):
+    def add_sectoral_check_props(self, federal_id, date, number, value):
         """ Установка данных об отраслевой принадлежности
         :param str federal_id: Идентификатор ФОИВ
         :param str date: Дата нормативного акта федерального органа исполнительной власти
         :param str number: Номер нормативного акта федерального органа исполнительной власти
         :param str value: Состав значений
         """
-        self.__data['sectoral_check_props'] = {
+        if not self.__data.get('sectoral_check_props'):
+            self.__data['sectoral_check_props'] = []
+
+        self.__data['sectoral_check_props'].append({
             'federal_id': federal_id,
             'date': date,
             'number': number,
             'value': value
-        }
+        })
 
     def set_operating_check_props(self, name, value, timestamp):
         """ Условия применения и значение реквизита «операционный реквизит чека»
@@ -245,19 +248,22 @@ class OrderItem(object):
             'denominator': denominator
         }
 
-    def set_sectoral_item_props(self, federal_id, date, number, value):
+    def add_sectoral_item_props(self, federal_id, date, number, value):
         """ Установка данных об отраслевой принадлежности
         :param str federal_id: Идентификатор ФОИВ
         :param int date: Дата нормативного акта федерального органа исполнительной власти
         :param str number: Номер нормативного акта федерального органа исполнительной власти
         :param str value: Состав значений
         """
-        self.__data['sectoral_item_props'] = {
+        if not self.__data.get('sectoral_item_props'):
+            self.__data['sectoral_item_props'] = []
+
+        self.__data['sectoral_item_props'].append({
             'federal_id': federal_id,
             'date': date,
             'number': number,
             'value': value
-        }
+        })
 
     def __iter__(self):
         for item in self.__data.items():
