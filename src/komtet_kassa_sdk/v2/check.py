@@ -10,7 +10,7 @@ class MarkTypes(object):
     EAN13 = 'ean13'
     ITF14 = 'itf14'
     GS10 = 'gs10'
-    GS1M = 'GS1M'
+    GS1M = 'gs1m'
     SHORT = 'short'
     FUR = 'fur'
     EGAIS20 = 'egais20'

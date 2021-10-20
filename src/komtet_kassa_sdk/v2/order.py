@@ -6,7 +6,7 @@ from . import PaymentType, VatRate
 
 class Order(object):
     """
-    :param int order_id: Номер операции в магазине
+    :param int external_id: Номер операции в магазине
     :param str sno: Система налогообложения
     :param str state: Статус заказа
     :param int|float prepayment: Предоплата
@@ -27,7 +27,14 @@ class Order(object):
         if state:
             self.__data['state'] = state
 
-    def set_company(self, payment_address, tax_system, inn=None, place_address=None):
+    def __iter__(self):
+        for item in self.__data.items():
+            yield item
+
+    def __getitem__(self, item):
+        return self.__data[item]
+
+    def set_company(self, payment_address, tax_system, inn=None, place_address=None, email=None):
         """
         :param str payment_address: Платёжный адрес компании
         :param str tax_system: Система налогообложения
@@ -40,6 +47,9 @@ class Order(object):
 
         if place_address:
             self.__data['company']['place_address'] = place_address
+
+        if email:
+            self.__data['company']['email'] = email
 
         return self
 
@@ -90,7 +100,7 @@ class Order(object):
         """
         self.__data['callback_url'] = callback_url
 
-    def add_courier_id(self, courier_id):
+    def set_courier_id(self, courier_id):
         """
         :param int courier_id: ID курьера
         """
@@ -162,8 +172,7 @@ class Order(object):
 
 class OrderItem(object):
     """
-        :param int id: Идентификатор позиции в магазине
-        :param int external_id: Внешний идентификатор позиции
+        :param int id: Идентификатор позиции в заказе
         :param int product_id: Идентификатор продукта в магазине
         :param str name: Наименование позиции
         :param str type: Тип заказа
@@ -179,14 +188,13 @@ class OrderItem(object):
         :param bool is_need_nomenclature_code: Необходимость указания маркировки для фискализации
     """
 
-    def __init__(self, external_id, name, price, quantity, measure, total=None, is_need_nomenclature_code=False,
+    def __init__(self, name, price, quantity=1, measure=0, total=None, is_need_nomenclature_code=False,
                  type=None, user_data=None, excise=None, id=None, country_code=None, product_id=None,
                  declaration_number=None, vat=VatRate.RATE_NO):
         if total is None:
             total = price * quantity
 
         self.__data = {
-            'external_id': external_id,
             'name': name,
             'measure': measure,
             'price': price,
