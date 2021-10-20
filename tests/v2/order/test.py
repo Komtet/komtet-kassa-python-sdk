@@ -10,49 +10,6 @@ from ...helpers.mock import (ResponseMock)
 
 
 class TestOrder(TestCase):
-    # def test_full_order(self):
-    #     order = Order(12, state='new', is_pay_to_courier=True,
-    #                   prepayment=200, payment_type=PaymentType.CARD)
-    #     order.set_company(payment_address='ул. им Дедушки на деревне д.5', inn='123456789',
-    #                       tax_system=TaxSystem.COMMON, place_address='Ещё один аддрес')
-    #     order.set_client(email='client@client.ru', phone='+79992410085', name='Иванов Иван',
-    #                      inn='516974792202', address='ул. Кижеватова д.7 кв.30',
-    #                      coordinate={'latitude': '53.202838856701206', 'longitude': '44.99768890421866'})
-    #     order.set_delivery_time('01.01.2021 12:00', '01.01.2021 13:00')
-    #     order.set_description(description='описание к заказу')
-    #     order.add_callback_url(callback_url='www.callback.com/url')
-    #     order.add_courier_id(20)
-    #     order.set_additional_user_props('получатель', 'Васильев')
-    #     order.set_additional_check_props('445334544')
-    #     order.add_sectoral_check_props('001', '01.01.2001', '170/21',
-    #                                    'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
-    #     order.set_operating_check_props('0', 'Данные операции', '03.11.2020 12:05:31')
-
-    #     agent_info = Agent(agent_type=AgentType.AGENT, phone='+79998887766',
-    #                        name='Названиепоставщика', inn='287381373424')
-    #     agent_info.set_paying_agent(operation='Операция1', phones=['+79998887766'])
-    #     agent_info.set_receive_payments_operator(phones=['+78005553535'])
-    #     agent_info.set_money_transfer_operator(phones=['+79998887766'], name='Операторперевода',
-    #                                            address='г. Москва, ул. Складочная д.3',
-    #                                            inn='8634330204')
-
-    #     position = OrderItem(id=1, name='Пицца маргарита', price=500, quantity=1,
-    #                          measure=0, total=500, is_need_nomenclature_code=True,
-    #                          type='product', user_data='Дополнительный реквизит предмета расчета',
-    #                          excise=10, id=0, country_code='056', product_id=10,
-    #                          declaration_number='12332234533', vat=VatRate.RATE_NO)
-
-    #     position.set_agent(agent_info)
-    #     position.set_mark_code(type=MarkTypes.EAN13, code='1234567890123')
-    #     position.set_mark_quantity(numerator=1, denominator=2)
-    #     position.add_sectoral_item_props('001', '01.01.2001', '170/21',
-    #                                      'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
-
-    #     order.add_item(position)
-
-    #     order.apply_discount(50)
-    #     order.apply_correction_positions()
-
     def test_order(self):
         self.maxDiff = None
         order = Order(12, state='new', is_pay_to_courier=True,
