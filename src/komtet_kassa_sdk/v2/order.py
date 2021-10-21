@@ -190,7 +190,7 @@ class OrderItem(object):
 
     def __init__(self, name, price, quantity=1, measure=0, total=None, is_need_nomenclature_code=False,
                  type=None, user_data=None, excise=None, id=None, country_code=None, product_id=None,
-                 declaration_number=None, vat=VatRate.RATE_NO):
+                 declaration_number=None, vat=VatRate.RATE_NO, external_id=None):
         if total is None:
             total = price * quantity
 
@@ -217,6 +217,9 @@ class OrderItem(object):
 
         if id is not None:
             self.__data['id'] = id
+
+        if external_id is not None:
+            self.__data['external_id'] = external_id
 
         if excise is not None:
             self.__data['excise'] = excise

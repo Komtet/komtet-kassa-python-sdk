@@ -100,7 +100,8 @@ class TestOrder(TestCase):
         order.set_delivery_time('01.01.2021 12:00', '01.01.2021 13:00')
         order.set_description('Комментарий к заказу')
         order.add_item(OrderItem(id=1, name='Пицца маргарита', price=500, quantity=1, product_id=15,
-                                 measure=0, total=500, type='product', user_data='Дополнительный реквизит предмета расчета'))
+                                 measure=0, total=500, type='product', external_id=10,
+                                 user_data='Дополнительный реквизит предмета расчета'))
 
         order.add_callback_url('https://callback_url.ru')
         order.set_courier_id(1)
@@ -127,6 +128,7 @@ class TestOrder(TestCase):
             'items': [
                 {
                     'id': 1,
+                    'external_id': 10,
                     'is_need_nomenclature_code': False,
                     'measure': 0,
                     'name': 'Пицца маргарита',
