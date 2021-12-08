@@ -26,7 +26,7 @@ class Employee(object):
     """
 
     def __init__(self, type, name, login, password, pos_id, inn=None, phone=None, email=None):
-        self.data = {
+        self.__data = {
             'type': type,
             'name': name,
             'login': login,
@@ -34,27 +34,27 @@ class Employee(object):
             'pos_id': pos_id
         }
         if inn:
-            self.data['inn'] = inn
+            self.__data['inn'] = inn
 
         if phone:
-            self.data['phone'] = phone
+            self.__data['phone'] = phone
 
         if email:
-            self.data['email'] = email
+            self.__data['email'] = email
 
     def __iter__(self):
-        for item in self.data.items():
+        for item in self.__data.items():
             yield item
 
     def __getitem__(self, item):
-        return self.data[item]
+        return self.__data[item]
 
     def set_payment_address(self, payment_address):
         """
         Установка адреса места рассчета
         :param str payment_address: Адрес места рассчета
         """
-        self.data['payment_address'] = payment_address
+        self.__data['payment_address'] = payment_address
 
     def set_access_settings(self, is_manager=None, is_can_assign_order=None,
                             is_app_fast_basket=None):
@@ -66,10 +66,10 @@ class Employee(object):
         :param bool is_app_fast_basket: Переходить в корзину сразу после выбора товара
         """
         if is_manager:
-            self.data['is_manager'] = is_manager
+            self.__data['is_manager'] = is_manager
 
         if is_can_assign_order:
-            self.data['is_can_assign_order'] = is_can_assign_order
+            self.__data['is_can_assign_order'] = is_can_assign_order
 
         if is_app_fast_basket:
-            self.data['is_app_fast_basket'] = is_app_fast_basket
+            self.__data['is_app_fast_basket'] = is_app_fast_basket
