@@ -239,7 +239,7 @@ komtet-kassa-python-sdk
     # intent = Intent.SELL_CORRECTION # Коррекция прихода
     # intent = Intent.RETURN_CORRECTION # Коррекция расхода
 
-    check = CorrectionCheck(oid, printer_number, intent)
+    check = CorrectionCheck(oid, intent, sno)
 
     # Установка данных компании
     check.set_company(payment_address=payment_address, tax_system=tax_system)
@@ -249,7 +249,7 @@ komtet-kassa-python-sdk
     # payment_method = PaymentType.CASH # наличные
 
     # Установка суммы коррекции
-    check.set_payment(12, payment_type)
+    check.add_payment(12, payment_type)
 
     correction_type = CorrectionType.SELF # Тип коррекции
     # correction_type = CorrectionType.SELF # Самостоятельно
@@ -432,16 +432,15 @@ komtet-kassa-python-sdk
     # intent = Intent.SELL_CORRECTION # Коррекция прихода
     # intent = Intent.RETURN_CORRECTION # Коррекция расхода
 
-    check = CorrectionCheck(oid, printer_number, intent, tax_system)
+    check = CorrectionCheck(oid, intent, sno)
 
     payment_method = PaymentMethod.CARD # Метод оплаты, корректирующей суммы
     # payment_method = PaymentMethod.CARD # электронные
     # payment_method = PaymentMethod.CASH # наличные
 
     # Установка суммы коррекции
-    check.set_payment(
+    check.add_payment(
       correction_sum=12, # Сумма
-      vat_rate=vat_rate,
       payment_method=payment_method
     )
 

@@ -373,40 +373,20 @@ class Agent(object):
         return self.__data[item]
 
 
-class Check(object):
-    """
-    :param oid: Номер операции в магазине
-    :param str email: E-Mail пользователя для отправки электронного чека
-    :param str intent: Направление платежа
-    :param int tax_system: Система налогообложения
-    :param str payment_address: Место расчетов
-    """
-
-    def __init__(self, oid, email, intent, tax_system, payment_address=None):
-        self.__data = {
-            'external_id': oid,
-            'user': email,
-            'print': False,
-            'intent': intent,
-            'sno': tax_system,
-            'payments': [],
-            'positions': []
-        }
-        if payment_address:
-            self.__data['payment_address'] = payment_address
-
+class BaseCheck(object):
+    """ Базовый класс операций для обычного чека и чека коррекции """
     def __iter__(self):
-        for item in self.__data.items():
+        for item in self._data.items():
             yield item
 
     def __getitem__(self, item):
-        return self.__data[item]
+        return self._data[item]
 
     def set_print(self, value):
         """
         :param bool value: Печатать чек или нет
         """
-        self.__data['print'] = bool(value)
+        self._data['print'] = bool(value)
         return self
 
     def add_payment(self, amount, method=PaymentMethod.CARD):
@@ -414,27 +394,7 @@ class Check(object):
         :param int|float amount: Сумма платежа
         :param str method: Метод оплаты
         """
-        self.__data['payments'].append({'sum': amount,
-                                        'type': method})
-        return self
-
-    def set_client(self, name=None, inn=None):
-        """
-        :param str name: Наименование покупателя
-        :param str inn: ИНН покупателя
-        """
-
-        self.__data['client'] = {}
-
-        if name:
-            self.__data['client']['name'] = name
-
-        if inn:
-            self.__data['client']['inn'] = inn
-
-        if not self.__data['client']:
-            del self.__data['client']
-
+        self._data['payments'].append({'sum': amount, 'type': method})
         return self
 
     def set_cashier(self, name, inn=None):
@@ -442,31 +402,25 @@ class Check(object):
         :param str name: Ф.И.О. кассира
         :param str inn: ИНН кассира
         """
-        self.__data['cashier'] = {'name': name}
+        self._data['cashier'] = {'name': name}
 
         if inn:
-            self.__data['cashier']['inn'] = inn
+            self._data['cashier']['inn'] = inn
 
         return self
-
-    def set_agent(self, agent):
-        """
-        :param Agent agent: агент на чек
-        """
-        self.__data.update(dict(agent))
 
     def set_additional_check_props(self, value):
         """
         :param str value: Дополнительный реквизит чека
         """
-        self.__data['additional_check_props'] = value
+        self._data['additional_check_props'] = value
 
     def set_additional_user_props(self, name, value):
         """
         :param str name: Наименование дополнительного реквизита пользователя
         :param str value: Значение дополнительного реквизита пользователя
         """
-        self.__data['additional_user_props'] = {
+        self._data['additional_user_props'] = {
             'name': name,
             'value': value
         }
@@ -537,57 +491,95 @@ class Check(object):
         if user_data is not None:
             position['user_data'] = user_data
 
-        self.__data['positions'].append(position)
+        self._data['positions'].append(position)
         return self
 
     def set_callback_url(self, url):
         """
         :param str callback: URL, на который необходимо ответить после обработки чека
         """
-        self.__data['callback_url'] = url
+        self._data['callback_url'] = url
         return self
+
+
+class Check(BaseCheck):
+    """
+    :param oid: Номер операции в магазине
+    :param str email: E-Mail пользователя для отправки электронного чека
+    :param str intent: Направление платежа
+    :param int tax_system: Система налогообложения
+    :param str payment_address: Место расчетов
+    """
+
+    def __init__(self, oid, email, intent, tax_system, payment_address=None):
+        self._data = {
+            'external_id': oid,
+            'user': email,
+            'print': False,
+            'intent': intent,
+            'sno': tax_system,
+            'payments': [],
+            'positions': []
+        }
+        if payment_address:
+            self._data['payment_address'] = payment_address
+
+    def set_client(self, name=None, inn=None):
+        """
+        :param str name: Наименование покупателя
+        :param str inn: ИНН покупателя
+        """
+
+        self._data['client'] = {}
+
+        if name:
+            self._data['client']['name'] = name
+
+        if inn:
+            self._data['client']['inn'] = inn
+
+        if not self._data['client']:
+            del self._data['client']
+
+        return self
+
+    def set_agent(self, agent):
+        """
+        :param Agent agent: агент на чек
+        """
+        self._data.update(dict(agent))
 
     def apply_discount(self, discount):
         """
         :param int|float discount: сумма скидки
         """
-        apply_discount(discount, self.__data['positions'])
+        apply_discount(discount, self._data['positions'])
 
     def apply_correction_positions(self):
         """
         Кооректировка позиций с расхождениями между price * quantity и total
         """
-        self.__data['positions'] = correction_positions(self.__data['positions'])
+        self._data['positions'] = correction_positions(self._data['positions'])
 
 
-class CorrectionCheck(object):
+class CorrectionCheck(BaseCheck):
     """
     :param oid: Номер операции в магазине
-    :param str printer_number: Серийный номер принтера
     :param str intent: Тип чека коррекции
-    :param int tax_system: Система налогообложения
-    :param str vat: Налоговая ставка
+    :param int sno: Система налогообложения
     """
 
-    def __init__(self, oid, printer_number, intent, tax_system=None):
+    def __init__(self, oid, intent, sno):
 
-        self.__data = {
+        self._data = {
             'external_id': oid,
-            'printer_number': printer_number,
             'intent': intent,
+            'sno': sno,
+            'print': False,
             'payments': [],
             'positions': [],
             'correction': None
         }
-        if tax_system is not None:
-            self.__data['sno'] = tax_system
-
-    def __iter__(self):
-        for item in self.__data.items():
-            yield item
-
-    def __getitem__(self, item):
-        return self.__data[item]
 
     def set_correction_data(self, type, date, document_number, description):
         """
@@ -597,7 +589,7 @@ class CorrectionCheck(object):
         :param str description: Описание коррекции
         """
 
-        self.__data['correction'] = {
+        self._data['correction'] = {
             'type': type,
             'date': date,
             'document': document_number,
@@ -605,40 +597,14 @@ class CorrectionCheck(object):
         }
         return self
 
-    def set_payment(self, amount, vat, method=PaymentMethod.CARD):
-        """
-        :param int|float amount: Сумма платежа
-        :param str vat: Налоговая ставка
-        :param str method: Метод оплаты
-        """
-        self.__data['payments'] = [{'sum': amount,
-                                    'type': method}]
-        self.__data['positions'] = [{
-            'name': ('Коррекция прихода'
-                     if self.__data['intent'] == Intent.SELL_CORRECTION else
-                     'Коррекция расхода'),
-            'price': amount,
-            'quantity': 1,
-            'total': amount,
-            'vat': vat
-        }]
-        return self
-
     def set_authorised_person(self, name, inn=None):
         """
         :param str name: Ф.И.О. кассира
         :param str inn: ИНН кассира
         """
-        self.__data['authorised_person'] = {'name': name}
+        self._data['authorised_person'] = {'name': name}
 
         if inn:
-            self.__data['authorised_person']['inn'] = inn
+            self._data['authorised_person']['inn'] = inn
 
-        return self
-
-    def set_callback_url(self, url):
-        """
-        :param str callback: URL, на который необходимо ответить после обработки чека
-        """
-        self.__data['callback_url'] = url
         return self

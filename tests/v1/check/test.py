@@ -69,19 +69,19 @@ class TestCheck(TestCase):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
         check.set_client(name='Иванов И.П.')
 
-        self.assertEqual(check._Check__data['client']['name'], 'Иванов И.П.')
+        self.assertEqual(check._data['client']['name'], 'Иванов И.П.')
 
     def test_check_ffd_105_with_client_inn(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
         check.set_client(inn='1231231231')
 
-        self.assertEqual(check._Check__data['client']['inn'], '1231231231')
+        self.assertEqual(check._data['client']['inn'], '1231231231')
 
     def test_check_ffd_105_with_empty_client(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
         check.set_client()
 
-        self.assertEqual(check._Check__data.get('client'), None)
+        self.assertEqual(check._data.get('client'), None)
 
     def test_check_ffd_105(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)

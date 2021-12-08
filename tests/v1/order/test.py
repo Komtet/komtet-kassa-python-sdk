@@ -416,7 +416,7 @@ class TestSetCashier(TestCase):
         })
 
     def test_set_cashier_with_inn_in_correction_check(self):
-        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION, TaxSystem.COMMON)
+        check = CorrectionCheck(2, Intent.SELL_CORRECTION, TaxSystem.COMMON)
         check.set_authorised_person('Иваров И.П.', '1234567890123')
         self.assertDictEqual(check['authorised_person'], {
             'name': 'Иваров И.П.',
@@ -424,7 +424,7 @@ class TestSetCashier(TestCase):
         })
 
     def test_set_cashier_without_inn_in_correction_check(self):
-        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION, TaxSystem.COMMON)
+        check = CorrectionCheck(2, Intent.SELL_CORRECTION, TaxSystem.COMMON)
         check.set_authorised_person('Иваров И.П.')
         self.assertDictEqual(check['authorised_person'], {
             'name': 'Иваров И.П.'

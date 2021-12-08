@@ -503,10 +503,7 @@ class Check(object):
 class CorrectionCheck(object):
     """
     :param oid: Номер операции в магазине
-    :param str printer_number: Серийный номер принтера
     :param str intent: Тип чека коррекции
-    :param int tax_system: Система налогообложения
-    :param str vat: Налоговая ставка
     """
 
     def __init__(self, oid, intent):
@@ -525,7 +522,8 @@ class CorrectionCheck(object):
     def __getitem__(self, item):
         return self.__data[item]
 
-    def set_client(self, email, phone=None, name=None, inn=None, birthdate=None, citizenship=None, document_code=None, document_data=None, address=None):
+    def set_client(self, email, phone=None, name=None, inn=None, birthdate=None, citizenship=None,
+                   document_code=None, document_data=None, address=None):
         """
         :param str email: Email покупателя
         :param str phone: Телефон покупателя

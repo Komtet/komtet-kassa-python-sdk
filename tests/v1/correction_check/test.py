@@ -2,13 +2,15 @@
 from decimal import Decimal
 from unittest import TestCase
 
-from komtet_kassa_sdk.v1 import (CorrectionCheck, CorrectionType, Intent, TaxSystem, VatRate)
+from komtet_kassa_sdk.v1 import (CorrectionCheck, CorrectionType, Intent, PaymentMethod,
+                                 TaxSystem, VatRate)
 
 
 class TestCorrectionCheck(TestCase):
     def test_check(self):
-        check = CorrectionCheck(2, '00112233445566', Intent.SELL_CORRECTION, TaxSystem.COMMON)
-        check.set_payment(10, VatRate.RATE_10)
+        check = CorrectionCheck(2, Intent.SELL_CORRECTION, TaxSystem.COMMON)
+        check.add_position('name 1', 10, quantity=1)
+        check.add_payment(10, PaymentMethod.CARD)
         check.set_correction_data(CorrectionType.FORCED, '2017-09-28', 'K11',
                                   'Отключение электричества')
         check.set_authorised_person('Иванов И.И.', '123456789012')
@@ -16,19 +18,19 @@ class TestCorrectionCheck(TestCase):
 
         expected = {
             'external_id': 2,
-            'printer_number': '00112233445566',
             'intent': 'sellCorrection',
             'sno': 0,
+            'print': False,
             'payments': [
                 {'sum': 10, 'type': 'card'},
             ],
             'positions': [
                 {
-                    'name': 'Коррекция прихода',
+                    'name': 'name 1',
                     'price': 10,
                     'quantity': 1,
                     'total': 10,
-                    'vat': '10'
+                    'vat': 'no'
                 }
             ],
             'correction': {
@@ -45,5 +47,3 @@ class TestCorrectionCheck(TestCase):
         }
         for key, value in check:
             self.assertEqual(expected[key], value)
-
-        self.assertEqual(check['printer_number'], '00112233445566')
