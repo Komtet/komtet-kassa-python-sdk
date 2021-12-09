@@ -233,11 +233,10 @@ komtet-kassa-python-sdk
 
     # Создание чека коррекции
 
-    printer_number = 'серийный номер принтера'
-
-    intent = Intent.SELL_CORRECTION  # Направление коррекции
-    # intent = Intent.SELL_CORRECTION # Коррекция прихода
-    # intent = Intent.RETURN_CORRECTION # Коррекция расхода
+    intent = Intent.SELL_CORRECTION  # Коррекция прихода
+    # intent = Intent.BUY_CORRECTION # Коррекция расхода
+    # intent = Intent.SELL_RETURN_CORRECTION # Коррекция возврата прихода
+    # intent = Intent.BUY_RETURN_CORRECTION # Коррекция возврата расхода
 
     check = CorrectionCheck(oid, intent, sno)
 
@@ -426,11 +425,10 @@ komtet-kassa-python-sdk
 
     # Создание чека коррекции
 
-    printer_number = 'серийный номер принтера'
-
-    intent = Intent.SELL_CORRECTION  # Направление коррекции
-    # intent = Intent.SELL_CORRECTION # Коррекция прихода
-    # intent = Intent.RETURN_CORRECTION # Коррекция расхода
+    intent = Intent.SELL_CORRECTION  # Коррекция прихода
+    # intent = Intent.BUY_CORRECTION # Коррекция расхода
+    # intent = Intent.SELL_RETURN_CORRECTION # Коррекция возврата прихода
+    # intent = Intent.BUY_RETURN_CORRECTION # Коррекция возврата расхода
 
     check = CorrectionCheck(oid, intent, sno)
 

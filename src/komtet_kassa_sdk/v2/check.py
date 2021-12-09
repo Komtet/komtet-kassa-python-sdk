@@ -35,8 +35,14 @@ class Intent(object):
     SELL_CORRECTION = 'sellCorrection'
     """Коррекция прихода"""
 
-    RETURN_CORRECTION = 'sellReturnCorrection'
+    BUY_CORRECTION = 'buyCorrection'
     """Коррекция расхода"""
+
+    SELL_RETURN_CORRECTION = 'sellReturnCorrection'
+    """Коррекция возврата прихода"""
+
+    BUY_RETURN_CORRECTION = 'buyReturnCorrection'
+    """Коррекция возврата расхода"""
 
 
 class TaxSystem(object):
