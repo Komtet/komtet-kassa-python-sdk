@@ -20,7 +20,8 @@ test_all:  	## Run all tests
 	@make test_legacy && make test
 
 publish:	## Upload package to PyPI
-	@python3 setup.py sdist upload
+	@python3 setup.py sdist
+	@python -m twine upload --repository komtet-kassa-sdk dist/*
 
 eggs:		## Собрать яйца
 	@docker-compose run python2 bash -c 'python setup.py bdist_egg'
