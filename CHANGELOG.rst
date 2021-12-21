@@ -3,6 +3,7 @@ Changelog
 
 Unreleased
 ----------
+- Тесты перенесены в docker
 
 
 7.0.0 (21.12.2021)
