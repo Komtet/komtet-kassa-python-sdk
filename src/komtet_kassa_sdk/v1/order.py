@@ -1,5 +1,5 @@
 # coding: utf-8
-from komtet_kassa_sdk.lib.helpers import apply_discount, correction_positions
+from komtet_kassa_sdk.v1.lib.helpers import apply_discount, correction_positions
 
 from . import PaymentMethod, VatRate
 

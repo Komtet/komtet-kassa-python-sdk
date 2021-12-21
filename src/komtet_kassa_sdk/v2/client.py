@@ -32,6 +32,10 @@ class Response(object):
     def _asdict(self):
         return self.__data
 
+    def __iter__(self):
+        for item in self.__data.items():
+            yield item
+
 
 Task = TaskInfo = OrderInfo = EmployeeInfo = Response
 
@@ -75,7 +79,7 @@ class Client(object):
         :param int qid: Идентификатор очереди
         """
         qid = self.__handle_queue_id(qid)
-        rep = self.__get('/api/shop/v1/queues/%s' % qid)
+        rep = self.__get('/api/shop/v2/queues/%s' % qid)
         rep.raise_for_status()
         return rep.json().get('state') == 'active'
 
@@ -87,7 +91,7 @@ class Client(object):
         :param int qid: Идентификатор очереди
         """
         qid = self.__handle_queue_id(qid)
-        rep = self.__post('/api/shop/v1/queues/%s/task' % qid, dict(check))
+        rep = self.__post('/api/shop/v2/queues/%s/task' % qid, dict(check))
         rep.raise_for_status()
         result = rep.json()
         return Task(**result)
@@ -100,7 +104,7 @@ class Client(object):
         :param int qid: Идентификатор очереди
         """
         qid = self.__handle_queue_id(qid)
-        rep = self.__post('/api/shop/v1/queues/%s/multi-tasks' % qid,
+        rep = self.__post('/api/shop/v2/queues/%s/multi-tasks' % qid,
                           [dict(check) for check in checks])
         rep.raise_for_status()
         result = rep.json()
@@ -112,7 +116,7 @@ class Client(object):
 
         :param str|int task_id: ID задачи
         """
-        rep = self.__get('/api/shop/v1/tasks/%s' % task_id)
+        rep = self.__get('/api/shop/v2/tasks/%s' % task_id)
         rep.raise_for_status()
         result = rep.json()
         return TaskInfo(**result)
@@ -126,7 +130,7 @@ class Client(object):
         :param string limit: Ограничить вывод заказов на limit элементов
         """
 
-        url = '/api/shop/v1/orders?start=%s&limit=%s' % (start, limit)
+        url = '/api/shop/v2/orders?start=%s&limit=%s' % (start, limit)
         if courier_id:
             url += '&courier_id=%s' % courier_id
 
@@ -144,7 +148,7 @@ class Client(object):
 
         :param Order order: Экземпляр заказа
         """
-        rep = self.__post('/api/shop/v1/orders', dict(order))
+        rep = self.__post('/api/shop/v2/orders', dict(order))
         rep.raise_for_status()
         result = rep.json()
         return OrderInfo(**result)
@@ -155,7 +159,7 @@ class Client(object):
         :param int oid: Идентификатор заказа
         :param Order order: Экземпляр заказа
         """
-        rep = self.__put('/api/shop/v1/orders/%s' % oid, dict(order))
+        rep = self.__put('/api/shop/v2/orders/%s' % oid, dict(order))
         rep.raise_for_status()
         result = rep.json()
         return OrderInfo(**result)
@@ -165,7 +169,7 @@ class Client(object):
         Просмотр информации о заказе
         :param int oid: Идентификатор заказа
         """
-        rep = self.__get('/api/shop/v1/orders/%s' % oid)
+        rep = self.__get('/api/shop/v2/orders/%s' % oid)
         rep.raise_for_status()
         result = rep.json()
         return OrderInfo(**result)
@@ -175,7 +179,7 @@ class Client(object):
         Удаление заказа
         :param int oid: Идентификатор заказа
         """
-        rep = self.__delete('/api/shop/v1/orders/%s' % oid)
+        rep = self.__delete('/api/shop/v2/orders/%s' % oid)
         rep.raise_for_status()
         return True
 
@@ -186,7 +190,7 @@ class Client(object):
         :param string start: Начинать вывод сотрудников с start
         :param string limit: Ограничить вывод сотрудников на limit элементов
         """
-        url = '/api/shop/v1/employees?start=%s&limit=%s' % (start, limit)
+        url = '/api/shop/v2/employees?start=%s&limit=%s' % (start, limit)
         if type:
             url += '&type=%s' % type
 
@@ -200,7 +204,7 @@ class Client(object):
         Создание сотрудника
         :param Employee employee: Экземпляр сотрудника
         """
-        rep = self.__post('/api/shop/v1/employees', dict(employee))
+        rep = self.__post('/api/shop/v2/employees', dict(employee))
         rep.raise_for_status()
         result = rep.json()
         return EmployeeInfo(**result)
@@ -211,7 +215,7 @@ class Client(object):
         :param int eid: Идентификатор сотрудника
         :param Employee employee: Экземпляр сотрудника
         """
-        rep = self.__put('/api/shop/v1/employees/%s' % eid, dict(employee))
+        rep = self.__put('/api/shop/v2/employees/%s' % eid, dict(employee))
         rep.raise_for_status()
         result = rep.json()
         return EmployeeInfo(**result)
@@ -221,7 +225,7 @@ class Client(object):
         Просмотр информации о сотруднике
         :param int eid: Идентификатор сотрудника
         """
-        rep = self.__get('/api/shop/v1/employees/%s' % oid)
+        rep = self.__get('/api/shop/v2/employees/%s' % eid)
         rep.raise_for_status()
         result = rep.json()
         return EmployeeInfo(**result)
@@ -231,7 +235,7 @@ class Client(object):
         Удаление сотрудника
         :param int eid: Идентификатор сотрудника
         """
-        rep = self.__delete('/api/shop/v1/employees/%s' % eid)
+        rep = self.__delete('/api/shop/v2/employees/%s' % eid)
         rep.raise_for_status()
         return True
 

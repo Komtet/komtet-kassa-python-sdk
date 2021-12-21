@@ -1,0 +1,8 @@
+FROM python:2.7
+
+ENV PYTHONDONTWRITEBYTECODE yes
+
+COPY ./ /
+WORKDIR ./
+
+RUN pip install --no-cache-dir -r /config/requirements.txt
