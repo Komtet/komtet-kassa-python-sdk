@@ -366,7 +366,7 @@ class Check(object):
                                         'type': method})
         return self
 
-    def set_client(self, email, phone=None, name=None, inn=None, birthdate=None, citizenship=None, document_code=None, document_data=None, address=None):
+    def set_client(self, email=None, phone=None, name=None, inn=None, birthdate=None, citizenship=None, document_code=None, document_data=None, address=None):
         """
         :param str email: Email покупателя
         :param str phone: Телефон покупателя
@@ -379,7 +379,8 @@ class Check(object):
         :param str address: Адрес покупателя
         """
 
-        self.__data['client'] = {'email': email}
+        if email:
+            self.__data['client']['email'] = email
 
         if name:
             self.__data['client']['name'] = name
@@ -517,6 +518,7 @@ class CorrectionCheck(object):
         self.__data = {
             'external_id': oid,
             'intent': intent,
+            'client': {},
             'payments': [],
             'positions': [],
         }
@@ -528,7 +530,7 @@ class CorrectionCheck(object):
     def __getitem__(self, item):
         return self.__data[item]
 
-    def set_client(self, email, phone=None, name=None, inn=None, birthdate=None, citizenship=None,
+    def set_client(self, email=None, phone=None, name=None, inn=None, birthdate=None, citizenship=None,
                    document_code=None, document_data=None, address=None):
         """
         :param str email: Email покупателя
@@ -542,7 +544,8 @@ class CorrectionCheck(object):
         :param str address: Адрес покупателя
         """
 
-        self.__data['client'] = {'email': email}
+        if email:
+            self.__data['client']['email'] = email
 
         if name:
             self.__data['client']['name'] = name
