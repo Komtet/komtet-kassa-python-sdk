@@ -23,7 +23,7 @@ class TestCorrectionCheck(TestCase):
             'sno': 0,
             'print': False,
             'client': {
-                'name': 'Иванов И.П.', 
+                'name': 'Иванов И.П.',
                 'inn': '1231231231'
             },
             'payments': [
