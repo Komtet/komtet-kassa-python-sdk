@@ -459,6 +459,12 @@ komtet-kassa-python-sdk
         inn='123456789012'
     )
 
+    # Указание данных клиента
+    check.set_client(
+        name='Иванов И.П.',
+        inn='1231231231'
+    )
+
     # Отправка запроса
     try:
         task = client.create_task(check, 'идентификатор очереди')
