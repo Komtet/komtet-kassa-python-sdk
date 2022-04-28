@@ -15,12 +15,17 @@ class TestCorrectionCheck(TestCase):
                                   'Отключение электричества')
         check.set_authorised_person('Иванов И.И.', '123456789012')
         check.set_callback_url('http://test.pro')
+        check.set_client(name='Иванов И.П.', inn='1231231231')
 
         expected = {
             'external_id': 2,
             'intent': 'sellCorrection',
             'sno': 0,
             'print': False,
+            'client': {
+                'name': 'Иванов И.П.', 
+                'inn': '1231231231'
+            },
             'payments': [
                 {'sum': 10, 'type': 'card'},
             ],
