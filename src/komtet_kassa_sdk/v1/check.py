@@ -587,22 +587,20 @@ class CorrectionCheck(BaseCheck):
             'correction': None
         }
 
-    def set_correction_data(self, type, date, description, document_number=None):
+    def set_correction_data(self, type, date, document_number, description):
         """
         :param int type: Тип коррекции
         :param str date: Дата документа коррекции
-        :param str description: Описание коррекции
         :param str document_number: № документа коррекции
+        :param str description: Описание коррекции
         """
 
         self._data['correction'] = {
             'type': type,
             'date': date,
+            'document': document_number,
             'description': description
         }
-
-        if document_number:
-            self._data['correction']['document'] = document_number
 
         return self
 
