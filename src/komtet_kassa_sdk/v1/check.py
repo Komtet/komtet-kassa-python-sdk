@@ -507,6 +507,25 @@ class BaseCheck(object):
         self._data['callback_url'] = url
         return self
 
+    def set_client(self, name=None, inn=None):
+        """
+        :param str name: Наименование покупателя
+        :param str inn: ИНН покупателя
+        """
+
+        self._data['client'] = {}
+
+        if name:
+            self._data['client']['name'] = name
+
+        if inn:
+            self._data['client']['inn'] = inn
+
+        if not self._data['client']:
+            del self._data['client']
+
+        return self
+
 
 class Check(BaseCheck):
     """
@@ -529,25 +548,6 @@ class Check(BaseCheck):
         }
         if payment_address:
             self._data['payment_address'] = payment_address
-
-    def set_client(self, name=None, inn=None):
-        """
-        :param str name: Наименование покупателя
-        :param str inn: ИНН покупателя
-        """
-
-        self._data['client'] = {}
-
-        if name:
-            self._data['client']['name'] = name
-
-        if inn:
-            self._data['client']['inn'] = inn
-
-        if not self._data['client']:
-            del self._data['client']
-
-        return self
 
     def set_agent(self, agent):
         """
@@ -601,6 +601,7 @@ class CorrectionCheck(BaseCheck):
             'document': document_number,
             'description': description
         }
+
         return self
 
     def set_authorised_person(self, name, inn=None):
