@@ -2,11 +2,12 @@
 from decimal import Decimal
 from unittest import TestCase
 
-from komtet_kassa_sdk.v2 import (Agent, AgentType, Client, Order, OrderItem, MarkTypes,
-                                 OrderInfo, PaymentType, TaxSystem, VatRate)
+from komtet_kassa_sdk.v2 import (Agent, AgentType, Client, MarkTypes, Order, OrderInfo, OrderItem,
+                                 PaymentType, TaxSystem, VatRate)
 from komtet_kassa_sdk.v2.client import Response
 from mock import patch
-from ...helpers.mock import (ResponseMock)
+
+from ...helpers.mock import ResponseMock
 
 
 class TestOrder(TestCase):
@@ -15,8 +16,10 @@ class TestOrder(TestCase):
         order = Order(12, state='new', is_pay_to_courier=True,
                       prepayment=200, payment_type=PaymentType.CARD)
         order.set_client(email='client@client.ru', phone='+79992410085', name='Иванов Иван',
-                         inn='516974792202', address='ул. Кижеватова д.7 кв.30',
-                         coordinate={'latitude': '53.202838856701206', 'longitude': '44.99768890421866'})
+                         address='ул. Кижеватова д.7 кв.30',
+                         coordinate={'latitude': '53.202838856701206',
+                                     'longitude': '44.99768890421866'},
+                         requisites={'name': 'Иванов Иван', 'inn': '516974792202'})
         order.set_delivery_time('01.01.2021 12:00', '01.01.2021 13:00')
         order.set_description('Комментарий к заказу')
         order.add_item(OrderItem(id=1, name='Пицца маргарита', price=500, quantity=1,
@@ -35,9 +38,12 @@ class TestOrder(TestCase):
                     'longitude': '44.99768890421866'
                 },
                 'email': 'client@client.ru',
-                'inn': '516974792202',
                 'name': 'Иванов Иван',
-                'phone': '+79992410085'
+                'phone': '+79992410085',
+                'requisites': {
+                    'inn': '516974792202',
+                    'name': 'Иванов Иван',
+                }
             },
             'date_end': '01.01.2021 13:00',
             'date_start': '01.01.2021 12:00',
@@ -95,8 +101,10 @@ class TestOrder(TestCase):
         order = Order(12, state='new', is_pay_to_courier=True,
                       prepayment=200, payment_type=PaymentType.CARD)
         order.set_client(email='client@client.ru', phone='+79992410085', name='Иванов Иван',
-                         inn='516974792202', address='ул. Кижеватова д.7 кв.30',
-                         coordinate={'latitude': '53.202838856701206', 'longitude': '44.99768890421866'})
+                         address='ул. Кижеватова д.7 кв.30',
+                         coordinate={'latitude': '53.202838856701206',
+                                     'longitude': '44.99768890421866'},
+                         requisites={'name': 'Иванов Иван', 'inn': '516974792202'})
         order.set_delivery_time('01.01.2021 12:00', '01.01.2021 13:00')
         order.set_description('Комментарий к заказу')
         order.add_item(OrderItem(id=1, name='Пицца маргарита', price=500, quantity=1, product_id=15,
@@ -115,9 +123,12 @@ class TestOrder(TestCase):
                     'longitude': '44.99768890421866'
                 },
                 'email': 'client@client.ru',
-                'inn': '516974792202',
                 'name': 'Иванов Иван',
-                'phone': '+79992410085'
+                'phone': '+79992410085',
+                'requisites': {
+                    'inn': '516974792202',
+                    'name': 'Иванов Иван',
+                }
             },
             'courier_id': 1,
             'date_end': '01.01.2021 13:00',
@@ -350,8 +361,10 @@ class TestOrder(TestCase):
         order = Order(12, state='new', is_pay_to_courier=True,
                       prepayment=200, payment_type=PaymentType.CARD)
         order.set_client(email='client@client.ru', phone='+79992410085', name='Иванов Иван',
-                         inn='516974792202', address='ул. Кижеватова д.7 кв.30',
-                         coordinate={'latitude': '53.202838856701206', 'longitude': '44.99768890421866'})
+                         address='ул. Кижеватова д.7 кв.30',
+                         coordinate={'latitude': '53.202838856701206',
+                                     'longitude': '44.99768890421866'},
+                         requisites={'name': 'Иванов Иван', 'inn': '516974792202'})
 
         self.assertEqual(
             order._Order__data['client']['coordinate']['latitude'], '53.202838856701206')
@@ -457,8 +470,10 @@ class TestClientOrder(TestCase):
             order = Order(external_id=12, state='new', is_pay_to_courier=False,
                           payment_type=PaymentType.CARD)
             order.set_client(email='client@client.ru', phone='+79992410085', name='Иванов Иван',
-                             inn='516974792202', address='ул. Кижеватова д.7 кв.30',
-                             coordinate={'latitude': '53.202838856701206', 'longitude': '44.99768890421866'})
+                             address='ул. Кижеватова д.7 кв.30',
+                             coordinate={'latitude': '53.202838856701206',
+                                         'longitude': '44.99768890421866'},
+                             requisites={'name': 'Иванов Иван', 'inn': '516974792202'})
             order.set_company(payment_address='ул. Кижеватова д.7 кв.30', tax_system=0)
             order.set_delivery_time(date_start='2019-04-12 07:00', date_end='2019-04-12 13:00')
             order.add_item(OrderItem(id=1, name='Демо-товар 2', price=1500, quantity=5,
@@ -596,8 +611,10 @@ class TestSetAgentInfoToOrder(TestCase):
         order = Order(12, state='new', is_pay_to_courier=True,
                       prepayment=200, payment_type=PaymentType.CARD)
         order.set_client(email='client@client.ru', phone='+79992410085', name='Иванов Иван',
-                         inn='516974792202', address='ул. Кижеватова д.7 кв.30',
-                         coordinate={'latitude': '53.202838856701206', 'longitude': '44.99768890421866'})
+                         address='ул. Кижеватова д.7 кв.30',
+                         coordinate={'latitude': '53.202838856701206',
+                                     'longitude': '44.99768890421866'},
+                         requisites={'name': 'Иванов Иван', 'inn': '516974792202'})
         order.set_delivery_time('01.01.2021 12:00', '01.01.2021 13:00')
         order.set_description('Комментарий к заказу')
         item = OrderItem(id=1, name='Пицца маргарита', price=500, quantity=1,
@@ -620,9 +637,12 @@ class TestSetAgentInfoToOrder(TestCase):
                     'longitude': '44.99768890421866'
                 },
                 'email': 'client@client.ru',
-                'inn': '516974792202',
                 'name': 'Иванов Иван',
-                'phone': '+79992410085'
+                'phone': '+79992410085',
+                'requisites': {
+                    'inn': '516974792202',
+                    'name': 'Иванов Иван',
+                }
             },
             'date_end': '01.01.2021 13:00',
             'date_start': '01.01.2021 12:00',
