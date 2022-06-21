@@ -53,13 +53,14 @@ class Order(object):
 
         return self
 
-    def set_client(self, address, phone, email=None, name=None, coordinate=None, inn=None):
+    def set_client(self, address, phone, email=None, name=None, coordinate=None, requisites=None):
         """
         :param str name: Имя получателя
         :param str address: Адрес доставки
         :param str phone: Телефон получателя
         :param str email: Email получателя
         :param dict coordinate: Координата адреса получателя
+        :params dict requisites: Реквизиты покупателя для печати
         """
         self.__data['client'] = {
             'address': address,
@@ -72,11 +73,17 @@ class Order(object):
         if name:
             self.__data['client']['name'] = name
 
-        if inn:
-            self.__data['client']['inn'] = inn
-
         if coordinate:
             self.__data['client']['coordinate'] = coordinate
+
+        if requisites:
+            self.__data['client']['requisites'] = {}
+
+            if requisites.get('name'):
+                self.__data['client']['requisites']['name'] = requisites.get('name')
+
+            if requisites.get('inn'):
+                self.__data['client']['requisites']['inn'] = requisites.get('inn')
 
     def set_delivery_time(self, date_start, date_end):
         """
