@@ -19,7 +19,7 @@ __all__ = [
     'EmployeeType',
     'Intent',
     'MarkTypes',
-    'MesureTypes'
+    'MesureTypes',
     'PaymentMethod',
     'PaymentObject',
     'PaymentType',
