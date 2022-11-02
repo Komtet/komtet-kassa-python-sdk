@@ -49,7 +49,7 @@ komtet-kassa-python-sdk
     email = 'client@client.ru'   # E-Mail пользователя для отправки электронного чека
     phone = '+79992400041'       # Телефон пользователя
     name = 'Иванов Иван'         # Имя пользователя
-    inn = '516954782202'         # Инн пользователя
+    inn = '5834041042'           # Инн пользователя
 
     check.set_client(email=email, phone=phone, name=name, inn=inn)
 
@@ -238,7 +238,7 @@ komtet-kassa-python-sdk
     # intent = Intent.SELL_RETURN_CORRECTION # Коррекция возврата прихода
     # intent = Intent.BUY_RETURN_CORRECTION # Коррекция возврата расхода
 
-    check = CorrectionCheck(oid, intent, sno)
+    check = CorrectionCheck(oid, intent)
 
     # Установка данных компании
     check.set_company(payment_address=payment_address, tax_system=tax_system)
@@ -256,14 +256,13 @@ komtet-kassa-python-sdk
 
     # Установка данных коррекции
     check.set_correction_info(correction_type,
-                                '2017-09-28', # Дата документа коррекции в формате 'yyyy-mm-dd'
-                                'K11',        # Номер документа коррекции
-                                'Отключение электричества'     # Описание коррекции
+                             '31.03.2022', # Дата документа коррекции в формате 'dd.mm.yyyy'
+                             'K11',        # Номер документа коррекции
     )
 
     # Создаём позицию коррекции
     position = Position(name='Товар', price=10, quantity=5, total=50,
-                        measure=measure_type, payment_method=payment_method,
+                        measure=measure, payment_method=payment_method,
                         payment_object=payment_object, vat=vat_rate)
 
     # Добавляем позицию коррекции
