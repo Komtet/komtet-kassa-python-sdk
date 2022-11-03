@@ -601,7 +601,7 @@ class CorrectionCheck(object):
             'value': value
         }
 
-    def set_correction_info(self, type, base_date, base_number, base_name=''):
+    def set_correction_info(self, type, base_date, base_number=None):
         """
         :param int type: Тип коррекции
         :param str base_date: Дата документа коррекции
@@ -612,9 +612,11 @@ class CorrectionCheck(object):
         self.__data['correction_info'] = {
             'type': type,
             'base_date': base_date,
-            'base_number': base_number,
-            'base_name': base_name
         }
+
+        if base_number:
+            self.__data['correction_info']['base_number'] = base_number
+
         return self
 
     def set_company(self, payment_address, tax_system):

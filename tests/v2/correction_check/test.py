@@ -13,8 +13,7 @@ class TestCorrectionCheck(TestCase):
         check.set_client(email='client@client.ru', phone='+79992410085',
                          name='Иванов Иван', inn='516974792202')
         check.add_payment(50)
-        check.set_correction_info(CorrectionType.INSTRUCTION, '2017-09-28', 'K11',
-                                  'Отключение электричества')
+        check.set_correction_info(CorrectionType.INSTRUCTION, '2017-09-28', 'K11')
         position = Position(name='Товар', price=10, quantity=5, total=50,
                             measure=MesureTypes.PIECE, payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT, vat=VatRate.RATE_NO)
@@ -30,8 +29,7 @@ class TestCorrectionCheck(TestCase):
             'correction_info': {
                 'type': 'instruction',
                 'base_date': '2017-09-28',
-                'base_number': 'K11',
-                'base_name': 'Отключение электричества'
+                'base_number': 'K11'
             },
             'company': {
                 'payment_address': 'ул. им Дедушки на деревне д.5',
@@ -68,6 +66,28 @@ class TestCorrectionCheck(TestCase):
 
         for key, value in check:
             self.assertEqual(expected[key], value)
+
+    def test_correction_info(self):
+        '''
+        Тест информации о коррекции
+        '''
+        check = CorrectionCheck(3, Intent.SELL_CORRECTION)
+        check.set_correction_info(CorrectionType.SELF, '2017-09-28', 'K11')
+
+        self.assertEqual(check['correction_info']['type'], 'self')
+        self.assertEqual(check['correction_info']['base_date'], '2017-09-28')
+        self.assertEqual(check['correction_info']['base_number'], 'K11')
+
+    def test_correction_info_without_base_number(self):
+        '''
+        Тест информации о коррекции без номера документа основания для коррекции
+        '''
+        check = CorrectionCheck(3, Intent.SELL_CORRECTION)
+        check.set_correction_info(CorrectionType.INSTRUCTION, '2022-09-28')
+
+        self.assertEqual(check['correction_info']['type'], 'instruction')
+        self.assertEqual(check['correction_info']['base_date'], '2022-09-28')
+
 
     def test_additional_user_props(self):
         '''
