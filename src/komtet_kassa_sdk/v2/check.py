@@ -530,6 +530,13 @@ class CorrectionCheck(object):
     def __getitem__(self, item):
         return self.__data[item]
 
+    def set_print(self, value):
+        """
+        :param bool value: Печатать чек или нет
+        """
+        self.__data['print'] = bool(value)
+        return self
+
     def set_client(self, email=None, phone=None, name=None, inn=None, birthdate=None, citizenship=None,
                    document_code=None, document_data=None, address=None):
         """

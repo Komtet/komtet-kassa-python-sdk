@@ -67,6 +67,11 @@ class TestCorrectionCheck(TestCase):
         for key, value in check:
             self.assertEqual(expected[key], value)
 
+        check.set_print(True)
+        self.assertTrue(check['print'])
+        check.set_print(False)
+        self.assertFalse(check['print'])
+
     def test_correction_info(self):
         '''
         Тест информации о коррекции
