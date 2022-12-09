@@ -1,18 +1,10 @@
 from setuptools import find_packages, setup
 
-
-with open('README.rst', 'r') as readme:
-    long_description = readme.read()
-
-with open('CHANGELOG.rst', 'r') as changelog:
-    long_description += '\n\n' + changelog.read()
-
 setup(
     name='komtet_kassa_sdk',
     version='7.1.1',
     license='MIT',
     description='Python SDK for KOMTET Kassa',
-    long_description=long_description,
 
     author='Motmom',
     author_email='motmom.dev@gmail.com',
