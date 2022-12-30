@@ -168,6 +168,7 @@ komtet-kassa-python-sdk
     # mark_type = MarkTypes.ITF14
     # mark_type = MarkTypes.GS10
     # mark_type = MarkTypes.GS1M
+    # mark_type = MarkTypes.GS10
     # mark_type = MarkTypes.SHORT
     # mark_type = MarkTypes.FUR
     # mark_type = MarkTypes.EGAIS20
