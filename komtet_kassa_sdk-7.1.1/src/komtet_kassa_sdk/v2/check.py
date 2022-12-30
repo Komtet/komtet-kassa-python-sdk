@@ -11,7 +11,6 @@ class MarkTypes(object):
     ITF14 = 'itf14'
     GS10 = 'gs10'
     GS1M = 'gs1m'
-    GS10 = 'gs10'
     SHORT = 'short'
     FUR = 'fur'
     EGAIS20 = 'egais20'
