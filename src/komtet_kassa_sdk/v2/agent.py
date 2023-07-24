@@ -1,4 +1,4 @@
-
+# coding: utf-8
 
 class AgentType(object):
     """Типы признака агента по предмету расчета"""
