@@ -34,10 +34,12 @@ class Order(object):
     def __getitem__(self, item):
         return self.__data[item]
 
-    def set_company(self, payment_address, tax_system, inn=None, place_address=None, email=None):
+    def set_company(self, payment_address, tax_system, inn=None, place_address=None):
         """
         :param str payment_address: Платёжный адрес компании
         :param str tax_system: Система налогообложения
+        :param str inn: ИНН организации
+        :param str place_address: Адрес расчетов
         """
 
         self.__data['company'] = {'payment_address': payment_address, 'sno': tax_system}
@@ -48,9 +50,6 @@ class Order(object):
         if place_address:
             self.__data['company']['place_address'] = place_address
 
-        if email:
-            self.__data['company']['email'] = email
-
         return self
 
     def set_client(self, address, phone, email=None, name=None, coordinate=None, requisites=None):
@@ -60,7 +59,7 @@ class Order(object):
         :param str phone: Телефон получателя
         :param str email: Email получателя
         :param dict coordinate: Координата адреса получателя
-        :params dict requisites: Реквизиты покупателя для печати
+        :param dict requisites: Реквизиты покупателя для печати
         """
         self.__data['client'] = {
             'address': address,

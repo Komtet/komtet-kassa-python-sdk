@@ -60,7 +60,7 @@ class Agent(object):
 
     def set_paying_agent(self, operation, phones):
         """ Передача атрибутов платежного агента
-        :param str oparation: Наименование операции (максимальная длина строки – 24 символа)
+        :param str operation: Наименование операции (максимальная длина строки – 24 символа)
         :param list phones: Телефоны платежного агента
         """
         self.__data['agent_info']['paying_agent'] = {

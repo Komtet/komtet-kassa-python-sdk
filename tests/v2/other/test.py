@@ -2,7 +2,7 @@
 from decimal import Decimal
 from unittest import TestCase
 
-from komtet_kassa_sdk.v2 import (Check, Client, Intent, MesureTypes,
+from komtet_kassa_sdk.v2 import (Check, Client, Intent, MeasureTypes,
                                  PaymentMethod, Position, PaymentObject, TaskInfo, TaxSystem, VatRate)
 from komtet_kassa_sdk.v2.lib.helpers import correction_positions
 from mock import patch
@@ -55,19 +55,19 @@ class TestMultiTasks(TestCase):
             for i in range(5):
                 check = Check(oid=2043, intent=Intent.SELL)
                 position = Position(id=1, name='Товар', price=100, quantity=1,
-                                    measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                                    measure=MeasureTypes.PIECE, vat=VatRate.RATE_NO,
                                     payment_method=PaymentMethod.FULL_PAYMENT,
                                     payment_object=PaymentObject.PRODUCT)
                 check.add_position(position)
                 check.add_payment(100)
                 position = Position(id=1, name='Товар', price=100, quantity=2,
-                                    measure=MesureTypes.KILOGRAMM, vat=VatRate.RATE_NO,
+                                    measure=MeasureTypes.KILOGRAMM, vat=VatRate.RATE_NO,
                                     payment_method=PaymentMethod.FULL_PAYMENT,
                                     payment_object=PaymentObject.PRODUCT)
                 check.add_position(position)
                 check.add_payment(200)
                 position = Position(id=1, name='Товар', price=300, quantity=3, total=290,
-                                    measure=MesureTypes.PIECE, vat=VatRate.RATE_20,
+                                    measure=MeasureTypes.PIECE, vat=VatRate.RATE_20,
                                     payment_method=PaymentMethod.FULL_PAYMENT,
                                     payment_object=PaymentObject.PRODUCT)
                 check.add_position(position)

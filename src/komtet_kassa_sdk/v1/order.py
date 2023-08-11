@@ -37,11 +37,11 @@ class Order(object):
 
     def set_client(self, address, phone, email=None, name=None, coordinate=None):
         """
-        :param str client_name: Имя получателя
-        :param str client_address: Адрес доставки
-        :param str client_phone: Телефон получателя
-        :param str client_email: Email получателя
-        :param dict client_coordinate: Координата адреса получателя
+        :param str address: Адрес доставки
+        :param str phone: Телефон получателя
+        :param str email: Email получателя
+        :param str name: Имя получателя
+        :param dict coordinate: Координата адреса получателя
         """
         self.__data['client_address'] = address
         self.__data['client_phone'] = phone
@@ -83,6 +83,7 @@ class Order(object):
         :param int|float quantity: Количество единиц
         :param int|float total: Общая стоимость позиции
         :param str vat: Налоговая ставка
+        :param str measure_name: Единица измерения
         :param Agent agent: Экземпляр агента
         :param int|float excise: Сумма акциза
         :param str country_code: Цифровой код страны происхождения товара

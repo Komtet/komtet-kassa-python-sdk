@@ -11,7 +11,6 @@ class MarkTypes(object):
     ITF14 = 'itf14'
     GS10 = 'gs10'
     GS1M = 'gs1m'
-    GS10 = 'gs10'
     SHORT = 'short'
     FUR = 'fur'
     EGAIS20 = 'egais20'
@@ -121,7 +120,7 @@ class VatRate(object):
         return cls.rates
 
 
-class MesureTypes(object):
+class MeasureTypes(object):
     PIECE = 0
     GRAMM = 10
     KILOGRAMM = 11
@@ -367,7 +366,8 @@ class Check(object):
                                         'type': method})
         return self
 
-    def set_client(self, email=None, phone=None, name=None, inn=None, birthdate=None, citizenship=None, document_code=None, document_data=None, address=None):
+    def set_client(self, email=None, phone=None, name=None, inn=None, birthdate=None,
+                   citizenship=None, document_code=None, document_data=None, address=None):
         """
         :param str email: Email покупателя
         :param str phone: Телефон покупателя
@@ -411,8 +411,10 @@ class Check(object):
 
     def set_company(self, payment_address, tax_system, inn=None, place_address=None):
         """
-        :param str payment_address: Платёжный адрес компании
+        :param str payment_address: Место расчетов
         :param str tax_system: Система налогообложения
+        :param str inn: ИНН организации
+        :param str place_address: Адрес расчетов
         """
 
         self.__data['company'] = {'payment_address': payment_address, 'sno': tax_system}
@@ -627,13 +629,21 @@ class CorrectionCheck(object):
 
         return self
 
-    def set_company(self, payment_address, tax_system):
+    def set_company(self, payment_address, tax_system, inn=None, place_address=None):
         """
-        :param str payment_address: Платёжный адрес компании
+        :param str payment_address: Место расчетов
         :param str tax_system: Система налогообложения
+        :param str inn: ИНН организации
+        :param str place_address: Адрес расчетов
         """
 
         self.__data['company'] = {'payment_address': payment_address, 'sno': tax_system}
+
+        if inn:
+            self.__data['company']['inn'] = inn
+
+        if place_address:
+            self.__data['company']['place_address'] = place_address
 
         return self
 

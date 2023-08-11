@@ -56,8 +56,7 @@ class Employee(object):
         """
         self.__data['payment_address'] = payment_address
 
-    def set_access_settings(self, is_manager=None, is_can_assign_order=None,
-                            is_app_fast_basket=None):
+    def set_access_settings(self, is_manager=None, is_can_assign_order=None, is_app_fast_basket=None):
         """
         Установка настроек доступа
         :param bool is_manager: Разрешить в приложении редактировать и создавать заказы

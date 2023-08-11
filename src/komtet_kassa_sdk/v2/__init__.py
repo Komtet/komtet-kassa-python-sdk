@@ -1,6 +1,6 @@
 from .agent import Agent, AgentType
 from .check import (Check, CorrectionCheck, CorrectionType, Intent, MarkTypes,
-                    MesureTypes, PaymentMethod, PaymentObject, PaymentType,
+                    MeasureTypes, PaymentMethod, PaymentObject, PaymentType,
                     Position, TaxSystem, VatRate)
 from .client import Client, EmployeeInfo, OrderInfo, Task, TaskInfo
 from .employee import Employee, EmployeeType
@@ -19,7 +19,7 @@ __all__ = [
     'EmployeeType',
     'Intent',
     'MarkTypes',
-    'MesureTypes',
+    'MeasureTypes',
     'PaymentMethod',
     'PaymentObject',
     'PaymentType',
@@ -30,4 +30,5 @@ __all__ = [
     'Task',
     'TaskInfo',
     'TaxSystem',
-    'VatRate']
+    'VatRate'
+]

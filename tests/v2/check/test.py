@@ -2,7 +2,7 @@
 from decimal import Decimal
 from unittest import TestCase
 
-from komtet_kassa_sdk.v2 import (Agent, AgentType, Check, Position, Intent, MarkTypes, MesureTypes,
+from komtet_kassa_sdk.v2 import (Agent, AgentType, Check, Position, Intent, MarkTypes, MeasureTypes,
                                  PaymentMethod, PaymentObject, TaxSystem, VatRate)
 
 
@@ -23,7 +23,7 @@ class TestCheck(TestCase):
                                                inn='8634330204')
 
         position = Position(id=1, name='Товар', price=10, quantity=1, total=10, excise=10,
-                            measure=MesureTypes.PIECE, declaration_number='12332234533',
+                            measure=MeasureTypes.PIECE, declaration_number='12332234533',
                             user_data='Дополнительный реквизит предмета расчета',
                             country_code='056', payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT, vat=VatRate.RATE_NO)
@@ -121,7 +121,7 @@ class TestCheck(TestCase):
                           tax_system=TaxSystem.COMMON)
 
         position = Position(id=1, name='Товар', price=10, quantity=1,
-                            measure=MesureTypes.PIECE, payment_method=PaymentMethod.FULL_PAYMENT,
+                            measure=MeasureTypes.PIECE, payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT, vat=VatRate.RATE_NO)
         check.add_position(position)
         check.set_cashier(name='Кассир')
@@ -222,12 +222,12 @@ class TestCheck(TestCase):
     def test_apply_discount(self):
         check = Check(oid=2043, intent=Intent.SELL)
         position = Position(id=1, name='Товар1', price=120.67, quantity=1,
-                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            measure=MeasureTypes.PIECE, vat=VatRate.RATE_NO,
                             payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT)
         check.add_position(position)
         position = Position(id=2, name='Товар2', price=113.54, quantity=1,
-                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            measure=MeasureTypes.PIECE, vat=VatRate.RATE_NO,
                             payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT)
         check.add_position(position)
@@ -242,7 +242,7 @@ class TestCheck(TestCase):
         '''
         check = Check(oid=2043, intent=Intent.SELL)
         position = Position(id=1, name='Товар', price=Decimal('42.4'), quantity=2,
-                            total=Decimal(84.5), measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            total=Decimal(84.5), measure=MeasureTypes.PIECE, vat=VatRate.RATE_NO,
                             payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT)
         check.add_position(position)
@@ -256,7 +256,7 @@ class TestCheck(TestCase):
         '''
         check = Check(oid=2043, intent=Intent.SELL)
         position = Position(id=1, name='Товар', price=10, quantity=1,
-                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            measure=MeasureTypes.PIECE, vat=VatRate.RATE_NO,
                             payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT)
         position.set_mark_code(type=MarkTypes.EAN13, code='1234567890123')
@@ -296,7 +296,7 @@ class TestCheck(TestCase):
         '''
         check = Check(oid=2043, intent=Intent.SELL)
         position = Position(id=1, name='Товар1', price=120.67, quantity=1,
-                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            measure=MeasureTypes.PIECE, vat=VatRate.RATE_NO,
                             payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT)
         position.add_sectoral_item_props('001', '01.01.2001', '170/21',
@@ -334,7 +334,7 @@ class TestCheckAgent(TestCase):
                                                address='г. Москва, ул. Складочная д.3',
                                                inn='8634330204')
         position = Position(id=1, name='Товар1', price=100, quantity=1,
-                            measure=MesureTypes.PIECE, vat=VatRate.RATE_NO,
+                            measure=MeasureTypes.PIECE, vat=VatRate.RATE_NO,
                             payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT)
         position.set_agent(agent_info)
