@@ -24,7 +24,7 @@ class TestOrder(TestCase):
         order.add_position(oid='1', type='product', name='position name1', price=555.0)
         order.add_position(oid='2', type='product', name='position name2', price=100.0,
                            quantity=5, vat=VatRate.RATE_10, measure_name='kg')
-        order.add_position(oid='3', type='product', name='position name3', price=555.0,
+        order.add_position(oid='3', type='product_practical', name='position name3', price=555.0,
                            excise=19.89, country_code='643',
                            declaration_number='10129000/220817/0211234')
 
@@ -63,7 +63,7 @@ class TestOrder(TestCase):
                 },
                 {
                     "order_item_id": '3',
-                    "type": "product",
+                    "type": "product_practical",
                     "name": "position name3",
                     "price": 555.0,
                     "quantity": 1,
@@ -92,7 +92,7 @@ class TestOrder(TestCase):
                                 date_end="2018-02-28 15:20")
         order.set_description('Комментарий к заказу')
         order.add_position(oid='1', type='product', name='position name1', price=555.0)
-        order.add_position(oid='2', type='product', name='position name2', price=100.0,
+        order.add_position(oid='2', type='product_practical', name='position name2', price=100.0,
                            quantity=5, vat=VatRate.RATE_10, measure_name='kg')
 
         order.add_callback_url('https://callback_url.ru')
@@ -123,7 +123,7 @@ class TestOrder(TestCase):
                 },
                 {
                     "order_item_id": '2',
-                    "type": "product",
+                    "type": "product_practical",
                     "name": "position name2",
                     "price": 100.0,
                     "quantity": 5,
@@ -220,7 +220,7 @@ class TestClientOrder(TestCase):
                                     date_end='2019-04-12 13:00')
             order.add_position(oid='1', type='product', name='Демо-товар 2', vat='10', quantity=5,
                                price=1500.0, total=1500.0)
-            order.add_position(oid='2', type='delivery', name="Доставка", price=500)
+            order.add_position(oid='2', type='service', name="Доставка", price=500)
 
             order_info = self.client.create_order(order)
             self.assertIsInstance(order_info, OrderInfo)
@@ -260,7 +260,7 @@ class TestClientOrder(TestCase):
                                     date_end='2019-04-12 13:00')
             order.add_position(oid='1', type='product', name='Демо-товар 2', vat='10', quantity=5,
                                price=1500.0, total=1500.0)
-            order.add_position(oid='2', type='delivery', name="Доставка", price=500)
+            order.add_position(oid='2', type='service', name="Доставка", price=500)
 
             order_info = self.client.update_order(775, order)
             self.assertIsInstance(order_info, OrderInfo)
@@ -311,7 +311,7 @@ class TestClientOrder(TestCase):
                                     date_end='2019-04-12 13:00')
             order.add_position(oid='1', type='product', name='Демо-товар 2', vat='10', quantity=5,
                                price=1500.0, total=1500.0)
-            order.add_position(oid='2', type='delivery', name="Доставка", price=500)
+            order.add_position(oid='2', type='service', name="Доставка", price=500)
 
             order.add_callback_url('https://calback_url.ru')
 
@@ -363,7 +363,7 @@ class TestClientOrder(TestCase):
 
         order.add_position(oid='1', type='product', name='Позиция 1', vat='10', quantity=2,
                            price=Decimal('42.4'), total=Decimal(84.5))
-        order.add_position(oid='2', type='delivery', name="Доставка", price=10)
+        order.add_position(oid='2', type='service', name="Доставка", price=10)
         order.apply_correction_positions()
         self.assertEqual(len(order['items']), 3)
 
@@ -489,7 +489,7 @@ class TestSetAgentInfoToOrder(TestCase):
             order.add_position(oid='1', type='product', name='Демо-товар 2', vat='10', quantity=5,
                                price=1500.0, total=1500.0, agent=agent)
 
-            order.add_position(oid='2', type='delivery', name="Доставка", price=500)
+            order.add_position(oid='2', type='service', name="Доставка", price=500)
 
             order_info = self.client.create_order(order)
             self.assertIsInstance(order_info, OrderInfo)

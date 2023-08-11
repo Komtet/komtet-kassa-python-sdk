@@ -27,7 +27,7 @@ class TestOrder(TestCase):
         order.add_item(OrderItem(id=2, name='Пицца пеперони', price=600, quantity=5,
                                  measure=0, total=3000, type='product', vat=VatRate.RATE_10))
         order.add_item(OrderItem(id=3, name='Пицца барбекю', price=555, quantity=1,
-                                 measure=0, type='product', excise=19.89, country_code='643',
+                                 measure=0, type='product_practical', excise=19.89, country_code='643',
                                  declaration_number='10129000/220817/0211234'))
 
         expected = {
@@ -84,7 +84,7 @@ class TestOrder(TestCase):
                     'price': 555,
                     'quantity': 1,
                     'total': 555,
-                    'type': 'product',
+                    'type': 'product_practical',
                     'vat': 'no'
                 }
             ],
@@ -108,7 +108,7 @@ class TestOrder(TestCase):
         order.set_delivery_time('01.01.2021 12:00', '01.01.2021 13:00')
         order.set_description('Комментарий к заказу')
         order.add_item(OrderItem(id=1, name='Пицца маргарита', price=500, quantity=1, product_id=15,
-                                 measure=0, total=500, type='product', external_id=10,
+                                 measure=0, total=500, type='product_practical', external_id=10,
                                  user_data='Дополнительный реквизит предмета расчета'))
 
         order.add_callback_url('https://callback_url.ru')
@@ -146,7 +146,7 @@ class TestOrder(TestCase):
                     'price': 500,
                     'quantity': 1,
                     'total': 500,
-                    'type': 'product',
+                    'type': 'product_practical',
                     'vat': 'no',
                     'product_id': 15,
                     'user_data': 'Дополнительный реквизит предмета расчета'
@@ -410,7 +410,7 @@ class TestClientOrder(TestCase):
                 'price': 500.0,
                 'quantity': 1.0,
                 'total': 500.0,
-                'type': 'delivery',
+                'type': 'service',
                 'vat': 'no'
             }],
             'amount': 8000.0,
@@ -433,7 +433,7 @@ class TestClientOrder(TestCase):
             order.set_delivery_time(date_start='2019-04-12 07:00', date_end='2019-04-12 13:00')
             order.add_item(OrderItem(id=1, name='Демо-товар 2', price=1500, quantity=5,
                                      measure=0, total=7500, vat='10', type='product'))
-            order.add_item(OrderItem(id=2, name='Доставка', price=500, type='delivery'))
+            order.add_item(OrderItem(id=2, name='Доставка', price=500, type='service'))
 
             order_info = self.client.create_order(order)
 
@@ -459,7 +459,7 @@ class TestClientOrder(TestCase):
                 'price': 500.0,
                 'quantity': 1.0,
                 'total': 500.0,
-                'type': 'delivery',
+                'type': 'service',
                 'vat': 'no'
             })
 
@@ -478,7 +478,7 @@ class TestClientOrder(TestCase):
             order.set_delivery_time(date_start='2019-04-12 07:00', date_end='2019-04-12 13:00')
             order.add_item(OrderItem(id=1, name='Демо-товар 2', price=1500, quantity=5,
                                      measure=0, total=7500, vat='10', type='product'))
-            order.add_item(OrderItem(id=2, name='Доставка', price=500, type='delivery'))
+            order.add_item(OrderItem(id=2, name='Доставка', price=500, type='service'))
 
             order_info = self.client.update_order(775, order)
             self.assertIsInstance(order_info, OrderInfo)
@@ -515,7 +515,7 @@ class TestClientOrder(TestCase):
                 'price': 500.0,
                 'quantity': 1.0,
                 'total': 500.0,
-                'type': 'delivery',
+                'type': 'service',
                 'vat': 'no'
             })
 
@@ -531,7 +531,7 @@ class TestClientOrder(TestCase):
             order.set_delivery_time(date_start='2019-04-12 07:00', date_end='2019-04-12 13:00')
             order.add_item(OrderItem(id=1, name='Демо-товар 2', price=1500, quantity=5,
                                      measure=0, total=7500, vat='10', type='product'))
-            order.add_item(OrderItem(id=2, name='Доставка', price=500, type='delivery'))
+            order.add_item(OrderItem(id=2, name='Доставка', price=500, type='service'))
             order.add_callback_url('https://calback_url.ru')
 
             order_info = self.client.create_order(order)
@@ -559,7 +559,7 @@ class TestClientOrder(TestCase):
                 'price': 500.0,
                 'quantity': 1.0,
                 'total': 500.0,
-                'type': 'delivery',
+                'type': 'service',
                 'vat': 'no'
             })
 
@@ -583,7 +583,7 @@ class TestClientOrder(TestCase):
         order = Order(12, state='new', is_pay_to_courier=False, payment_type=PaymentType.CARD)
         order.add_item(OrderItem(id=1, name='Позиция 1', price=Decimal('42.4'), quantity=2,
                                  measure=0, vat='10', total=Decimal(84.5), type='product'))
-        order.add_item(OrderItem(id=2, name='Доставка', price=10, type='delivery'))
+        order.add_item(OrderItem(id=2, name='Доставка', price=10, type='service'))
 
         order.apply_correction_positions()
         self.assertEqual(len(order['items']), 3)
