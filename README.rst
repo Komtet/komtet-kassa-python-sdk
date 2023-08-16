@@ -69,31 +69,31 @@ komtet-kassa-python-sdk
     position_price = 100  # Цена позиции
 
     # Единицы измерений
-    measure = MesureTypes.PIECE
-    # measure = MesureTypes.PIECE
-    # measure = MesureTypes.GRAMM
-    # measure = MesureTypes.KILOGRAMM
-    # measure = MesureTypes.TON
-    # measure = MesureTypes.CENTIMETER
-    # measure = MesureTypes.DECIMETER
-    # measure = MesureTypes.METER
-    # measure = MesureTypes.SQUARE_CENTIMETER
-    # measure = MesureTypes.SQUARE_DECIMETER
-    # measure = MesureTypes.SQUARE_METER
-    # measure = MesureTypes.MILLILITER
-    # measure = MesureTypes.LITER
-    # measure = MesureTypes.CUBIC_METER
-    # measure = MesureTypes.KILOWATT_HOUR
-    # measure = MesureTypes.GIGA_CALORIE
-    # measure = MesureTypes.DAY
-    # measure = MesureTypes.HOUR
-    # measure = MesureTypes.MINUTE
-    # measure = MesureTypes.SECOND
-    # measure = MesureTypes.KILOBYTE
-    # measure = MesureTypes.MEGABYTE
-    # measure = MesureTypes.GIGABYTE
-    # measure = MesureTypes.TERABYTE
-    # measure = MesureTypes.OTHER_MEASURMENTS
+    measure = MeasureTypes.PIECE
+    # measure = MeasureTypes.PIECE
+    # measure = MeasureTypes.GRAMM
+    # measure = MeasureTypes.KILOGRAMM
+    # measure = MeasureTypes.TON
+    # measure = MeasureTypes.CENTIMETER
+    # measure = MeasureTypes.DECIMETER
+    # measure = MeasureTypes.METER
+    # measure = MeasureTypes.SQUARE_CENTIMETER
+    # measure = MeasureTypes.SQUARE_DECIMETER
+    # measure = MeasureTypes.SQUARE_METER
+    # measure = MeasureTypes.MILLILITER
+    # measure = MeasureTypes.LITER
+    # measure = MeasureTypes.CUBIC_METER
+    # measure = MeasureTypes.KILOWATT_HOUR
+    # measure = MeasureTypes.GIGA_CALORIE
+    # measure = MeasureTypes.DAY
+    # measure = MeasureTypes.HOUR
+    # measure = MeasureTypes.MINUTE
+    # measure = MeasureTypes.SECOND
+    # measure = MeasureTypes.KILOBYTE
+    # measure = MeasureTypes.MEGABYTE
+    # measure = MeasureTypes.GIGABYTE
+    # measure = MeasureTypes.TERABYTE
+    # measure = MeasureTypes.OTHER_MEASURMENTS
 
     # Налоговая ставка
     vat_rate = VatRate.RATE_NO  # Без НДС

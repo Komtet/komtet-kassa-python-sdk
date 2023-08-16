@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
 
-from komtet_kassa_sdk.v2 import (CorrectionCheck, CorrectionType, Intent, MesureTypes,
+from komtet_kassa_sdk.v2 import (CorrectionCheck, CorrectionType, Intent, MeasureTypes,
                                  PaymentMethod, PaymentObject, Position, TaxSystem, VatRate)
 
 
@@ -15,7 +15,7 @@ class TestCorrectionCheck(TestCase):
         check.add_payment(50)
         check.set_correction_info(CorrectionType.INSTRUCTION, '2017-09-28', 'K11')
         position = Position(name='Товар', price=10, quantity=5, total=50,
-                            measure=MesureTypes.PIECE, payment_method=PaymentMethod.FULL_PAYMENT,
+                            measure=MeasureTypes.PIECE, payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT, vat=VatRate.RATE_NO)
         check.add_position(position)
         check.set_cashier(name='Кассир', inn='8634330201')

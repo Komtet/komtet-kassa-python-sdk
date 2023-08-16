@@ -534,9 +534,10 @@ class Check(BaseCheck):
     :param str intent: Направление платежа
     :param int tax_system: Система налогообложения
     :param str payment_address: Место расчетов
+    :param str payment_address: Адрес расчетов
     """
 
-    def __init__(self, oid, email, intent, tax_system, payment_address=None):
+    def __init__(self, oid, email, intent, tax_system, payment_address=None, place_address=None):
         self._data = {
             'external_id': oid,
             'user': email,
@@ -546,8 +547,12 @@ class Check(BaseCheck):
             'payments': [],
             'positions': []
         }
+
         if payment_address:
             self._data['payment_address'] = payment_address
+
+        if place_address:
+            self._data['place_address'] = place_address
 
     def set_agent(self, agent):
         """
@@ -573,9 +578,11 @@ class CorrectionCheck(BaseCheck):
     :param oid: Номер операции в магазине
     :param str intent: Тип чека коррекции
     :param int sno: Система налогообложения
+    :param str payment_address: Место расчетов
+    :param str payment_address: Адрес расчетов
     """
 
-    def __init__(self, oid, intent, sno):
+    def __init__(self, oid, intent, sno, payment_address=None, place_address=None):
 
         self._data = {
             'external_id': oid,
@@ -586,6 +593,12 @@ class CorrectionCheck(BaseCheck):
             'positions': [],
             'correction': None
         }
+
+        if payment_address:
+            self._data['payment_address'] = payment_address
+
+        if place_address:
+            self._data['place_address'] = place_address
 
     def set_correction_data(self, type, date, document_number, description):
         """

@@ -26,4 +26,5 @@ __all__ = [
     'Task',
     'TaskInfo',
     'TaxSystem',
-    'VatRate']
+    'VatRate'
+]

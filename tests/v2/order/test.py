@@ -165,12 +165,10 @@ class TestOrder(TestCase):
         order = Order(12, state='new', is_pay_to_courier=True,
                       prepayment=200, payment_type=PaymentType.CARD)
         order.set_company(payment_address='ул. им Дедушки на деревне д.5', inn='123456789',
-                          tax_system=TaxSystem.COMMON, place_address='Ещё один аддрес',
-                          email='company@gmail.com')
+                          tax_system=TaxSystem.COMMON, place_address='Ещё один аддрес')
 
         expected = {
             'company': {
-                'email': 'company@gmail.com',
                 'inn': '123456789',
                 'payment_address': 'ул. им Дедушки на деревне д.5',
                 'place_address': 'Ещё один аддрес',
