@@ -19,9 +19,8 @@ test:		## Run tests for python 3.6
 test_all:  	## Run all tests
 	@make test_legacy && make test
 
-publish:	## Upload package to PyPI
-	@python3 setup.py sdist
-	@python -m twine upload --repository komtet-kassa-sdk dist/*
+publish: test_all	## Upload package to PyPI
+	@python3 setup.py sdist upload
 
 eggs:		## Собрать яйца
 	@docker-compose run python2 bash -c 'python setup.py bdist_egg'

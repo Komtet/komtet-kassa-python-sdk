@@ -9,9 +9,6 @@ setup(
     author='Motmom',
     author_email='motmom.dev@gmail.com',
 
-    maintainer='Guryev Konstantin',
-    maintainer_email='kosmini4@gmail.com',
-
     url='https://github.com/Komtet/komtet-kassa-python-sdk',
     download_url='https://pypi.python.org/pypi/komtet_kassa_sdk',
 
