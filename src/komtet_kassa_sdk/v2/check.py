@@ -76,11 +76,23 @@ class VatRate(object):
     RATE_0 = '0'
     """НДС 0%"""
 
+    RATE_5 = '5'
+    """НДС 5%"""
+
+    RATE_7 = '7'
+    """НДС 7%"""
+
     RATE_10 = '10'
     """НДС 10%"""
 
     RATE_20 = '20'
     """НДС 20%"""
+
+    RATE_105 = '105'
+    """НДС 5/105"""
+
+    RATE_107 = '107'
+    """НДС 7/107"""
 
     RATE_110 = '110'
     """НДС 10/110"""
@@ -91,26 +103,27 @@ class VatRate(object):
     @classmethod
     def parse(cls, rate):
         if isinstance(rate, float) and rate < 1:
-            rate = '%.2f' % rate
-
-        if not isinstance(rate, str):
-            rate = str(rate)
-
-        if rate == '10/110':
-            rate = cls.RATE_110
-        elif rate in ['20/120', '18/118']:
-            rate = cls.RATE_120
+            rate = str(int(rate * 100))
         else:
-            rate = rate.replace('%', '')
-            rate = rate.replace('0.', '')
+            rate = str(rate).replace('%', '')
 
-        if rate in ['18', 18]:
+        if rate == '5/105':
+            rate = cls.RATE_105
+        elif rate == '7/107':
+            rate = cls.RATE_107
+        elif rate == '10/110':
+            rate = cls.RATE_110
+        elif rate == '20/120':
+            rate = cls.RATE_120
+        # С 1 января 2019 года ставка по налогу 18% увеличилась до 20% и больше не применяется
+        elif rate == '18':
             rate = cls.RATE_20
-        elif rate in ['118', 118, '18/118']:
+        elif rate in ['118', '18/118']:
             rate = cls.RATE_120
 
         if rate not in cls.get_rates():
             raise ValueError('Unknown VAT rate: %s' % rate)
+
         return rate
 
     @classmethod
