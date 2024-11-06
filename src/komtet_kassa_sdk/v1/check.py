@@ -87,8 +87,14 @@ class VatRate(object):
 
     @classmethod
     def parse(cls, rate):
-        if isinstance(rate, float) and rate < 1:
-            rate = str(int(rate * 100))
+        if isinstance(rate, str) and '.' in rate:
+            rate = float(rate)
+
+        if isinstance(rate, float):
+            if rate < 1:
+                rate = str(int(rate * 100))
+            else:
+                rate = str(int(rate))
         else:
             rate = str(rate).replace('%', '')
 
