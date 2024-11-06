@@ -97,9 +97,13 @@ komtet-kassa-python-sdk
 
     # Налоговая ставка
     vat_rate = VatRate.RATE_NO  # Без НДС
-    # vat_rate = VatRate.RATE_20  # НДС 20%
     # vat_rate = VatRate.RATE_0  # НДС 0%
+    # vat_rate = VatRate.RATE_5  # НДС 5%
+    # vat_rate = VatRate.RATE_7  # НДС 7%
     # vat_rate = VatRate.RATE_10  # НДС 10%
+    # vat_rate = VatRate.RATE_20  # НДС 20%
+    # vat_rate = VatRate.RATE_105  # НДС 5/105
+    # vat_rate = VatRate.RATE_107  # НДС 7/107
     # vat_rate = VatRate.RATE_110  # НДС 10/110
     # vat_rate = VatRate.RATE_120  # НДС 20/120
 
@@ -368,7 +372,11 @@ komtet-kassa-python-sdk
     vat_rate = VatRate.RATE_20  # НДС 20%
     # vat_rate = VatRate.RATE_NO  # Без НДС
     # vat_rate = VatRate.RATE_0  # НДС 0%
+    # vat_rate = VatRate.RATE_5  # НДС 5%
+    # vat_rate = VatRate.RATE_7  # НДС 7%
     # vat_rate = VatRate.RATE_10  # НДС 10%
+    # vat_rate = VatRate.RATE_105  # НДС 5/105
+    # vat_rate = VatRate.RATE_107  # НДС 7/107
     # vat_rate = VatRate.RATE_110  # НДС 10/110
     # vat_rate = VatRate.RATE_120  # НДС 20/120
     # Можно указать просто число:
