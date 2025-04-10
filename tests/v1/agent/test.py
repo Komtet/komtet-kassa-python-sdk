@@ -41,6 +41,21 @@ class TestAgent(TestCase):
         }
         self.assertEqual(dict(self.agent), expected)
 
+    def test_paying_agent_with_null_arguments(self):
+        self.agent.set_paying_agent_info()
+
+        expected = {
+            "agent_info": {
+                "type": "payment_agent"
+            },
+            "supplier_info": {
+                "phones": ["+87776665544"],
+                "name": "ООО 'Лютик'",
+                "inn": "12345678901"
+            }
+        }
+        self.assertEqual(dict(self.agent), expected)
+
     def test_receive_payments_operator(self):
         self.agent.set_receive_payments_operator_info(['+87654443322'])
 

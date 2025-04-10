@@ -351,15 +351,17 @@ class Agent(object):
             if inn:
                 self.__data['supplier_info']['inn'] = inn
 
-    def set_paying_agent_info(self, operation, phones):
+    def set_paying_agent_info(self, operation=None, phones=None):
         """ Передача атрибутов платежного агента
         :param str oparation: Наименование операции (максимальная длина строки – 24 символа)
         :param list phones: Телефоны платежного агента
         """
-        self.__data['agent_info']['paying_agent'] = {
-            'operation': operation,
-            'phones': phones
-        }
+        if operation or phones:
+            self.__data['agent_info']['paying_agent'] = {}
+            if operation:
+                self.__data['agent_info']['paying_agent']['operation'] = operation
+            if phones:
+                self.__data['agent_info']['paying_agent']['phones'] = phones
 
     def set_receive_payments_operator_info(self, phones):
         """ Передача атрибутов оператора по приему платежей
