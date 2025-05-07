@@ -308,7 +308,7 @@ class TestCheck(TestCase):
         position.set_wholesale(False)
         self.assertFalse(position['wholesale'])
 
-    def test_wholesale(self):
+    def test_sectoral_item_props(self):
         '''
         Тест данных об отраслевой принадлежности чека
         '''
