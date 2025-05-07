@@ -805,6 +805,12 @@ class Position(object):
             'denominator': denominator
         }
 
+    def set_wholesale(self, value):
+        """
+        :param bool value: Признак использования ОСУ
+        """
+        self.__data['wholesale'] = bool(value)
+
     def add_sectoral_item_props(self, federal_id, date, number, value):
         """ Установка данных об отраслевой принадлежности
         :param str federal_id: Идентификатор ФОИВ
