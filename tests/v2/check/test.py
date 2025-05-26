@@ -290,6 +290,24 @@ class TestCheck(TestCase):
         self.assertEqual(check['sectoral_check_props'][0]['number'], '170/21')
         self.assertEqual(check['sectoral_check_props'][0]['value'], 'Ид1=Знач1&Ид2=Знач2&Ид3=Знач3')
 
+    def test_wholesale(self):
+        ''' Тест установки признака использования ОСУ
+        '''
+        position = Position(
+            id=1,
+            name='Товар1',
+            price=120.67,
+            quantity=1,
+            measure=MeasureTypes.PIECE,
+            vat=VatRate.RATE_NO,
+            payment_method=PaymentMethod.FULL_PAYMENT,
+            payment_object=PaymentObject.PRODUCT
+        )
+        position.set_wholesale(True)
+        self.assertTrue(position['wholesale'])
+        position.set_wholesale(False)
+        self.assertFalse(position['wholesale'])
+
     def test_sectoral_item_props(self):
         '''
         Тест данных об отраслевой принадлежности чека
