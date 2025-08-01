@@ -594,7 +594,7 @@ class Check(object):
         self.__data['internet'] = bool(value)
         return self
 
-    def add_cashless_payments(self, sum, method, id, additional_info=None):
+    def add_cashless_payment(self, sum, method, id, additional_info=None):
         """Сведения об оплате в безналичном порядке суммы расчета, указанной в кассовом чеке (БСО)
         :param int|float sum: Сумма оплаты безналичными
         :param int method: Признак способа оплаты безналичными

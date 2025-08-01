@@ -355,7 +355,7 @@ class TestCheck(TestCase):
         '''
         check = Check(oid=1, intent=Intent.SELL)
 
-        check.add_cashless_payments(sum=1000, method=1, id='transaction_1')
+        check.add_cashless_payment(sum=1000, method=1, id='transaction_1')
         self.assertEqual(len(check['cashless_payments']), 1)
         self.assertEqual(check['cashless_payments'][0], {
             'sum': 1000,
@@ -363,7 +363,7 @@ class TestCheck(TestCase):
             'id': 'transaction_1'
         })
 
-        check.add_cashless_payments(sum=2000, method=2, id='transaction_2',
+        check.add_cashless_payment(sum=2000, method=2, id='transaction_2',
                                 additional_info='Дополнительные сведения')
         self.assertEqual(len(check['cashless_payments']), 2)
         self.assertEqual(check['cashless_payments'][1], {
@@ -373,7 +373,7 @@ class TestCheck(TestCase):
             'additional_info': 'Дополнительные сведения'
         })
 
-        check.add_cashless_payments(sum=3000, method=3, id='transaction_3')
+        check.add_cashless_payment(sum=3000, method=3, id='transaction_3')
         self.assertEqual(len(check['cashless_payments']), 3)
         self.assertEqual(check['cashless_payments'][2], {
             'sum': 3000,
