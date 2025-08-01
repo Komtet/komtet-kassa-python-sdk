@@ -15,6 +15,7 @@ class TestCheck(TestCase):
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
         check.add_position('name 2', 100, 3, total=290, vat=20)
+        check.set_internet(True)
         check.set_callback_url('http://test.pro')
 
         expected = {
@@ -55,6 +56,7 @@ class TestCheck(TestCase):
                     'vat': '20'
                 }
             ],
+            'internet': True,
             'callback_url': 'http://test.pro'
         }
         for key, value in check:
@@ -64,6 +66,11 @@ class TestCheck(TestCase):
         self.assertTrue(check['print'])
         check.set_print(False)
         self.assertFalse(check['print'])
+
+        check.set_internet(True)
+        self.assertTrue(check['internet'])
+        check.set_internet(False)
+        self.assertFalse(check['internet'])
 
     def test_check_ffd_105_with_client_name(self):
         check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
@@ -260,6 +267,38 @@ class TestCheck(TestCase):
 
         for key, value in check:
             self.assertEqual(expected[key], value)
+
+    def test_set_cashless_payments(self):
+        '''
+        Тест добавления сведений об оплате в безналичном порядке
+        '''
+        check = Check(1, 'user@host', Intent.SELL, TaxSystem.COMMON)
+
+        check.set_cashless_payments(sum=1000, method=1, id='transaction_1')
+        self.assertEqual(len(check['cashless_payments']), 1)
+        self.assertEqual(check['cashless_payments'][0], {
+            'sum': 1000,
+            'method': 1,
+            'id': 'transaction_1'
+        })
+
+        check.set_cashless_payments(sum=2000, method=2, id='transaction_2',
+                                additional_info='Дополнительные сведения')
+        self.assertEqual(len(check['cashless_payments']), 2)
+        self.assertEqual(check['cashless_payments'][1], {
+            'sum': 2000,
+            'method': 2,
+            'id': 'transaction_2',
+            'additional_info': 'Дополнительные сведения'
+        })
+
+        check.set_cashless_payments(sum=3000, method=3, id='transaction_3')
+        self.assertEqual(len(check['cashless_payments']), 3)
+        self.assertEqual(check['cashless_payments'][2], {
+            'sum': 3000,
+            'method': 3,
+            'id': 'transaction_3'
+        })
 
 
 class TestNomenklature(TestCase):

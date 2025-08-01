@@ -14,8 +14,9 @@ class TestCorrectionCheck(TestCase):
         check.set_correction_data(CorrectionType.FORCED, '2017-09-28', 'K11',
                                   'Отключение электричества')
         check.set_authorised_person('Иванов И.И.', '123456789012')
-        check.set_callback_url('http://test.pro')
         check.set_client(name='Иванов И.П.', inn='1231231231')
+        check.set_internet(True)
+        check.set_callback_url('http://test.pro')
 
         expected = {
             'external_id': 2,
@@ -48,7 +49,13 @@ class TestCorrectionCheck(TestCase):
                 'name': 'Иванов И.И.',
                 'inn': '123456789012'
             },
+            'internet': True,
             'callback_url': 'http://test.pro'
         }
         for key, value in check:
             self.assertEqual(expected[key], value)
+
+        check.set_internet(True)
+        self.assertTrue(check['internet'])
+        check.set_internet(False)
+        self.assertFalse(check['internet'])

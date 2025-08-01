@@ -3,6 +3,15 @@ Changelog
 
 Unreleased
 ----------
+  - Изменения по v1:
+    - В классы `Check` и `CorrectionCheck` добавлен метод `set_internet` - признак расчета в "Интернет"
+    - В класс `Check` добавлен метод  `set_cashless_payments` - сведения об оплате безналичными
+
+  - Изменения по v2:
+    - В классы `Check` и `CorrectionCheck` добавлен метод `set_internet` - признак расчета в "Интернет"
+    - В классы `Check` и `CorrectionCheck` добавлен метод `timezone` - часовая зона
+    - В класс `Check` добавлен метод  `set_cashless_payments` - сведения об оплате безналичными
+    - В класс `Position` добавлен метод  `set_planned_status` - планируемый статус товара
 
 7.3.1 (27.05.2025)
 ------------------
