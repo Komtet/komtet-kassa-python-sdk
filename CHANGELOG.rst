@@ -9,7 +9,7 @@ Unreleased
 
   - Изменения по v2:
     - В классы `Check` и `CorrectionCheck` добавлен метод `set_internet` - признак расчета в "Интернет"
-    - В классы `Check` и `CorrectionCheck` добавлен метод `timezone` - часовая зона
+    - В классы `Check` и `CorrectionCheck` добавлен метод `set_timezone` - часовая зона
     - В класс `Check` добавлен метод  `add_cashless_payment` - сведения об оплате безналичными
     - В класс `Position` добавлен метод  `set_planned_status` - планируемый статус товара
 
