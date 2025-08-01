@@ -345,6 +345,65 @@ class PaymentObject(object):
     """
 
 
+class TimeZone(object):
+    """Часовая зона"""
+
+    TIME_ZONE_1 = 1
+    """UTC+2"""
+
+    TIME_ZONE_2 = 2
+    """UTC+3"""
+
+    TIME_ZONE_3 = 3
+    """UTC+4"""
+
+    TIME_ZONE_4 = 4
+    """UTC+5"""
+
+    TIME_ZONE_5 = 5
+    """UTC+6"""
+
+    TIME_ZONE_6 = 6
+    """UTC+7"""
+
+    TIME_ZONE_7 = 7
+    """UTC+8"""
+
+    TIME_ZONE_8 = 8
+    """UTC+9"""
+
+    TIME_ZONE_9 = 9
+    """UTC+10"""
+
+    TIME_ZONE_10 = 10
+    """UTC+11"""
+
+    TIME_ZONE_11 = 11
+    """UTC+12"""
+
+
+class PlannedStatus(object):
+    """Планируемый статус товара"""
+
+    PLANNED_STATUS_1 = 1
+    """Штучный товар, подлежащий обязательной маркировке средством идентификации, реализован"""
+
+    PLANNED_STATUS_2 = 2
+    """Мерный товар, подлежащий обязательной маркировке средством идентификации, в стадии реализации"""
+
+    PLANNED_STATUS_3 = 3
+    """Штучный товар, подлежащий обязательной маркировке средством идентификации, возвращен"""
+
+    PLANNED_STATUS_4 = 4
+    """Часть товара, подлежащего обязательной маркировке средством идентификации, возвращена"""
+
+    PLANNED_STATUS_5 = 5
+    """Штучный товар, подлежащий обязательной маркировке средством идентификации, в стадии реализации"""
+
+    PLANNED_STATUS_6 = 6
+    """Мерный товар, подлежащий обязательной маркировке средством идентификации, реализован"""
+
+
 class Check(object):
     """
     :param oid: Номер операции в магазине
@@ -527,6 +586,42 @@ class Check(object):
         Кооректировка позиций с расхождениями между price * quantity и total
         """
         self.__data['positions'] = correction_positions(self.__data['positions'])
+
+    def set_internet(self, value):
+        """Признак применения ККТ при осуществлении расчета в безналичном порядке в сети «Интернет»
+        :param bool value: Признак расчета в Интернет
+        """
+        self.__data['internet'] = bool(value)
+        return self
+
+    def add_cashless_payment(self, sum, method, id, additional_info=None):
+        """Сведения об оплате в безналичном порядке суммы расчета, указанной в кассовом чеке (БСО)
+        :param int|float sum: Сумма оплаты безналичными
+        :param int method: Признак способа оплаты безналичными
+        :param str id: Идентификаторы безналичной оплаты
+        :param str additional_info: Дополнительные сведения о безналичной оплате
+        """
+        if 'cashless_payments' not in self.__data:
+            self.__data['cashless_payments'] = []
+
+        cashless_payment = {
+            'sum': sum,
+            'method': method,
+            'id': id
+        }
+
+        if additional_info:
+            cashless_payment['additional_info'] = additional_info
+
+        self.__data['cashless_payments'].append(cashless_payment)
+        return self
+
+    def set_timezone(self, timezone):
+        """Установка часовой зоны
+        :param int timezone: Часовая зона
+        """
+        self.__data['timezone'] = timezone
+        return self
 
 
 class CorrectionCheck(object):
@@ -729,6 +824,20 @@ class CorrectionCheck(object):
         """
         self.__data['positions'].append(dict(position))
 
+    def set_internet(self, value):
+        """Признак применения ККТ при осуществлении расчета в безналичном порядке в сети «Интернет»
+        :param bool value: Признак расчета в Интернет
+        """
+        self.__data['internet'] = bool(value)
+        return self
+
+    def set_timezone(self, timezone):
+        """Установка часовой зоны
+        :param int timezone: Часовая зона
+        """
+        self.__data['timezone'] = timezone
+        return self
+
 
 class Position(object):
     """
@@ -827,6 +936,12 @@ class Position(object):
             'number': number,
             'value': value
         })
+
+    def set_planned_status(self, planned_status):
+        """Установка планируемого статуса товара
+        :param int planned_status: Планируемый статус товара
+        """
+        self.__data['planned_status'] = planned_status
 
     def __iter__(self):
         for item in self.__data.items():

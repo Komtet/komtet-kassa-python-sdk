@@ -2,7 +2,8 @@
 from unittest import TestCase
 
 from komtet_kassa_sdk.v2 import (CorrectionCheck, CorrectionType, Intent, MeasureTypes,
-                                 PaymentMethod, PaymentObject, Position, TaxSystem, VatRate)
+                                 PaymentMethod, PaymentObject, Position, TaxSystem,
+                                 VatRate, TimeZone, PlannedStatus)
 
 
 class TestCorrectionCheck(TestCase):
@@ -17,10 +18,13 @@ class TestCorrectionCheck(TestCase):
         position = Position(name='Товар', price=10, quantity=5, total=50,
                             measure=MeasureTypes.PIECE, payment_method=PaymentMethod.FULL_PAYMENT,
                             payment_object=PaymentObject.PRODUCT, vat=VatRate.RATE_NO)
+        position.set_planned_status(planned_status=PlannedStatus.PLANNED_STATUS_1)
         check.add_position(position)
         check.set_cashier(name='Кассир', inn='8634330201')
         check.set_additional_check_props('445334544')
         check.set_authorised_person('Иванов И.И.', '123456789012')
+        check.set_internet(True)
+        check.set_timezone(timezone=TimeZone.TIME_ZONE_2)
         check.set_callback_url('http://test.pro')
 
         expected = {
@@ -49,7 +53,8 @@ class TestCorrectionCheck(TestCase):
                 'measure': 0,
                 'payment_method': 'full_payment',
                 'payment_object': 'product',
-                'vat': 'no'
+                'vat': 'no',
+                'planned_status': 1
             }],
             'cashier': {
                 'name': 'Кассир',
@@ -61,6 +66,8 @@ class TestCorrectionCheck(TestCase):
                 'inn': '123456789012'
             },
             'payments': [{'type': 'card', 'sum': 50}],
+            'internet': True,
+            'timezone': 2,
             'callback_url': 'http://test.pro'
         }
 
@@ -71,6 +78,11 @@ class TestCorrectionCheck(TestCase):
         self.assertTrue(check['print'])
         check.set_print(False)
         self.assertFalse(check['print'])
+
+        check.set_internet(True)
+        self.assertTrue(check['internet'])
+        check.set_internet(False)
+        self.assertFalse(check['internet'])
 
     def test_correction_info(self):
         '''
