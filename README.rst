@@ -247,7 +247,7 @@ komtet-kassa-python-sdk
     check.check.set_internet(True)
 
     # Если нужно установить сведения об оплате в безналичном порядке
-    check.set_cashless_payments(sum=2000, method=2, id='transaction_1',
+    check.add_cashless_payments(sum=2000, method=2, id='transaction_1',
                                 additional_info='Дополнительные сведения')
 
     # Если нужно установить часовую зону
@@ -455,7 +455,7 @@ komtet-kassa-python-sdk
     check.check.set_internet(True)
 
     # Если нужно установить сведения об оплате в безналичном порядке
-    check.set_cashless_payments(sum=2000, method=2, id='transaction_1',
+    check.add_cashless_payments(sum=2000, method=2, id='transaction_1',
                                 additional_info='Дополнительные сведения')
 
     # Отправка запроса
