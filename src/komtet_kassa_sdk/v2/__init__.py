@@ -1,7 +1,7 @@
 from .agent import Agent, AgentType
 from .check import (Check, CorrectionCheck, CorrectionType, Intent, MarkTypes,
                     MeasureTypes, PaymentMethod, PaymentObject, PaymentType,
-                    Position, TaxSystem, VatRate)
+                    Position, TaxSystem, VatRate, TimeZone, PlannedStatus)
 from .client import Client, EmployeeInfo, OrderInfo, Task, TaskInfo
 from .employee import Employee, EmployeeType
 from .order import Order, OrderItem
@@ -30,5 +30,7 @@ __all__ = [
     'Task',
     'TaskInfo',
     'TaxSystem',
-    'VatRate'
+    'VatRate',
+    'TimeZone',
+    'PlannedStatus'
 ]

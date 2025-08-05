@@ -151,6 +151,27 @@ komtet-kassa-python-sdk
     # payment_object = PaymentObject.THM
     # payment_object = PaymentObject.TM
 
+    # Часовая зона
+    timezone = TimeZone.TIME_ZONE_1     # UTC+2
+    # timezone = TimeZone.TIME_ZONE_2    # UTC+3
+    # timezone = TimeZone.TIME_ZONE_3    # UTC+4
+    # timezone = TimeZone.TIME_ZONE_4    # UTC+5
+    # timezone = TimeZone.TIME_ZONE_5    # UTC+6
+    # timezone = TimeZone.TIME_ZONE_6    # UTC+7
+    # timezone = TimeZone.TIME_ZONE_7    # UTC+8
+    # timezone = TimeZone.TIME_ZONE_8    # UTC+9
+    # timezone = TimeZone.TIME_ZONE_9    # UTC+10
+    # timezone = TimeZone.TIME_ZONE_10    # UTC+11
+    # timezone = TimeZone.TIME_ZONE_11    # UTC+12
+
+    # Планируемый статус товара
+    planned_status=PlannedStatus.PLANNED_STATUS_1
+    # planned_status=PlannedStatus.PLANNED_STATUS_2
+    # planned_status=PlannedStatus.PLANNED_STATUS_3
+    # planned_status=PlannedStatus.PLANNED_STATUS_4
+    # planned_status=PlannedStatus.PLANNED_STATUS_5
+    # planned_status=PlannedStatus.PLANNED_STATUS_6
+
     # Создание позиции
     position = Position(id=1,  # Идентификатор позиции в магазине
                         name='Наименование позиции',
@@ -190,10 +211,10 @@ komtet-kassa-python-sdk
     agent_info = Agent(agent_type=AgentType.AGENT, phone='+79998887766',
                         name='Названиепоставщика', inn='287381373424')
 
-    # Если нужно, установка платёжного агента
+    # Если нужно установить платёжного агента
     agent_info.set_paying_agent(operation='Операция1', phones=['+79998887766'])
 
-    # Если нужно, установка оператора приёма платежей
+    # Если нужно установить оператора приёма платежей
     agent_info.set_receive_payments_operator(phones=['+79998887766'])
 
     # Если нужно, установка оператора перевода средств
@@ -203,6 +224,9 @@ komtet-kassa-python-sdk
 
     # Добавление агента в позицию
     position.set_agent(agent_info)
+
+    # Если нужно установить планируемый статус товара
+    position.set_planned_status(planned_status=PlannedStatus.PLANNED_STATUS_1)
 
     # Добавление позиции
     check.add_position(position)
@@ -218,6 +242,16 @@ komtet-kassa-python-sdk
 
     # Если нужно установить дополнительные параметры чека
     check.set_additional_check_props('445334544')
+
+    # Если нужно установить признак расчета в Интернет
+    check.check.set_internet(True)
+
+    # Если нужно установить сведения об оплате в безналичном порядке
+    check.add_cashless_payment(sum=2000, method=2, id='transaction_1',
+                                additional_info='Дополнительные сведения')
+
+    # Если нужно установить часовую зону
+    check.set_timezone(timezone=TimeZone.TIME_ZONE_2)
 
     # Если нужно получитиь отчёт об успешной фискализации
     check.set_callback_url('http://shop.pro/fiscal_check/callback')
@@ -416,6 +450,13 @@ komtet-kassa-python-sdk
 
     # Если нужно нужно передать данные клиента для фискализации
     check.set_client('Пупкин П.П.', '123412341234')
+
+    # Если нужно установить признак расчета в Интернет
+    check.check.set_internet(True)
+
+    # Если нужно установить сведения об оплате в безналичном порядке
+    check.add_cashless_payment(sum=2000, method=2, id='transaction_1',
+                                additional_info='Дополнительные сведения')
 
     # Отправка запроса
     try:

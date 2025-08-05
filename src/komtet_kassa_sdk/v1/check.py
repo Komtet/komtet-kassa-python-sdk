@@ -547,6 +547,13 @@ class BaseCheck(object):
 
         return self
 
+    def set_internet(self, value):
+        """Признак применения ККТ при осуществлении расчета в безналичном порядке в сети «Интернет»
+        :param bool value: Признак расчета в Интернет
+        """
+        self._data['internet'] = bool(value)
+        return self
+
 
 class Check(BaseCheck):
     """
@@ -592,6 +599,28 @@ class Check(BaseCheck):
         Кооректировка позиций с расхождениями между price * quantity и total
         """
         self._data['positions'] = correction_positions(self._data['positions'])
+
+    def add_cashless_payment(self, sum, method, id, additional_info=None):
+        """Сведения об оплате в безналичном порядке суммы расчета, указанной в кассовом чеке (БСО)
+        :param int|float sum: Сумма оплаты безналичными
+        :param int method: Признак способа оплаты безналичными
+        :param str id: Идентификаторы безналичной оплаты
+        :param str additional_info: Дополнительные сведения о безналичной оплате
+        """
+        if 'cashless_payments' not in self._data:
+            self._data['cashless_payments'] = []
+
+        cashless_payment = {
+            'sum': sum,
+            'method': method,
+            'id': id
+        }
+
+        if additional_info:
+            cashless_payment['additional_info'] = additional_info
+
+        self._data['cashless_payments'].append(cashless_payment)
+        return self
 
 
 class CorrectionCheck(BaseCheck):
