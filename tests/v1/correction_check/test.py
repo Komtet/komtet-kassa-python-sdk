@@ -14,6 +14,7 @@ class TestCorrectionCheck(TestCase):
         check.set_correction_data(CorrectionType.FORCED, '2017-09-28', 'K11',
                                   'Отключение электричества')
         check.set_authorised_person('Иванов И.И.', '123456789012')
+        check.set_user(user='user@host')
         check.set_client(name='Иванов И.П.', inn='1231231231')
         check.set_internet(True)
         check.set_callback_url('http://test.pro')
@@ -23,6 +24,7 @@ class TestCorrectionCheck(TestCase):
             'intent': 'sellCorrection',
             'sno': 0,
             'print': False,
+            'user': 'user@host',
             'client': {
                 'name': 'Иванов И.П.',
                 'inn': '1231231231'

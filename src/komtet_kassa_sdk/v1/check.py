@@ -678,3 +678,10 @@ class CorrectionCheck(BaseCheck):
             self._data['authorised_person']['inn'] = inn
 
         return self
+
+    def set_user(self, user):
+        """
+        :param str user: Email или телефон пользователя для отправки электронного чека
+        """
+        self._data['user'] = user
+        return self
