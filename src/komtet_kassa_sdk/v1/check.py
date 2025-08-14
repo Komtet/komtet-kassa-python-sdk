@@ -650,7 +650,7 @@ class CorrectionCheck(BaseCheck):
         if place_address:
             self._data['place_address'] = place_address
 
-    def set_correction_data(self, type, date, document_number, description):
+    def set_correction_data(self, type, date, document_number, description=None):
         """
         :param int type: Тип коррекции
         :param str date: Дата документа коррекции
@@ -661,9 +661,12 @@ class CorrectionCheck(BaseCheck):
         self._data['correction'] = {
             'type': type,
             'date': date,
-            'document': document_number,
-            'description': description
+            'document': document_number
         }
+
+        # Deprecated
+        if description:
+            self._data['correction']['description'] = description
 
         return self
 
