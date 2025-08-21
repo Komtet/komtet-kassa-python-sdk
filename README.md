@@ -3,8 +3,6 @@
 Библиотека для интеграции вашего сайта с с облачным сервисом
 распределенной печати чеков [КОМТЕТ Касса](http://kassa.komtet.ru)
 
-[![image](https://img.shields.io/travis/Komtet/komtet-kassa-python-sdk.svg?style=flat-square)](https://travis-ci.org/Komtet/komtet-kassa-python-sdk)
-
 # Установка
 
 С помощью pip:
