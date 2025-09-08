@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='komtet_kassa_sdk',
-    version='7.4.3',
+    version='7.4.4',
     license='MIT',
     description='Python SDK for KOMTET Kassa',
 

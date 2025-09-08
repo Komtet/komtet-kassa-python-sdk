@@ -664,7 +664,7 @@ class CorrectionCheck(BaseCheck):
         }
 
         if document_number:
-            self._data['correction']['document_number'] = document_number
+            self._data['correction']['document'] = document_number
 
         # Deprecated
         if description:
