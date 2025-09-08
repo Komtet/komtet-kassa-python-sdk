@@ -622,7 +622,7 @@ class Check(object):
         """Установка часовой зоны
         :param int timezone: Часовая зона
         """
-        self.__data['timezone'] = timezone
+        self.__data['timezone'] = int(timezone)
         return self
 
 
@@ -837,7 +837,7 @@ class CorrectionCheck(object):
         """Установка часовой зоны
         :param int timezone: Часовая зона
         """
-        self.__data['timezone'] = timezone
+        self.__data['timezone'] = int(timezone)
         return self
 
 
