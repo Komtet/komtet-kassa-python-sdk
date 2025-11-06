@@ -42,9 +42,6 @@ class TaxSystem(object):
     SIMPLIFIED_IN_OUT = 2
     """УСН доход - расход"""
 
-    UTOII = 3
-    """ЕНВД"""
-
     UST = 4
     """ЕСН"""
 
