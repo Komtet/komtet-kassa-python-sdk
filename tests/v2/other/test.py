@@ -3,7 +3,7 @@ from decimal import Decimal
 from unittest import TestCase
 
 from komtet_kassa_sdk.v2 import (Check, Client, Intent, MeasureTypes,
-                                 PaymentMethod, Position, PaymentObject, TaskInfo, TaxSystem, VatRate)
+                                 PaymentMethod, Position, PaymentObject, TaskInfo, VatRate)
 from komtet_kassa_sdk.v2.lib.helpers import correction_positions
 from mock import patch
 from ...helpers.mock import ResponseListMock
@@ -14,25 +14,30 @@ class TestVatRate(TestCase):
         for src, dest in [
             ('no', 'no'),
             (0, '0'),
-            (0.18, '20'),
+            (0.18, '18'),
             (0.2, '20'),
             (0.20, '20'),
+            (0.22, '22'),
             (10, '10'),
             (10.0, '10'),
-            (18, '20'),
+            (18, '18'),
             (20, '20'),
             (20.0, '20'),
+            (22.0, '22'),
             ('10%', '10'),
-            ('18%', '20'),
+            ('18%', '18'),
             ('20%', '20'),
+            ('22%', '22'),
             ('0', '0'),
-            ('0.18', '20'),
+            ('0.18', '18'),
             ('0.20', '20'),
+            ('0.22', '22'),
             ('110', '110'),
-            ('118', '120'),
+            ('118', '118'),
             ('10/110', '110'),
-            ('18/118', '120'),
-            ('20/120', '120')
+            ('18/118', '118'),
+            ('20/120', '120'),
+            ('22/122', '122')
         ]:
             self.assertEqual(VatRate.parse(src), dest)
 
