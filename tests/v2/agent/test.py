@@ -26,14 +26,34 @@ class TestAgent(TestCase):
     def test_paying_agent(self):
         agent_info = Agent(agent_type=AgentType.AGENT, phone='+79998887766',
                            name='Названиепоставщика', inn='287381373424')
-        agent_info.set_paying_agent(operation='Операция1', phones=['+79998887766'])
+        agent_info.set_paying_agent(phones=['+79998887766'])
 
         expected = {
             'agent_info': {
                 'type': 'agent',
                 'paying_agent': {
-                        'operation': 'Операция1',
-                        'phones': ['+79998887766']
+                    'phones': ['+79998887766']
+                }
+            },
+            'supplier_info': {
+                'phones': ['+79998887766'],
+                'name': 'Названиепоставщика',
+                'inn': '287381373424'
+            }
+        }
+        self.assertEqual(dict(agent_info), expected)
+
+    def test_paying_agent_with_operation(self):
+        agent_info = Agent(agent_type=AgentType.AGENT, phone='+79998887766',
+                           name='Названиепоставщика', inn='287381373424')
+        agent_info.set_paying_agent(phones=['+79998887766'], operation='Операция1')
+
+        expected = {
+            'agent_info': {
+                'type': 'agent',
+                'paying_agent': {
+                    'phones': ['+79998887766'],
+                    'operation': 'Операция1'
                 }
             },
             'supplier_info': {
