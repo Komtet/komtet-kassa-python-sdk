@@ -52,10 +52,10 @@ class TaxSystem(object):
     """ОСН"""
 
     SIMPLIFIED_IN = 1
-    """УСН доход"""
+    """УСН Доходы"""
 
     SIMPLIFIED_IN_OUT = 2
-    """УСН доход - расход"""
+    """УСН Доходы минус расходы"""
 
     UST = 4
     """ЕСН"""
@@ -182,7 +182,7 @@ class PaymentType(object):
     """Cумма постоплатой (кредит)"""
 
     COUNTER_PROVISIONING = 'counter_provisioning'
-    """Cумма встречным предлжением"""
+    """Cумма встречным предоставлением"""
 
 
 class CorrectionType(object):
@@ -199,7 +199,7 @@ class PaymentMethod(object):
     """Cпособ рассчета"""
 
     PRE_PAYMENT_FULL = 'pre_payment_full'
-    """Полная предварительная оплата до момента передачи предмета расчета «ПРЕДОПЛАТА 100 %»"""
+    """Полная предварительная оплата до момента передачи предмета расчета «ПРЕДОПЛАТА 100%»"""
 
     PRE_PAYMENT_PART = 'pre_payment_part'
     """Частичная предварительная оплата до момента передачи предмета расчета - «ПРЕДОПЛАТА»"""
@@ -300,25 +300,25 @@ class PaymentObject(object):
     """Расход"""
 
     SOLE_PROPRIETOR_CPI_CONTRIBUTINS = 'sole_proprietor_cpi_contributins'
-    """взносы на ОПС ИП"""
+    """Взносы на ОПС ИП"""
 
     CPI_CONTRIBUTINS = 'cpi_contributins'
-    """взносы на ОПС"""
+    """Взносы на ОПС"""
 
     SOLE_PROPRIETOR_CMI_CONTRIBUTINS = 'sole_proprietor_cmi_contributins'
-    """взносы на ОМС ИП"""
+    """Взносы на ОМС ИП"""
 
     CMI_CONTRIBUTINS = 'cmi_contributins'
-    """взносы на ОМС"""
+    """Взносы на ОМС"""
 
     CSI_CONTRIBUTINS = 'csi_contributins'
-    """взносы на ОСС"""
+    """Взносы на ОСС"""
 
     CASINO_PAYMENT = 'casino_payment'
-    """платеж казино"""
+    """Платеж казино"""
 
     PAYMENT_OF_THE_MONEY = 'payment_of_the_money'
-    """выдача денежных средств банковским платежным агентом"""
+    """Выдача денежных средств банковским платежным агентом"""
 
     ATNM = 'atnm'
     """
@@ -329,7 +329,7 @@ class PaymentObject(object):
     ATM = 'atm'
     """
     Реализация подакцизного товара, подлежащего маркировке средством идентификации,
-    и  имеющего код маркировки
+    и имеющего код маркировки
     """
 
     TNM = 'tnm'
@@ -432,7 +432,7 @@ class Check(object):
 
     def set_print(self, value):
         """
-        :param bool value: Печатать чек или нет
+        :param bool value: Печатать бумажный чек или нет
         """
         self.__data['print'] = bool(value)
         return self
@@ -451,12 +451,12 @@ class Check(object):
         """
         :param str email: Email покупателя
         :param str phone: Телефон покупателя
-        :param str name: Наименование покупателя
-        :param str inn: ИНН покупателя
+        :param str name: Покупатель (клиент)
+        :param str inn: ИНН покупателя (клиента)
         :param str birthdate: Дата рождения покупателя
         :param str citizenship: Код города покупателя
         :param str document_code: Код документа покупателя
-        :param str document_data: Даннае документа покупателя
+        :param str document_data: Данные документа, удостоверяющего личность
         :param str address: Адрес покупателя
         """
 
@@ -509,7 +509,7 @@ class Check(object):
 
     def set_cashier(self, name, inn=None):
         """
-        :param str name: Ф.И.О. кассира
+        :param str name: Кассир
         :param str inn: ИНН кассира
         """
         self.__data['cashier'] = {'name': name}
@@ -572,7 +572,9 @@ class Check(object):
 
     def set_callback_url(self, url):
         """
-        :param str callback: URL, на который необходимо ответить после обработки чека
+        :param str url: URL-адрес обработчика на стороне клиента.
+                        На данный адрес будет отправлен HTTP POST-запрос с результатами
+                        фискализации после завершения обработки документа на сервере.
         """
         self.__data['callback_url'] = url
         return self
@@ -591,7 +593,7 @@ class Check(object):
 
     def set_internet(self, value):
         """Признак применения ККТ при осуществлении расчета в безналичном порядке в сети «Интернет»
-        :param bool value: Признак расчета в Интернет
+        :param bool value: Признак расчета в сети Интернет
         """
         self.__data['internet'] = bool(value)
         return self
@@ -651,7 +653,7 @@ class CorrectionCheck(object):
 
     def set_print(self, value):
         """
-        :param bool value: Печатать чек или нет
+        :param bool value: Печатать бумажный чек или нет
         """
         self.__data['print'] = bool(value)
         return self
@@ -661,12 +663,12 @@ class CorrectionCheck(object):
         """
         :param str email: Email покупателя
         :param str phone: Телефон покупателя
-        :param str name: Наименование покупателя
-        :param str inn: ИНН покупателя
+        :param str name: Покупатель (клиент)
+        :param str inn: ИНН покупателя (клиента)
         :param str birthdate: Дата рождения покупателя
         :param str citizenship: Код города покупателя
         :param str document_code: Код документа покупателя
-        :param str document_data: Даннае документа покупателя
+        :param str document_data: Данные документа, удостоверяющего личность
         :param str address: Адрес покупателя
         """
 
@@ -701,7 +703,7 @@ class CorrectionCheck(object):
 
     def set_cashier(self, name, inn=None):
         """
-        :param str name: Ф.И.О. кассира
+        :param str name: Кассир
         :param str inn: ИНН кассира
         """
         self.__data['cashier'] = {'name': name}
@@ -731,7 +733,7 @@ class CorrectionCheck(object):
         """
         :param int type: Тип коррекции
         :param str base_date: Дата документа коррекции
-        :param str base_number: № документа коррекции
+        :param str base_number: Номер документа коррекции
         :param str base_name: Описание коррекции
         """
 
@@ -774,7 +776,7 @@ class CorrectionCheck(object):
 
     def set_authorised_person(self, name, inn=None):
         """
-        :param str name: Ф.И.О. кассира
+        :param str name: Кассир
         :param str inn: ИНН кассира
         """
         self.__data['authorised_person'] = {'name': name}
@@ -815,7 +817,9 @@ class CorrectionCheck(object):
 
     def set_callback_url(self, url):
         """
-        :param str callback: URL, на который необходимо ответить после обработки чека
+        :param str url: URL-адрес обработчика на стороне клиента.
+                        На данный адрес будет отправлен HTTP POST-запрос с результатами
+                        фискализации после завершения обработки документа на сервере.
         """
         self.__data['callback_url'] = url
         return self
@@ -828,7 +832,7 @@ class CorrectionCheck(object):
 
     def set_internet(self, value):
         """Признак применения ККТ при осуществлении расчета в безналичном порядке в сети «Интернет»
-        :param bool value: Признак расчета в Интернет
+        :param bool value: Признак расчета в сети Интернет
         """
         self.__data['internet'] = bool(value)
         return self
@@ -907,9 +911,9 @@ class Position(object):
         self.__data['mark_code'] = {type: code}
 
     def set_mark_quantity(self, numerator, denominator):
-        """ Установка дробного колличества маркировки
-        :param int numerator: Делимое
-        :param int denominator: Делитель
+        """ Установка дробного количества маркированного товара
+        :param int numerator: Числитель дробной части предмета расчета
+        :param int denominator: Знаменатель дробной части предмета расчета
         """
         self.__data['mark_quantity'] = {
             'numerator': numerator,
@@ -918,7 +922,7 @@ class Position(object):
 
     def set_wholesale(self, value):
         """
-        :param bool value: Признак использования ОСУ
+        :param bool value: Признак использования объемно-сортового учета (ОСУ)
         """
         self.__data['wholesale'] = bool(value)
 

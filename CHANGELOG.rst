@@ -3,6 +3,10 @@ Changelog
 
 Unreleased
 ----------
+  - Изменения по v1:
+    - В методе `set_correction_data` удален параметр `description`
+  - Изменения по v2:
+    - В методе `set_paying_agent` параметр `operation` стал необязательным
 
 8.0.0 (20.11.2025)
 ------------------
