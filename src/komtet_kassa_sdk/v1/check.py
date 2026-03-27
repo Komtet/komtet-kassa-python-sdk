@@ -664,7 +664,7 @@ class CorrectionCheck(BaseCheck):
             warnings.warn(
                 "Параметр 'description' в методе set_correction_data устарел "
                 "и будет окончательно удален в следующей версии.",
-                category=FutureWarning
+                category=DeprecationWarning
             )
 
         self._data['correction'] = {
