@@ -1,4 +1,5 @@
 # coding: utf-8
+import warnings
 from komtet_kassa_sdk.v1.lib.helpers import apply_discount, correction_positions
 
 
@@ -652,12 +653,19 @@ class CorrectionCheck(BaseCheck):
         if place_address:
             self._data['place_address'] = place_address
 
-    def set_correction_data(self, type, date, document_number=None):
+    def set_correction_data(self, type, date, document_number=None, description=None):
         """
         :param int type: Тип коррекции
         :param str date: Дата документа коррекции
         :param str document_number: Номер документа коррекции
         """
+
+        if description is not None:
+            warnings.warn(
+                "Параметр 'description' в методе set_correction_data устарел "
+                "и будет окончательно удален в следующей версии.",
+                category=FutureWarning
+            )
 
         self._data['correction'] = {
             'type': type,
@@ -666,6 +674,9 @@ class CorrectionCheck(BaseCheck):
 
         if document_number:
             self._data['correction']['document'] = document_number
+
+        if description:
+            self._data['correction']['description'] = description
 
         return self
 

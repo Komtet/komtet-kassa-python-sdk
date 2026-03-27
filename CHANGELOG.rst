@@ -3,10 +3,9 @@ Changelog
 
 Unreleased
 ----------
-  - Изменения по v1:
-    - В методе `set_correction_data` удален параметр `description`
-  - Изменения по v2:
-    - В методе `set_paying_agent` параметр `operation` стал необязательным
+  - В методе `set_correction_data` параметр `description` помечен как устаревший (deprecated) и будет полностью удален в следующей мажорной версии
+  - Добавлен метод `set_paying_agent_info`
+  - Метод `set_paying_agent` помечен как устаревший (deprecated) и будет полностью удален в следующей мажорной версии. Вместо него рекомендуется использовать `set_paying_agent_info`
 
 8.0.0 (20.11.2025)
 ------------------
