@@ -1,4 +1,6 @@
 # coding: utf-8
+import warnings
+
 
 class AgentType(object):
     """Типы признака агента по предмету расчета"""
@@ -58,15 +60,31 @@ class Agent(object):
             if inn:
                 self.__data['supplier_info']['inn'] = inn
 
-    def set_paying_agent(self, operation, phones):
-        """ Передача атрибутов платежного агента
-        :param str operation: Наименование операции (максимальная длина строки – 24 символа)
+    def set_paying_agent_info(self, phones, operation=None):
+        """ Передача атрибутов платежного агента (Актуальный метод)
         :param list phones: Телефоны платежного агента
+        :param str operation: Наименование операции (максимальная длина строки – 24 символа)
         """
         self.__data['agent_info']['paying_agent'] = {
-            'operation': operation,
             'phones': phones
         }
+
+        if operation:
+            self.__data['agent_info']['paying_agent']['operation'] = operation
+
+        return self
+
+    def set_paying_agent(self, operation, phones):
+        """ Передача атрибутов платежного агента (Устарел)
+        .. deprecated:: Используйте set_paying_agent_info(phones, operation)
+        """
+        warnings.warn(
+            "Метод set_paying_agent(operation, phones) устарел "
+            "и будет окончательно удален в следующей версии. "
+            "Используйте set_paying_agent_info(phones, operation=None).",
+            category=DeprecationWarning
+        )
+        return self.set_paying_agent_info(phones=phones, operation=operation)
 
     def set_receive_payments_operator(self, phones):
         """ Передача атрибутов оператора по приему платежей

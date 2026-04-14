@@ -1,4 +1,5 @@
 # coding: utf-8
+import warnings
 from komtet_kassa_sdk.v1.lib.helpers import apply_discount, correction_positions
 
 
@@ -37,10 +38,10 @@ class TaxSystem(object):
     """ОСН"""
 
     SIMPLIFIED_IN = 1
-    """УСН доход"""
+    """УСН Доходы"""
 
     SIMPLIFIED_IN_OUT = 2
-    """УСН доход - расход"""
+    """УСН Доходы минус расходы"""
 
     UST = 4
     """ЕСН"""
@@ -140,7 +141,7 @@ class PaymentMethod(object):
     """Cумма постоплатой (кредит)"""
 
     COUNTER_PROVISIONING = 'counter_provisioning'
-    """Cумма встречным предлжением"""
+    """Cумма встречным предоставлением"""
 
 
 class CorrectionType(object):
@@ -157,7 +158,7 @@ class CalculationMethod(object):
     """Cпособ рассчета"""
 
     PRE_PAYMENT_FULL = 'pre_payment_full'
-    """Полная предварительная оплата до момента передачи предмета расчета «ПРЕДОПЛАТА 100 %»"""
+    """Полная предварительная оплата до момента передачи предмета расчета «ПРЕДОПЛАТА 100%»"""
 
     PRE_PAYMENT_PART = 'pre_payment_part'
     """Частичная предварительная оплата до момента передачи предмета расчета - «ПРЕДОПЛАТА»"""
@@ -411,7 +412,7 @@ class BaseCheck(object):
 
     def set_print(self, value):
         """
-        :param bool value: Печатать чек или нет
+        :param bool value: Печатать бумажный чек или нет
         """
         self._data['print'] = bool(value)
         return self
@@ -426,7 +427,7 @@ class BaseCheck(object):
 
     def set_cashier(self, name, inn=None):
         """
-        :param str name: Ф.И.О. кассира
+        :param str name: Кассир
         :param str inn: ИНН кассира
         """
         self._data['cashier'] = {'name': name}
@@ -523,15 +524,17 @@ class BaseCheck(object):
 
     def set_callback_url(self, url):
         """
-        :param str callback: URL, на который необходимо ответить после обработки чека
+        :param str url: URL-адрес обработчика на стороне клиента.
+                        На данный адрес будет отправлен HTTP POST-запрос с результатами
+                        фискализации после завершения обработки документа на сервере.
         """
         self._data['callback_url'] = url
         return self
 
     def set_client(self, name=None, inn=None):
         """
-        :param str name: Наименование покупателя
-        :param str inn: ИНН покупателя
+        :param str name: Покупатель (клиент)
+        :param str inn: ИНН покупателя (клиента)
         """
 
         self._data['client'] = {}
@@ -558,11 +561,11 @@ class BaseCheck(object):
 class Check(BaseCheck):
     """
     :param oid: Номер операции в магазине
-    :param str email: E-Mail пользователя для отправки электронного чека
+    :param str email: Email пользователя для отправки электронного чека
     :param str intent: Направление платежа
     :param int tax_system: Система налогообложения
     :param str payment_address: Место расчетов
-    :param str payment_address: Адрес расчетов
+    :param str place_address: Адрес расчетов
     """
 
     def __init__(self, oid, email, intent, tax_system, payment_address=None, place_address=None):
@@ -629,7 +632,7 @@ class CorrectionCheck(BaseCheck):
     :param str intent: Тип чека коррекции
     :param int sno: Система налогообложения
     :param str payment_address: Место расчетов
-    :param str payment_address: Адрес расчетов
+    :param str place_address: Адрес расчетов
     """
 
     def __init__(self, oid, intent, sno, payment_address=None, place_address=None):
@@ -654,9 +657,15 @@ class CorrectionCheck(BaseCheck):
         """
         :param int type: Тип коррекции
         :param str date: Дата документа коррекции
-        :param str document_number: № документа коррекции
-        :param str description: Описание коррекции
+        :param str document_number: Номер документа коррекции
         """
+
+        if description is not None:
+            warnings.warn(
+                "Параметр 'description' в методе set_correction_data устарел "
+                "и будет окончательно удален в следующей версии.",
+                category=DeprecationWarning
+            )
 
         self._data['correction'] = {
             'type': type,
@@ -666,7 +675,6 @@ class CorrectionCheck(BaseCheck):
         if document_number:
             self._data['correction']['document'] = document_number
 
-        # Deprecated
         if description:
             self._data['correction']['description'] = description
 
@@ -674,7 +682,7 @@ class CorrectionCheck(BaseCheck):
 
     def set_authorised_person(self, name, inn=None):
         """
-        :param str name: Ф.И.О. кассира
+        :param str name: Кассир
         :param str inn: ИНН кассира
         """
         self._data['authorised_person'] = {'name': name}
