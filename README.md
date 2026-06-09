@@ -94,10 +94,12 @@ vat_rate = VatRate.RATE_NO  # Без НДС
 # vat_rate = VatRate.RATE_7  # НДС 7%
 # vat_rate = VatRate.RATE_10  # НДС 10%
 # vat_rate = VatRate.RATE_20  # НДС 20%
+# vat_rate = VatRate.RATE_22  # НДС 22%
 # vat_rate = VatRate.RATE_105  # НДС 5/105
 # vat_rate = VatRate.RATE_107  # НДС 7/107
 # vat_rate = VatRate.RATE_110  # НДС 10/110
 # vat_rate = VatRate.RATE_120  # НДС 20/120
+# vat_rate = VatRate.RATE_122  # НДС 22/122
 
 #Способ расчёта
 payment_method = PaymentMethod.PRE_PAYMENT_FULL
@@ -399,10 +401,12 @@ vat_rate = VatRate.RATE_20  # НДС 20%
 # vat_rate = VatRate.RATE_5  # НДС 5%
 # vat_rate = VatRate.RATE_7  # НДС 7%
 # vat_rate = VatRate.RATE_10  # НДС 10%
+# vat_rate = VatRate.RATE_22  # НДС 22%
 # vat_rate = VatRate.RATE_105  # НДС 5/105
 # vat_rate = VatRate.RATE_107  # НДС 7/107
 # vat_rate = VatRate.RATE_110  # НДС 10/110
 # vat_rate = VatRate.RATE_120  # НДС 20/120
+# vat_rate = VatRate.RATE_122  # НДС 22/122
 # Можно указать просто число:
 # vat_rate = 20
 # или строку:
