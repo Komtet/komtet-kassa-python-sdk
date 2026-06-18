@@ -15,6 +15,8 @@ class TestCheck(TestCase):
         check.add_position('name 1', 100, quantity=2, measure_name='kg', oid='2')
         check.add_payment(300)
         check.add_position('name 2', 100, 3, total=290, vat=20)
+        check.add_payment(300)
+        check.add_position('name 3', 100, 3, total=290, vat=22)
         check.set_internet(True)
         check.set_callback_url('http://test.pro')
 
@@ -28,6 +30,7 @@ class TestCheck(TestCase):
             'payments': [
                 {'sum': 100, 'type': 'card'},
                 {'sum': 200, 'type': 'card'},
+                {'sum': 300, 'type': 'card'},
                 {'sum': 300, 'type': 'card'},
             ],
             'positions': [
@@ -54,6 +57,13 @@ class TestCheck(TestCase):
                     'quantity': 3,
                     'total': 290,
                     'vat': '20'
+                },
+                {
+                    'name': 'name 3',
+                    'price': 100,
+                    'quantity': 3,
+                    'total': 290,
+                    'vat': '22'
                 }
             ],
             'internet': True,
@@ -117,7 +127,12 @@ class TestCheck(TestCase):
         nomenclature.hex_code = '444D00000096b43f303132333432317367454b4b5050635332357935'
         check.add_position('name 2', 100, 3, total=290, vat=20, nomenclature=nomenclature)
 
+        nomenclature = Nomenclature()
+        nomenclature.hex_code = '444D00000096b43f303132333432317367454b4b5050635332357935'
+        check.add_position('name 3', 100, 3, total=290, vat=22, nomenclature=nomenclature)
+
         check.add_payment(200)
+        check.add_payment(300)
         check.add_payment(300)
 
         expected = {
@@ -137,6 +152,7 @@ class TestCheck(TestCase):
             'payments': [
                 {'sum': 100, 'type': 'card'},
                 {'sum': 200, 'type': 'card'},
+                {'sum': 300, 'type': 'card'},
                 {'sum': 300, 'type': 'card'}
             ],
             'positions': [
@@ -183,6 +199,16 @@ class TestCheck(TestCase):
                     'quantity': 3,
                     'total': 290,
                     'vat': '20',
+                    'nomenclature_code': {
+                        'hex_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
+                    }
+                },
+                {
+                    'name': 'name 3',
+                    'price': 100,
+                    'quantity': 3,
+                    'total': 290,
+                    'vat': '22',
                     'nomenclature_code': {
                         'hex_code': '444D00000096b43f303132333432317367454b4b5050635332357935'
                     }

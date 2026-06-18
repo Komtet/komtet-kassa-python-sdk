@@ -71,6 +71,12 @@ class TestMultiTasks(TestCase):
                                     payment_object=PaymentObject.PRODUCT)
                 check.add_position(position)
                 check.add_payment(300)
+                position = Position(id=1, name='Товар', price=300, quantity=3, total=290,
+                                    measure=MeasureTypes.PIECE, vat=VatRate.RATE_22,
+                                    payment_method=PaymentMethod.FULL_PAYMENT,
+                                    payment_object=PaymentObject.PRODUCT)
+                check.add_position(position)
+                check.add_payment(300)
 
                 checks.append(check)
 
